@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+    justify-content: space-between; /* Space out the content */
+}
+
+.container img {
+    max-width: 50%; /* Adjust the image width as needed */
+    height: auto;
+}
+
+.form-container {
+    width: 45%; /* Adjust the form width as needed */
+}
+
+.link {
+    margin-top: 10px;
+}
