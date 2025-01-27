@@ -1,18 +1,39 @@
 .container {
     display: flex;
-    align-items: center; /* Vertically center the content */
-    justify-content: space-between; /* Space out the content */
+    align-items: center;
+    justify-content: space-between;
 }
 
 .container img {
-    max-width: 50%; /* Adjust the image width as needed */
+    max-width: 50%;
     height: auto;
 }
 
 .form-container {
-    width: 45%; /* Adjust the form width as needed */
+    width: 45%;
+}
+
+label[for="prenom"], label[for="email"], label[for="password"], label[for="nom"] {
+font-weight: bolder;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+input[type="submit"] {
+    background-color: #175bed;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 
 .link {
     margin-top: 10px;
+}
+
+.centrer {
+text-align: center;
 }
