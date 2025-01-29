@@ -304,3 +304,39 @@
 }
 
 /* FIN DU BODY */
+
+/* FOOTER */
+.mes-images {
+    position: absolute;
+    bottom: 0px;
+    right: 80px;
+}
+
+.instagram {
+    position: absolute;
+    right: 98px;
+    bottom: 53px;
+}
+
+.link {
+    position: absolute;
+    bottom: 56px;
+    right: 53px;
+}
+
+.facebook {
+    position: absolute;
+    bottom: 56px;
+    right: 8px;
+}
+
+.COPYRIGHTS {
+    position: absolute;
+    top: 895px;
+    left: 1600px;
+    color: #FFF;
+    font-size: 10px;
+
+}
+
+/* FIN DU FOOTER */
