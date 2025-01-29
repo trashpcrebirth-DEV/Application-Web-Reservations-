@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "sqltools.connections": [
         {
             "mysqlOptions": {
@@ -15,4 +16,7 @@
             "password": "oracle"
         }
     ]
+=======
+    "liveServer.settings.port": 5501
+>>>>>>> 3d0a4ba56f5b9a1ed3fb310585001520783440ce
 }
