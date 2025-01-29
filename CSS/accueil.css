@@ -10,7 +10,7 @@
     position: absolute;
     left: 280px;
     top: 10px;
-    width: 300px;
+    width: 350px;
     height: 150px;
 }
 
@@ -79,3 +79,228 @@
 }
 
 /* FIN DU HEADER */
+
+/* BODY */
+.VOTRE {
+    color: #175BED;
+
+}
+
+.DEVIENS {
+    color: #FFF;
+
+}
+
+.DEVIENS-UNE-STAR {
+    position: absolute;
+    top: 175px;
+    left: 125px;
+    font-size: 40px;
+    font-family: Poppins;
+    font-style: italic;
+
+}
+
+.paragraph {
+    position: absolute;
+    top: 250px;
+    left: 125px;
+    right: 600px;
+    color: #FFF;
+    font-family: Poppins;
+    font-size: 20px;
+
+}
+
+.EN-NOMBRE {
+    position: absolute;
+    top: 375px;
+    left: 135px;
+    color: #FFF;
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: italic;
+}
+
+
+.CINQ-CENT {
+    position: absolute;
+    top: 450px;
+    left: 675px;
+    font-family: Poppins;
+    font-size: 50px;
+    font-style: italic;
+    line-height: 75px;
+    color: #FFF;
+    border: 2px solid white;
+    padding: 75px;
+    border-radius: 25px;
+    padding-top: 99px;
+    padding-left: 230px;
+    padding-right: 110px
+}
+
+.CINQ-CENT {
+    position: absolute;
+    top: 425px;
+    left: 760px;
+    font-family: Poppins;
+    font-size: 50px;
+    font-style: italic;
+}
+
+.cinq-cents {
+    position: relative;
+    bottom: 10px;
+    right: 125px;
+}
+
+
+.CINQ-CENT:hover {
+    background: linear-gradient(180deg, #175BED 0%, rgba(140, 50, 255, 0.00) 100%);
+}
+
+
+.CINQ-CENT h3::after {
+    position: absolute;
+    top: 75px;
+    right: 75px;
+    left: 0px;
+    content: 'Événements organisés';
+    font-size: 20px;
+    visibility: visible;
+    white-space: nowrap;
+
+}
+
+
+
+.ligne-bleu1 {
+    position: absolute;
+    bottom: 270px;
+    left: 235px;
+    width: 285px;
+    height: 2px;
+    background-color: #175BED;
+    border: none;
+    margin: 100px 0;
+}
+
+
+.DIX-MILLES {
+    position: absolute;
+    top: 425px;
+    left: 125px;
+    font-family: Poppins;
+    font-size: 50px;
+    font-style: italic;
+    font-weight: 800;
+    line-height: 75px;
+    color: #FFF;
+    border: 2px solid white;
+    padding: 75px;
+    padding-top: 100px;
+    padding-left: 200px;
+    border-radius: 25px;
+}
+
+.dix_milles {
+    position: relative;
+    bottom: 10px;
+    right: 100px;
+}
+
+.DIX-MILLES:hover {
+    background: linear-gradient(180deg, #175BED 0%, rgba(140, 50, 255, 0.00) 100%);
+}
+
+
+
+.DIX-MILLES h3::after {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    content: 'Utilisateurs';
+    font-size: 20px;
+    visibility: visible;
+    white-space: nowrap;
+}
+
+
+.ligne-bleu2 {
+    position: absolute;
+    bottom: 270px;
+    left: 865px;
+    width: 275px;
+    height: 2px;
+    background-color: #175BED;
+    border: none;
+    margin: 100px 0;
+}
+
+.QUARANTE-DEUX {
+    position: absolute;
+    top: 450px;
+    left: 1130px;
+    font-family: Poppins;
+    font-size: 50px;
+    font-style: italic;
+    font-weight: 800;
+    line-height: 75px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #FFF;
+    border: 2px solid white;
+    padding: 75px;
+    display: inline-block;
+    border-radius: 25px;
+    padding-top: 99px;
+    padding-left: 230px;
+    padding-right: 160px;
+}
+
+.quarante-deux {
+    position: relative;
+    bottom: 10px;
+    right: 130px;
+}
+
+
+.QUARANTE-DEUX {
+    position: absolute;
+    top: 425px;
+    left: 1375px;
+    font-family: Poppins;
+    font-size: 50px;
+    font-style: italic;
+}
+
+.QUARANTE-DEUX:hover {
+    background: linear-gradient(180deg, #175BED 0%, rgba(140, 50, 255, 0.00) 100%);
+}
+
+
+.QUARANTE-DEUX h3::after {
+    position: absolute;
+    top: 75px;
+    right: 75px;
+    left: 0px;
+    content: 'Installations';
+    font-size: 20px;
+    visibility: visible;
+    white-space: nowrap;
+
+}
+
+.ligne-bleu3 {
+    position: absolute;
+    bottom: 270px;
+    left: 1480px;
+    width: 250px;
+    height: 2px;
+    background-color: #175BED;
+    border: none;
+    margin: 100px 0;
+}
+
+/* FIN DU BODY */
