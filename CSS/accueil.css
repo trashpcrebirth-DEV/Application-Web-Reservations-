@@ -8,10 +8,8 @@
 
 .logo {
     position: absolute;
-    left: 280px;
-    top: 10px;
-    width: 350px;
-    height: 150px;
+    width: 250px;
+    top: 0px;
 }
 
 .logo-link {
@@ -56,6 +54,15 @@
 
 }
 
+.bar-page-actuel{
+    height: 3px;
+    width: 77px;
+    background: #175BED;
+    position: absolute;
+    left: 1335px;
+    bottom: 884px;
+}
+
 .bar-de-navigation ul li::after {
     content: '';
     height: 3px;
@@ -86,12 +93,12 @@
 
 }
 
-.DEVIENS {
+.TEXTE {
     color: #FFF;
 
 }
 
-.DEVIENS-UNE-STAR {
+.TEXTE-MESSAGE {
     position: absolute;
     top: 175px;
     left: 125px;
