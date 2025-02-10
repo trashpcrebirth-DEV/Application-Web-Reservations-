@@ -12,14 +12,22 @@
     <%- include ("../partials/header.ejs") %>
     <!--BODY-->
     <div class="bar">
-        <label>Membre <input type="text"></label>
-        <label>Programme <input type="text"></label>
-    </br>
-        <label>Recherche d'activité <input type="text"></label>
+        <label>Catégorie</label>
+        <input type="text">
     </div>
-    <label class="Activité">ACTIVITÉS</label>
-    <hr class="ligne-blanche">
 
+    <div class="legende">
+        <label>Légende :</label>
+        <div class="boite">
+            <span class="boite-bleu"></span> Inscription Disponible
+        </div>
+        <div class="boite">
+            <span class="boite-vert"></span> Déjà pris
+        </div>
+        <div class="boite">
+            <span class="boite-rouge"></span> Hors service
+        </div>
+    </div>
     <!--FIN DU BODY-->
     <%- include ("../partials/footer.ejs") %>
 
