@@ -64,12 +64,32 @@ app.get("/", function (req, res) {
         });
     });
 });
+
+// Route pour la page de réservation
+app.get("/reservation", (req, res) => {
+    res.render("pages/reservation"); // Render le fichier reservation.ejs
+});
+
+// Route pour la page de contact
+app.get("/contact", (req, res) => {
+    res.render("pages/contact"); // Render le fichier contact.ejs
+});
+
+// Route pour la page de connexion
+app.get("/connexion", (req, res) => {
+    res.render("pages/connexion"); // Render le fichier connexion.ejs
+});
+
+// Route pour la page de inscription
+app.get("/inscription", (req, res) => {
+    res.render("pages/inscription"); // Render le fichier connexion.ejs
+});
  
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
         result) {
         if (err) throw err;
-        res.render("pages/add-event", {
+        res.render("pages/reservation", {
             siteTitle: "Application simple",
             pageTitle: "Ajouter un nouvel événement",
             items: result
