@@ -70,6 +70,11 @@ app.get("/reservation", (req, res) => {
     res.render("pages/reservation"); // Render le fichier reservation.ejs
 });
 
+// Route pour la page de profile
+app.get("/profile", (req, res) => {
+    res.render("pages/profile"); // Render le fichier profile.ejs
+});
+
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
     res.render("pages/contact"); // Render le fichier contact.ejs

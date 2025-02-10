@@ -7,9 +7,22 @@
     <link rel="stylesheet" href="../CSS/contact.css">
 </head>
 
-<body>
+<body class="banner">
     <%- include ("../partials/header.ejs") %>
 
+        <h2>Nous contacter</h2>
+        <form action="#" method="POST">
+            <label for="nom">Nom:</label><br>
+            <input type="text" required><br><br>
+    
+            <label for="email">Email:</label><br>
+            <input type="email" required><br><br>
+    
+            <label for="message">Message:</label><br>
+            <textarea rows="4" required></textarea><br><br>
+    
+            <input type="submit" value="Soumettre">
+        </form>
     <%- include ("../partials/footer.ejs") %>
 </body>
 
