@@ -165,3 +165,7 @@ app.get("/event/delete/:id", function (req, res) {
         res.redirect("/");
     });
 });
+
+app.get("/reservation", function (req, res) {
+    res.render("pages/reservation");  
+});
