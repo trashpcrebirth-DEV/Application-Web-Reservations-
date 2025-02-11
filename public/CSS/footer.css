@@ -1,8 +1,8 @@
 /* FOOTER */
 .mes-images {
     position: absolute;
-    bottom: 0px;
-    right: 80px;
+    bottom: 0%;
+    right: 5%;
 }
 
 .instagram {
@@ -25,11 +25,11 @@
 
 .COPYRIGHTS {
     position: absolute;
-    top: 895px;
-    left: 1600px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    top: 90%;
+    right: 13.5%;
     color: #FFF;
     font-size: 10px;
-
 }
 
 /* FIN DU FOOTER */
