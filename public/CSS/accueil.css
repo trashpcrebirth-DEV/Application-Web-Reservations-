@@ -1,91 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-}
 
-/* HEADER */
-
-.logo {
-    position: absolute;
-    width: 250px;
-    top: 0px;
-}
-
-.logo-link {
-    text-decoration: none;
-
-}
-
-.banner {
-    width: 100;
-    height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/background.gif);
-    background-size: cover;
-    background-position: center;
-}
-
-.bar-de-navigation {
-    width: 85%;
-    font-weight: bold;
-    margin: auto;
-    padding: 35px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.bar-de-navigation ul li {
-    display: inline-block;
-    margin: 0 20px;
-    position: relative;
-}
-
-.sportZone {
-    width: 120px;
-    cursor: pointer;
-    color: #FFF;
-}
-
-.bar-de-navigation ul li a {
-    text-decoration: none;
-    color: #FFF;
-    text-transform: uppercase;
-
-}
-
-.bar-page-actuel{
-    height: 3px;
-    width: 77px;
-    background: #175BED;
-    position: absolute;
-    left: 1335px;
-    bottom: 884px;
-}
-
-.bar-de-navigation ul li::after {
-    content: '';
-    height: 3px;
-    width: 0;
-    background: #175BED;
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    transition: 0.5s;
-}
-
-.bar-de-navigation ul :hover::after {
-    width: 100%;
-}
-
-
-.boite-bleu {
-    background-color: #175BED;
-    padding: 25px 25px;
-    border-radius: 20px;
-}
-
-/* FIN DU HEADER */
 
 /* BODY */
 .VOTRE {
@@ -132,8 +45,8 @@
 
 .CINQ-CENT {
     position: absolute;
-    top: 450px;
-    left: 675px;
+    top: 40%;
+    left: 10%;
     font-family: Poppins;
     font-size: 50px;
     font-style: italic;
@@ -312,38 +225,3 @@
 
 /* FIN DU BODY */
 
-/* FOOTER */
-.mes-images {
-    position: absolute;
-    bottom: 0px;
-    right: 80px;
-}
-
-.instagram {
-    position: absolute;
-    right: 98px;
-    bottom: 53px;
-}
-
-.link {
-    position: absolute;
-    bottom: 56px;
-    right: 53px;
-}
-
-.facebook {
-    position: absolute;
-    bottom: 56px;
-    right: 8px;
-}
-
-.COPYRIGHTS {
-    position: absolute;
-    top: 895px;
-    left: 1600px;
-    color: #FFF;
-    font-size: 10px;
-
-}
-
-/* FIN DU FOOTER */
