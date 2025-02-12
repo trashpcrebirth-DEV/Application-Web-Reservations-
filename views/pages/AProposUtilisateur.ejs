@@ -10,27 +10,38 @@
 <body>
     <%- include ("../partials/header.ejs") %>
     <!--BODY-->
-    <main>
-        <section class="aPropos-section">
-          <h1>À propos de nous</h1>
-          <p>
-            Bienvenue sur notre site ! Nous sommes engagés à offrir le meilleur service à nos utilisateurs, et nous aimons entendre leurs retours. Découvrez ce que disent nos utilisateurs à propos de leur expérience avec nous.
-          </p>
-        </section>
-    
-        <section class="avis-section">
-          <h2>Ce que nos utilisateurs disent</h2>
-          <div class="avis">
-            <% reviews.forEach((review) => { %>
-              <div class="card-avis">
-                <h3><%= review.userName %></h3>
-                <p>"<%= review.comment %>"</p>
-                <p class="note">Note : <%= review.rating %>/5</p>
-              </div>
-            <% }) %>
-          </div>
-        </section>
-    </main>
+    <section class="affichage-titre">
+        <div>
+            <h1>Avis de nos utilisateurs</h1>
+            <p>Découvrez ce que nos clients disent de leur expérience avec SportZone</p>
+        </div>
+    </section>
+
+    <section class="avis">
+        <div class="conteneur">
+            <div class="avis-grid">
+                <% avis.forEach(function(avi) { %>
+                    <div class="card-avis">
+                        <div>
+                            <div class="utilisateur-info">
+                                <img src="<%= avi.photoProfile %>" alt="<%= avi.nom %>" class="photo-profile">
+                                <div class="utilisateur-details">
+                                    <h3 class="utilisateur-nom"><%= avi.nom %></h3>
+                                    <p class="date"><%= avi.date %></p>
+                                </div>
+                            </div>
+                            <div class="note">
+                                <% for(let i = 0; i < avi.note; i++) { %>
+                                    <span class="star">&#9733;</span> <!--https://www.alt-codes.net/star_alt_code.php-->
+                                <% } %>
+                            </div>
+                        </div>
+                        <p class="commentaire"><%= avi.commentaire %></p>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </section>
     <!--FIN DU BODY-->
     <%- include ("../partials/footer.ejs") %>
 </body>
