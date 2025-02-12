@@ -1,16 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
-    <link rel="stylesheet" href="../CSS/contact.css">
+    <title>Profile</title>
+    <link rel="stylesheet" href="../CSS/profile.css">
 </head>
 
 <body class="banner">
     <%- include ("../partials/header.ejs") %>
+        <div class="forme">
+            <div class="profile-container">
+                <div class="profile-cercle">
+                    <span class="initial">V</span>
+                </div>
+                <div class="profile-info">
+                    <h1 style="text-align: center;">Nom: Viswa Balaratnam</h1>
+                </div>
+            </div>
 
-    <%- include ("../partials/footer.ejs") %>
+            <div class="info-container">
+                <h2>Dossier</h2>
+                <div class="info-row">
+                    <div class="info-column">
+                        <div class="info-box">
+                            <p><strong>Date d'inscription: </strong> 01/01/2020</p>
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Téléphone: </strong> 514 514 5144</p>
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Email: </strong> viswa@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="info-column">
+                        <div class="info-box">
+                            <p><strong>Date de naissance: </strong>01/01/2020</p>
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Langue: </strong>Français</p>
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Adresse: </strong>243928 Bois-de-Boulogne</p>
+                        </div>
+                    </div>
+                </div>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <form action="/deconnexion" method="POST">
+                    <input type="submit" value="Se déconnecter">
+                </form>
+
+            </div>
+
+        </div>
+        <%- include ("../partials/footer.ejs") %>
 </body>
 
 </html>
