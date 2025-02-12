@@ -85,45 +85,87 @@
     border: 1px solid white;
     border-radius: 5px;
     background-color: gray;
-    width: 300px;
+    width: 550px;
  
 }
 
-.legende {
+
+/*Généré par CHATGPT à revoir!*/
+.calendrier-container {
     position: absolute;
-    top: 300px;
+    top: 250px;
     left: 145px;
-    color: white;
-    /*display: flex; /*affichage horizontal*/
-    
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 600px;
+    height: 500px;
+    text-align: center;
 }
 
-.boite {
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.calendrier {
+    width: 100%;
+    font-size: 14px;
+
+}
+
+.calendrier-header {
     display: flex;
-    align-items: center; 
-    margin: 8px; 
+    justify-content: space-between;
+    align-items: center;    
+    margin-bottom: 15px;
     
 }
 
-.boite span {
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-    margin-right: 10px; 
+.calendrier-header button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
 }
 
-.boite-bleu {
-    background-color: blue;
+.calendrier-header button:hover {
+    background-color: #f1f1f1;
 }
 
-.boite-vert {
-    background-color: green;
+.month-year {
+    font-weight: bold;
 }
 
-.boite-rouge {
-    background-color: red;
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    height: 100px;
 }
 
+.day-header {
+    font-weight: bold;
+    padding: 10px;
+  
+}
+
+.day {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.day:hover {
+    background-color: #e0e0e0;
+}
+
+.empty {
+    background-color: #f5f5f5;
+}   
 
 /* FIN DU BODY */
 
