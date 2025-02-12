@@ -91,6 +91,17 @@ app.get("/inscription", (req, res) => {
     res.render("pages/inscription"); // Render le fichier connexion.ejs
 });
  
+// Route pour la page À propos de l'utilisateur
+app.get('/AProposUtilisateur', (req, res) => {
+    const reviews = [
+      { userName: 'Alice', comment: 'Service incroyable, je recommande fortement !', rating: 5 },
+      { userName: 'Bob', comment: 'Une bonne expérience globale, merci !', rating: 4 },
+      { userName: 'Charlie', comment: 'Pas mal, mais peut mieux faire.', rating: 3 },
+    ];
+    
+    res.render('pages/AProposUtilisateur', { activePage:'accueil', reviews });
+  });
+
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
         result) {
