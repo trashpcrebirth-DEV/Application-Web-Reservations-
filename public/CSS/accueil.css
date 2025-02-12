@@ -110,8 +110,8 @@ html, body {
 
 .ligne-bleu1 {
     position: absolute;
-    top:61.5%;
-    left: 12.25%;
+    top:60%;
+    left: 23.5%;
     width: 285px;
     height: 4px;
     background-color: #175BED;
@@ -163,8 +163,8 @@ html, body {
 
 .ligne-bleu2 {
     position: absolute;
-    top:61.5%;
-    left: 47%;
+    top:60%;
+    left: 25%;
     width: 245px;
     height: 4px;
     background-color: #175BED;
@@ -228,8 +228,8 @@ html, body {
 
 .ligne-bleu3 {
     position: absolute;
-    top:61.5%;
-    left: 76.6%;
+    top:60%;
+    left: 28.5%;
     width: 185px;
     height: 4px;
     background-color: #175BED;

@@ -1,33 +1,28 @@
 /* FOOTER */
-.mes-images {
-    position: absolute;
-    bottom: 0%;
-    right: 5%;
-}
 
 .instagram {
     position: absolute;
-    right: 98px;
-    bottom: 53px;
+    right: 10%;
+    bottom: 6%;
 }
 
 .link {
     position: absolute;
-    bottom: 56px;
-    right: 53px;
+    bottom: 6.5%;
+    right: 7.5%;
 }
 
 .facebook {
     position: absolute;
-    bottom: 56px;
-    right: 8px;
+    bottom: 6.5%;
+    right: 5%;
 }
 
 .COPYRIGHTS {
     position: absolute;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    top: 90%;
-    right: 13.5%;
+    right: 12.5%;
+    bottom: 7%;
     color: #FFF;
     font-size: 10px;
 }
