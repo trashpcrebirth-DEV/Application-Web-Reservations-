@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container img {
+    max-width: 50%;
+    height: auto;
+}
+
+.form-container {
+    width: 45%;
+}
+
+label[for="prenom"],
+label[for="email"],
+label[for="password"],
+label[for="nom"] {
+    font-weight: bolder;
+    margin-left: 10%;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 70%;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    margin-left: 10%;
+}
+
+input[type="submit"] {
+    background-color: #175bed;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 75%;
+    margin-left: 10%;
+    font-weight: bolder;
+}
+
+.link {
+    margin-top: 10px;
+}
+
+.centrer {
+    text-align: center;
+}
