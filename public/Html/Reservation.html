@@ -36,18 +36,36 @@
         <input type="text">
     </div>
 
-    <div class="legende">
-        <label>Légende :</label>
-        <div class="boite">
-            <span class="boite-bleu"></span> Inscription Disponible
-        </div>
-        <div class="boite">
-            <span class="boite-vert"></span> Déjà pris
-        </div>
-        <div class="boite">
-            <span class="boite-rouge"></span> Hors service
+    <!--Généré par ChatGPT à revoir-->
+    <div class="calendrier-container">
+        <h1>Calendrier</h1>
+    
+        <!-- Calendrier -->
+        <div class="calendrier">
+            <div class="calendrier-header">
+                <button class="avant" id="prevMonth">&lt;</button>
+                <span class="month-year" id="monthYear">Janvier 2025</span>
+                <button class="apres" id="nextMonth">&gt;</button>
+            </div>
+            
+            <div class="calendar-grid">
+                <div class="day-header">Dim</div>
+                <div class="day-header">Lun</div>
+                <div class="day-header">Mar</div>
+                <div class="day-header">Mer</div>
+                <div class="day-header">Jeu</div>
+                <div class="day-header">Ven</div>
+                <div class="day-header">Sam</div>
+            </div>
+    
+            <div id="daysGrid" class="calendar-grid">
+            </div>
         </div>
     </div>
+    
+    <script src="../Javascript/calendrier.js"></script>
+    
+    
     <!--FIN DU BODY-->
 
     <!--FOOTER-->
