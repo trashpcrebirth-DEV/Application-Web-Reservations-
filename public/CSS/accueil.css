@@ -152,7 +152,7 @@ html, body {
 
 .DIX-MILLES h3::after {
     position: absolute;
-    top: 70px;
+    top: 75px;
     left: 10px;
     content: 'Utilisateurs';
     font-size: 20px;

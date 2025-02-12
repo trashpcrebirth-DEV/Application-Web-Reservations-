@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  .aPropos-section {
+    padding: 20px;
+    background-color: #f0f0f0;
+    text-align: center;
+  }
+  
+  .avis-section {
+    padding: 20px;
+  }
+  
+  .avis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .card-avis {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-avis h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #007bff;
+  }
+  
+  .card-avis p {
+    margin: 5px 0;
+  }
+  
+  .note {
+    font-weight: bold;
+    color: #555;
+  }
+  
