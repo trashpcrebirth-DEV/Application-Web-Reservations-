@@ -58,31 +58,32 @@ app.get("/", function (req, res) {
         result) {
         if (err) throw err;
         res.render("pages/accueil", {
-            siteTitle: "Application simple",
-            pageTitle: "Liste d'événements",
-            items: result
+            siteTitle: "SportZone",
+            pageTitle: "Accueil",
+            items: result,
+            activePage: 'accueil' 
         });
     });
 });
 
 // Route pour la page de réservation
 app.get("/reservation", (req, res) => {
-    res.render("pages/reservation"); // Render le fichier reservation.ejs
+    res.render("pages/reservation", { activePage: 'reservation' }); // Render le fichier reservation.ejs
 });
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
-    res.render("pages/profile"); // Render le fichier profile.ejs
+    res.render("pages/profile", { activePage: 'profile' }); // Render le fichier profile.ejs
 });
 
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
-    res.render("pages/contact"); // Render le fichier contact.ejs
+    res.render("pages/contact", { activePage: 'contact' }); // Render le fichier contact.ejs
 });
 
 // Route pour la page de connexion
 app.get("/connexion", (req, res) => {
-    res.render("pages/connexion"); // Render le fichier connexion.ejs
+    res.render("pages/connexion", { activePage: 'connexion' }); // Render le fichier connexion.ejs
 });
 
 // Route pour la page de inscription

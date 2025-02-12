@@ -7,7 +7,6 @@
 <body style="background-color: #090909;">
     <!--HEADER-->
     <header>
-        <span class="bar-page-actuel"></span>
         <div class="bar-de-navigation">
             <a href="/" class="logo-link">
                 <h1 class="sportZone">
@@ -15,9 +14,9 @@
                 </h1>
             </a>
             <ul>
-                <li><a href="/"><span>Accueil</span></a></li>
-                <li><a href="/reservation">Réservation</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li class="<%= activePage === 'accueil' ? 'bar-page-actuel' : '' %>"><a href="/"><span>Accueil</span></a></li>
+                <li class="<%= activePage === 'reservation' ? 'bar-page-actuel' : '' %>"><a href="/reservation">Réservation</a></li>
+                <li class="<%= activePage === 'contact' ? 'bar-page-actuel' : '' %>"><a href="/contact">Contact</a></li>
                 <li><a href="/profile"><span>Profile</span></a></li>
                 <li class="boite-bleu"><a href="/connexion">S'inscrire</a></li>
             </ul>

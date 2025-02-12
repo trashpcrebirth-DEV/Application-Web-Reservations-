@@ -54,13 +54,18 @@
 
 }
 
-.bar-page-actuel{
-    height: 3px;
-    width: 77px;
-    background: #175BED;
+.bar-de-navigation ul li.bar-page-actuel{
+    color: #175BED;
+    font-weight: bold;
+}
+
+.bar-de-navigation ul li.bar-page-actuel::after {
+    content: "";
     position: absolute;
-    left: 1335px;
-    bottom: 884px;
+    bottom: -10px;
+    width: 100%;
+    height: 3px;
+    background-color: #175BED;
 }
 
 .bar-de-navigation ul li::after {
