@@ -93,40 +93,19 @@ app.get("/inscription", (req, res) => {
  
 // Route pour la page À propos de l'utilisateur
 app.get('/AProposUtilisateur', (req, res) => {
-    const avis = [
-        { 
-            //exemple d'utilisation doit integrer la bd mtn
-            id: 1, 
-            nom: 'Alex Dubois', 
-            note: 5, 
-            commentaire: "J'ai réservé un terrain de tennis facilement. L'expérience était géniale !", 
-            date: '15 Nov 2023',
-        },
-        { 
-            id: 2, 
-            nom: 'Marie Leclerc', 
-            note: 4, 
-            commentaire: "Le terrain de football était en excellent état. Je reviendrai sûrement !", 
-            date: '20 Nov 2023',
-        },
-        { 
-            id: 3, 
-            nom: 'Thomas Martin', 
-            note: 5, 
-            commentaire: "Réservation rapide et service client très réactif. Parfait !", 
-            date: '25 Nov 2023',
-        },
-        { 
-            id: 4, 
-            nom: 'William Thanh An Lam', 
-            note: 5, 
-            commentaire: "Personnel très réactif!", 
-            date: '25 Nov 2023',
-        }
-    ];
-    
-    res.render('pages/AProposUtilisateur', { activePage:'accueil', avis });
-  });
+    con.query("SELECT * FROM avis_desUtilisateurs", function (err,
+        results) {
+        if (err) throw err;
+        res.render("pages/AProposUtilisateur", {
+            siteTitle: "SportZone",
+            pageTitle: "Nos utilisateurs",
+            activePage: 'accueil',
+            avis: results
+        });
+    });
+});
+
+  
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,

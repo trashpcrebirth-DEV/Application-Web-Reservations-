@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         navigation.style.transform = `translateX(-${offset}px)`;
     }
 
-    function moveCarousel(direction) {
+    function moveNavigation(direction) {
         if (direction === 'arriere') {
             currentIndex = (currentIndex - 1 + nombreAvis) % nombreAvis;
         } else {
@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
         updateNavigation();
     }
 
-    arriereButton.addEventListener('click', () => moveCarousel('arriere'));
-    avancerButton.addEventListener('click', () => moveCarousel('avancer'));
+    arriereButton.addEventListener('click', () => moveNavigation('arriere'));
+    avancerButton.addEventListener('click', () => moveNavigation('avancer'));
 
     window.addEventListener('resize', updateNavigation);
 

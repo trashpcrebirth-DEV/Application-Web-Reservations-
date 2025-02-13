@@ -25,10 +25,10 @@
                         <div class="card-avis">
                             <div>
                                 <div class="utilisateur-info">
-                                    <img src="<%= avi.photoProfile %>" alt="<%= avi.nom %>" class="photo-profile">
+                                    <img src="<%= avi.image %>" alt="<%= avi.nom %>" class="photo-profile">
                                     <div class="utilisateur-details">
                                         <h3 class="utilisateur-nom"><%= avi.nom %></h3>
-                                        <p class="date"><%= avi.date %></p>
+                                        <p class="date"><%= new Date(avi.date).toLocaleDateString() %></p>
                                     </div>
                                 </div>
                                 <div class="note">
