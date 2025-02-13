@@ -115,6 +115,13 @@ app.get('/AProposUtilisateur', (req, res) => {
             note: 5, 
             commentaire: "Réservation rapide et service client très réactif. Parfait !", 
             date: '25 Nov 2023',
+        },
+        { 
+            id: 4, 
+            nom: 'William Thanh An Lam', 
+            note: 5, 
+            commentaire: "Personnel très réactif!", 
+            date: '25 Nov 2023',
         }
     ];
     

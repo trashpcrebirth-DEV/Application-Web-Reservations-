@@ -80,6 +80,7 @@ html, body {
     font-family: Poppins;
     font-size: 50px;
     font-style: italic;
+    animation: fadeIn 2.5s ease forwards;
 }
 
 .cinq-cents {
@@ -105,7 +106,6 @@ html, body {
     white-space: nowrap;
 
 }
-
 
 
 .ligne-bleu1 {
@@ -136,6 +136,7 @@ html, body {
     padding-left: 200px;
     padding-right:50px;
     border-radius: 25px;
+    animation: fadeIn 2.5s ease forwards;
 }
 
 .dix_milles {
@@ -207,6 +208,7 @@ html, body {
     font-family: Poppins;
     font-size: 50px;
     font-style: italic;
+    animation: fadeIn 2.5s ease forwards;
 }
 
 .QUARANTE-DEUX:hover {
@@ -237,6 +239,16 @@ html, body {
     margin: 6.5% 0;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* FIN DU BODY */
 

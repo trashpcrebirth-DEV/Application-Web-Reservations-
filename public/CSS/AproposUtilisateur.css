@@ -11,11 +11,12 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     color: #333;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/user.jpg);
 }
 
 .conteneur {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
 }
 
@@ -29,7 +30,7 @@ body {
 .affichage-titre h1 {
     font-size: 45px;
     margin-bottom: 1rem;
-    font-family: Poppins;
+    font-family: Poppins;    
 }
 
 .affichage-titre p {
@@ -42,19 +43,17 @@ body {
     padding: 3.25%;
 }
 
-.avis-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 5%;
-}
-
 .card-avis {
+    flex: 0 0 100%;
+    box-sizing: border-box;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(196, 233, 29, 0.1);
-    padding: 7.5%;
+    box-shadow: 0 0 10px 3px #175bed;
+    padding: 2.5%;
+    margin-right: 30px;
+    max-width: 50%;
+    animation: fadeIn 1s ease forwards;
 }
-
 
 .utilisateur-info {
     display: flex;
@@ -96,3 +95,89 @@ body {
     line-height: 1.5;
 }
 
+
+.navigation-button {
+    transition: opacity 0.3s ease;
+}
+
+.navigation-button:hover {
+    opacity: 1;
+}
+
+
+.navigation-container {
+    position: relative;;
+    width: 100%;
+    overflow: hidden;
+    padding: 6px;
+}
+
+.avis-navigation {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+
+.navigation-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(23, 91, 237, 0.7);
+    color: white;
+    border: 3px solid rgb(75, 48, 195);
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navigation-button:hover {
+    background-color: rgba(23, 91, 237, 1);
+    transform: translateY(-50%) scale(1.2); /* Agrandit légèrement le bouton */
+    box-shadow: 0 6px 20px rgba(23, 91, 237, 0.4);
+}
+
+
+.navigation-button.arriere {
+    top:68.5%;
+    left: 4.5%;
+}
+
+.navigation-button.avancer {
+    top:68.5%;
+    right: 4.5%;
+}
+/* Responsive */
+@media (min-width: 768px) {
+    .card-avis {
+        flex: 0 0 48.75%;
+        max-width: 60%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .card-avis {
+        flex: 0 0 48.75;
+        max-width: 60%;
+    }
+}
+
+
+/* Animation https://blog.hubspot.com/website/css-fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

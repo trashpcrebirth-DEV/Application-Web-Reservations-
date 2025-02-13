@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nos utilisateurs</title>
     <link rel="stylesheet" href="/CSS/AproposUtilisateur.css">
-
 </head>
 <body>
     <%- include ("../partials/header.ejs") %>
@@ -18,31 +17,36 @@
     </section>
 
     <section class="avis">
+        <button class="navigation-button arriere">&lt;</button>
         <div class="conteneur">
-            <div class="avis-grid">
-                <% avis.forEach(function(avi) { %>
-                    <div class="card-avis">
-                        <div>
-                            <div class="utilisateur-info">
-                                <img src="<%= avi.photoProfile %>" alt="<%= avi.nom %>" class="photo-profile">
-                                <div class="utilisateur-details">
-                                    <h3 class="utilisateur-nom"><%= avi.nom %></h3>
-                                    <p class="date"><%= avi.date %></p>
+            <div class="navigation-container">
+                <div class="avis-navigation">
+                    <% avis.forEach(function(avi) { %>
+                        <div class="card-avis">
+                            <div>
+                                <div class="utilisateur-info">
+                                    <img src="<%= avi.photoProfile %>" alt="<%= avi.nom %>" class="photo-profile">
+                                    <div class="utilisateur-details">
+                                        <h3 class="utilisateur-nom"><%= avi.nom %></h3>
+                                        <p class="date"><%= avi.date %></p>
+                                    </div>
+                                </div>
+                                <div class="note">
+                                    <% for(let i = 0; i < avi.note; i++) { %>
+                                        <span class="star">&#9733;</span> <!--https://www.alt-codes.net/star_alt_code.php-->
+                                    <% } %>
                                 </div>
                             </div>
-                            <div class="note">
-                                <% for(let i = 0; i < avi.note; i++) { %>
-                                    <span class="star">&#9733;</span> <!--https://www.alt-codes.net/star_alt_code.php-->
-                                <% } %>
-                            </div>
+                            <p class="commentaire"><%= avi.commentaire %></p>
                         </div>
-                        <p class="commentaire"><%= avi.commentaire %></p>
-                    </div>
-                <% }); %>
+                    <% }); %>
+                </div>
             </div>
         </div>
+        <button class="navigation-button avancer">&gt;</button>
     </section>
     <!--FIN DU BODY-->
     <%- include ("../partials/footer.ejs") %>
+    <script src="/Javascript/AproposUtilisateur.js"></script>
 </body>
 </html>
