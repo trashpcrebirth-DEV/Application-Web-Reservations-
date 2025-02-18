@@ -105,7 +105,12 @@ app.get('/AProposUtilisateur', (req, res) => {
     });
 });
 
-  
+// Route pour la page à propos des evenements
+app.get("/AProposEvenement", (req, res) => {
+    res.render("pages/AProposEvenement",{
+        activePage: 'accueil'
+    });
+});  
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,

@@ -28,7 +28,7 @@
                                     <img src="<%= avi.image %>" alt="<%= avi.nom %>" class="photo-profile">
                                     <div class="utilisateur-details">
                                         <h3 class="utilisateur-nom"><%= avi.nom %></h3>
-                                        <p class="date"><%= new Date(avi.date).toLocaleDateString() %></p>
+                                        <p class="date"><%= new Date(avi.date).toLocaleDateString() %></p> <!-- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString -->
                                     </div>
                                 </div>
                                 <div class="note">
