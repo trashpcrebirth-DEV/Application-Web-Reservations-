@@ -16,7 +16,7 @@
     border: 1px solid white;
     border-radius: 5px;
     background-color: gray;
-    width: 550px;
+    width: 545px;
  
 }
 
@@ -31,7 +31,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 600px;
-    height: 500px;
+    
     text-align: center;
 }
 
@@ -74,7 +74,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
-    height: 100px;
+   
 }
 
 .day-header {
@@ -97,6 +97,8 @@ h1 {
 .empty {
     background-color: #f5f5f5;
 }   
+
+
 
 /* FIN DU BODY */
 

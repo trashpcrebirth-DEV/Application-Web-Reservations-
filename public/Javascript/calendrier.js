@@ -63,5 +63,7 @@ function prevMonth() {
 document.getElementById('nextMonth').addEventListener('click', nextMonth);
 document.getElementById('prevMonth').addEventListener('click', prevMonth);
 
+
+
 // Initialiser le calendrier au chargement de la page
 updateCalendar();
