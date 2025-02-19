@@ -42,12 +42,32 @@
             </div>
         </div>
     </div>
-    <div id="reservationBox" class="reservation-box hidden">
-        <h2>Réservation</h2>
-        <p id="selectedDate"></p>
-        <button onclick="closeReservationBox()">Fermer</button>
-    </div>
+    <!-- Boîte de réservation -->
+<div id="reservationBox" class="reservation-box hidden">
+    <h2>Réservation</h2>
+    <p id="selectedDate"></p>
     
+    <!-- Liste des réservations -->
+    <div id="reservationList">
+        <% if (reservations.length > 0) { %>
+            <ul>
+                <% reservations.forEach(reservation => { %>
+                    <li>
+                        <strong>ID:</strong> <%= reservation.id_reservation %><br>
+                        <strong>Date:</strong> <%= reservation.date_time %><br>
+                        <strong>Prix:</strong> <%= reservation.prix %>€<br>
+                        <strong>Statut:</strong> <%= reservation.statut %><br>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>Aucune réservation pour cette date.</p>
+        <% } %>
+    </div>
+
+    <button onclick="closeReservationBox()">Fermer</button>
+</div>
+
     <script src="/Javascript/calendrier.js"></script>
 
     <!--FIN DU BODY-->

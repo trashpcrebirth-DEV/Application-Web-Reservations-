@@ -14,6 +14,5 @@
             "username": "scott",
             "password": "oracle",
         }
-    ],
-    "liveServer.settings.port": 5501
+    ]
 }

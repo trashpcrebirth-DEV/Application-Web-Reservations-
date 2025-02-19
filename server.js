@@ -67,9 +67,28 @@ app.get("/", function (req, res) {
 });
 
 // Route pour la page de réservation
+// app.get("/reservation", (req, res) => {
+//     res.render("pages/reservation", { activePage: 'reservation' }); // Render le fichier reservation.ejs
+// });
+
+// Route pour la page de réservation
 app.get("/reservation", (req, res) => {
-    res.render("pages/reservation", { activePage: 'reservation' }); // Render le fichier reservation.ejs
+    const dateReservation = req.query.date; // Date sélectionnée envoyée en paramètre
+    
+    // Requête SQL pour récupérer les réservations pour cette date
+    con.query("SELECT * FROM reservations WHERE DATE(date_time) = ?", [dateReservation], (err, results) => {
+        if (err) throw err;
+        
+        // Rendre la vue avec les résultats des réservations
+        res.render("pages/reservation", {
+            activePage: 'reservation',
+            reservations: results
+        });
+    });
 });
+
+
+
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
@@ -122,12 +141,37 @@ app.get('/AProposUtilisateur', (req, res) => {
     });
 });
 
-// Route pour la page à propos des evenements
+// Route pour la page à propos des événements
 app.get("/AProposEvenement", (req, res) => {
-    res.render("pages/AProposEvenement", {
-        activePage: 'accueil'
+
+    con.query("SELECT * FROM Liste_Evenements ORDER BY date_evenement", (err, results) => {
+        const evenementsParMois = [
+            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+        ].map((month, index) => ({
+            month, 
+            items: results
+                .filter(evenement => new Date(evenement.date_evenement).getMonth() === index) // https://stackoverflow.com/questions/52282799/how-to-create-a-query-string-filtering-the-search-by-specific-parameters
+                .map(evenement => ({
+                    titre: evenement.nom,
+                    date: new Date(evenement.date_evenement).toLocaleDateString(),
+                    lieu: evenement.lieu,
+                    description: evenement.description,
+                    participants: evenement.participants,
+                    image: evenement.image_url 
+                }))
+        }));
+
+        // Envoi des données à la vue
+        res.render("pages/AProposEvenement", {
+            activePage: 'accueil',
+            evenementsParMois
+        });
     });
 });
+
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -251,6 +295,4 @@ app.get("/event/delete/:id", function (req, res) {
     });
 });
 
-app.get("/reservation", function (req, res) {
-    res.render("pages/reservation");  
-});
+
