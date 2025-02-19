@@ -130,6 +130,28 @@ app.post('/inscription', function (req, res) {
         res.redirect("/");
     });
 });
+
+app.post('/connexion', function (req, res) {
+    const requete = "SELECT * FROM utilisateurs WHERE email = ? AND mot_de_passe = ?";
+    const parametres = [req.body.email, req.body.mot_de_passe];
+
+    con.query(requete, parametres, function (err, result) {
+        if (err) {
+            console.error("Erreur lors de la connexion :", err);
+            return res.status(500).send('Erreur serveur');
+        }
+
+        if (result.length > 0) {
+            // Utilisateur trouvé, connexion réussie
+            console.log("Utilisateur connecté :", result[0]);
+            res.redirect("/profile"); // Redirigez vers la page de profil ou une autre page appropriée
+        } else {
+            // Utilisateur non trouvé, connexion échouée
+            console.log("Échec de la connexion : utilisateur non trouvé");
+            res.status(401).send('Adresse courriel ou mot de passe incorrect');
+        }
+    });
+});
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
         result) {
@@ -163,6 +185,7 @@ app.post("/event/add", function (req, res) {
         res.redirect("/");
     });
 });
+
 
 /*
 Edit un evenement
