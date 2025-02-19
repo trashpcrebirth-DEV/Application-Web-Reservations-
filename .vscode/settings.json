@@ -10,9 +10,10 @@
             "port": 3306,
             "driver": "MySQL",
             "name": "mysql-server",
-            "database": "scott",
+            "database": "mybd",
             "username": "scott",
-            "password": "oracle"
+            "password": "oracle",
+            "database": "mybd"
         }
     ]
 }

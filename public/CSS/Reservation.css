@@ -16,7 +16,7 @@
     border: 1px solid white;
     border-radius: 5px;
     background-color: gray;
-    width: 550px;
+    width: 545px;
  
 }
 
@@ -31,7 +31,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 600px;
-    height: 500px;
+    
     text-align: center;
 }
 
@@ -74,7 +74,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
-    height: 100px;
+   
 }
 
 .day-header {
@@ -98,5 +98,39 @@ h1 {
     background-color: #f5f5f5;
 }   
 
+
+.reservation-box {
+    position: absolute;
+    top: 250px;
+    left: 800px; /* À droite du calendrier */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    display: none; /* Caché par défaut */
+}
+
+.hidden {
+    display: none;
+}
+
+.reservation-box h2 {
+    margin-bottom: 10px;
+}
+
+.reservation-box button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reservation-box button:hover {
+    background-color: darkred;
+}
 /* FIN DU BODY */
 

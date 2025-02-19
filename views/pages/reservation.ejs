@@ -8,11 +8,11 @@
     <title>Réservation</title>
     <link rel="stylesheet" href="/CSS/Reservation.css">
 </head>
-<body>
+<body class="banner">
     <%- include ("../partials/header.ejs") %>
     <!--BODY-->
     <div class="bar">
-        <label>Catégorie</label>
+        <label>Catégorie:</label>
         <input type="text">
     </div>
 
@@ -41,6 +41,11 @@
             <div id="daysGrid" class="calendrier-grid">
             </div>
         </div>
+    </div>
+    <div id="reservationBox" class="reservation-box hidden">
+        <h2>Réservation</h2>
+        <p id="selectedDate"></p>
+        <button onclick="closeReservationBox()">Fermer</button>
     </div>
     
     <script src="/Javascript/calendrier.js"></script>

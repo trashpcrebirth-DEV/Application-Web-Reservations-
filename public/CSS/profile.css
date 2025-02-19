@@ -1,20 +1,22 @@
-.forme {
+body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    height: 100vh;
     margin: 0;
     padding: 20px;
+}
+
+.forme {
+    display: flex;
+    justify-content: space-between;
 }
 
 .profile-container {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
-    text-align: left;
     width: 25%;
     margin-right: 20px;
+    text-align: center;
+    height: 20%;
 }
 
 .profile-cercle {
@@ -25,47 +27,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: auto;
-    margin-right: auto;
     color: white;
     font-size: 40px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
 }
 
 .profile-info h1 {
-    margin: 10px 0;
     font-size: 24px;
-}
-
-.profile-info p {
-    font-size: 18px;
-    color: #555;
 }
 
 .info-container {
     background-color: white;
+    padding: 20px;
     border-radius: 10px;
-    padding: 2%;
     width: 70%;
-    height: 60%;
-    margin-left: 2%;
-    margin-right: 2%;
 }
 
 .info-container h2 {
-    margin-bottom: 20px;
     font-size: 24px;
-}
-
-.info-container p {
-    font-size: 18px;
-    color: #555;
-}
-
-.info-column {
-    align-items: center;
-    width: 50%;
+    margin-bottom: 20px;
 }
 
 .info-row {
@@ -74,13 +55,17 @@
     gap: 20px;
 }
 
+.info-column {
+    width: 48%;
+}
+
 .info-box {
     background-color: #f9f9f9;
     padding: 15px;
-    margin-bottom: 5%;
-    border: 1px solid #ddd;
     border-radius: 8px;
-    width: 70%;
+    border: 1px solid #ddd;
+    margin-bottom: 5%;
+    width: 80%;
 }
 
 .info-box p {
@@ -92,16 +77,28 @@
     font-weight: bold;
 }
 
-input[type="submit"] {
-    align-self: baseline;
+.deconnecter {
     background-color: #ed1717;
     color: white;
     border: none;
-    cursor: pointer;
     padding: 12px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
-input[type="submit"]:hover {
+.deconnecter:hover {
     background-color: #a30f0f;
+}
+
+.modifier {
+    background-color: #2517ed;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.modifier:hover {
+    background-color: #2f0fa3;
 }

@@ -18,7 +18,7 @@
             </a>
             <h2 class="centrer">INSCRIPTION</h2>
 
-            <form>
+            <form action="/inscription" method="POST">
                 <label for="nom">Nom</label>
                 <br>
                 <input type="text" id="nom" name="nom" required>
@@ -33,7 +33,11 @@
                 <br>
                 <label for="password">Mot de passe</label>
                 <br>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                <br>
+                <label for="password">Confirmation de mot de passe </label>
+                <br>
+                <input type="password" id="confirm_password" name="confirm_password" required>
                 <br>
                 <input type="submit" value="S'INSCRIRE">
             </form>
