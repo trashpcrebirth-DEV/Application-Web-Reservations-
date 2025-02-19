@@ -13,7 +13,6 @@
             "database": "mybd",
             "username": "scott",
             "password": "oracle",
-            "database": "mybd"
         }
     ],
     "liveServer.settings.port": 5501
