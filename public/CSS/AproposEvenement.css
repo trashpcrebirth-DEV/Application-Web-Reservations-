@@ -1,0 +1,236 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+}
+
+.section {
+    background-color: #f5f8ff;
+    padding: 4%;
+    text-align: center;
+}
+
+.section-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section h1 {
+    font-size: 40px;
+    color: #333;
+    margin-bottom: 2%;
+    font-family: 'Poppins';
+    text-transform: uppercase;
+}
+
+.section p {
+    color: #666;
+    font-size: 17.5px;
+    font-family: 'Poppins';   
+}
+
+.lineTemps-container {
+    max-width: 1200px;
+    margin: 2% auto;
+    position: relative;
+}
+
+/* Line du temps */
+.lineTemps-container::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: #175bed;
+    opacity: 0.7;
+
+    box-shadow: 0 0 15px 5px #175bed;
+}
+
+.mois-section {
+    margin-bottom: 5%;
+}
+
+.mois-marker {
+    text-align: center;
+    margin-bottom: 3%;
+    position: relative;
+}
+
+/* Point */
+.mois-marker::before {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    background-color: #175bed;
+    border-radius: 50%;
+    top: 120%;
+    left: 49.35%;
+}
+
+.mois-marker span {
+    background-color: #175bed;
+    color: #fff;
+    padding: 0.5% 1.75%;
+    border-radius: 30px;
+    font-size: 20px;
+    display: inline-block;
+    font-family: Poppins; 
+    outline: 5px solid #e5e7eb;   
+}
+
+/* Event Cards */
+.evenements-list {
+    position: relative;
+
+}
+
+.evenement-card {
+    width: 100%;
+    margin-bottom: 5%;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 1s ease forwards;
+}
+
+.evenement-content {
+    background-color: #fff;
+    border-radius: 2%;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: box-shadow 0.3s ease;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), inset 0 0 10px #175bed; /* Bordure interne */
+    outline: 4px solid #175bed;
+}
+
+
+.evenement-image {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 0.5%;
+    margin-bottom: 1%;
+}
+
+.evenement-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.evenement-content h3 {
+    font-size: 30px;
+    margin-bottom: 1%;
+    color: #333;
+    font-family: Poppins;
+    text-decoration: underline; 
+}
+
+.evenement-details {
+    margin: 1% 0;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5%;
+    color: #666;
+}
+
+.detail i {
+    margin-right: 0.5rem;
+    color: #175bed;
+}
+
+.evenement-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+.pas-evenement{
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    font-size: 20px;
+    padding: 1%;
+    background-color: white;
+    border-radius: 5px;
+    margin: 1% 0;
+    animation: fadeIn 1s ease forwards;
+}
+
+/* Icons */
+.icon-calendar::before {
+    content: '📅';
+}
+
+.icon-location::before {
+    content: '📍';
+}
+
+.icon-users::before {
+    content: '👥';
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline-container::before {
+        left: 2rem;
+    }
+
+    .event-card {
+        width: calc(100% - 4rem);
+        margin-left: 4rem;
+    }
+
+    .event-card::before {
+        left: -2.5rem;
+    }
+
+    .year-marker {
+        text-align: left;
+        margin-left: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .event-content {
+        padding: 1rem;
+    }
+
+    .event-image {
+        height: 150px;
+    }
+}
+
+/* Animation https://blog.hubspot.com/website/css-fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

@@ -8,51 +8,60 @@
     <link rel="stylesheet" href="../CSS/profile.css">
 </head>
 
-<body class="banner">
+<body style="background-color:rgb(150, 150, 150);">
     <%- include ("../partials/header.ejs") %>
         <div class="forme">
             <div class="profile-container">
                 <div class="profile-cercle">
-                    <span class="initial">V</span>
+                    <span class="initial"><%= user.nom[0] %></span> <!-- Initiale du nom -->
                 </div>
                 <div class="profile-info">
-                    <h1 style="text-align: center;">Nom: Viswa Balaratnam</h1>
+                    <h1>Nom: <%= user.nom %> <%= user.prenom %></h1> <!-- Nom et prénom de l'utilisateur -->
                 </div>
             </div>
-
             <div class="info-container">
                 <h2>Dossier</h2>
                 <div class="info-row">
                     <div class="info-column">
                         <div class="info-box">
-                            <p><strong>Date d'inscription: </strong> 01/01/2020</p>
+                            <p><strong>ID:</strong> <%= user.id %></p> <!-- ID de l'utilisateur -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Téléphone: </strong> 514 514 5144</p>
+                            <p><strong>Date d'inscription:</strong> <%= user.date_inscription.toLocaleDateString() %></p> <!-- Date d'inscription -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Email: </strong> viswa@gmail.com</p>
+                            <p><strong>Téléphone:</strong> <%= user.telephone %></p> <!-- Numéro de téléphone -->
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Email:</strong> <%= user.email %></p> <!-- Email -->
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Statut:</strong> <%= user.statut || "Actif" %></p> <!-- statut de l'utilisateur -->
                         </div>
                     </div>
                     <div class="info-column">
                         <div class="info-box">
-                            <p><strong>Date de naissance: </strong>01/01/2020</p>
+                            <p><strong>Date de naissance:</strong> <%= user.date_naissance.toLocaleDateString() %></p> <!-- Date de naissance -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Langue: </strong>Français</p>
+                            <p><strong>Langue:</strong> <%= user.langue %></p> <!-- Langue -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Adresse: </strong>243928 Bois-de-Boulogne</p>
+                            <p><strong>Adresse:</strong> <%= user.adresse %></p> <!-- Adresse -->
+                        </div>
+                        <div class="info-box">
+                            <p><strong>Mot de passe:</strong> ********</p>
                         </div>
                     </div>
                 </div>
-                <br><br><br><br><br><br><br><br><br><br><br><br><br>
-                <form action="/deconnexion" method="POST">
-                    <input type="submit" value="Se déconnecter">
+                <form action="/modifier" method="POST">
+                    <button type="submit" class="modifier">Modifier</button>
                 </form>
-
+                <br>
+                <form action="/deconnexion" method="POST">
+                    <button type="submit" class="deconnecter">Se déconnecter</button>
+                </form>
             </div>
-
         </div>
         <%- include ("../partials/footer.ejs") %>
 </body>
