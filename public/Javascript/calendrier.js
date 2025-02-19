@@ -22,7 +22,7 @@ function showReservationBox(day, month, year) {
     reservationBox.style.display = "block";
     
     // Charger les réservations pour cette date
-   window.location.href = `/reservation?date=${formattedDate}`;
+    window.location.href = `/reservation?date=${formattedDate}`;
  
    
 }
