@@ -5,18 +5,28 @@ let currentDate = new Date();
 
 // Fonction pour afficher la boîte de réservation
 function showReservationBox(day, month, year) {
+    
     const months = [
         "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
     ];
-    
+
     const reservationBox = document.getElementById('reservationBox');
     const selectedDate = document.getElementById('selectedDate');
     
+    const formattedDate = `${year}-${month + 1}-${day}`; // Format de la date pour la requête
     selectedDate.textContent = `Réservations pour le ${day} ${months[month]} ${year}`;
+    
+    // Ouvrir la boîte de réservation
     reservationBox.classList.remove('hidden');
-    reservationBox.style.display = "block"; // Afficher la boîte
+    reservationBox.style.display = "block";
+    
+    // Charger les réservations pour cette date
+   window.location.href = `/reservation?date=${formattedDate}`;
+ 
+   
 }
+
 
 // Fonction pour fermer la boîte de réservation
 function closeReservationBox() {
