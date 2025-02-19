@@ -1,7 +1,7 @@
 /*
     Importing the required modules
 */
- 
+
 import express from "express";
 import session from "express-session";
 import path from "path";
@@ -9,11 +9,11 @@ import { fileURLToPath } from "url";
 import mysql from "mysql2";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
- 
+
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
- 
+
 /*
 Connect to server
 */
@@ -26,19 +26,19 @@ Configuration de EJS
 */
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
- 
+
 /*
 Importation de Bootstrap
 */
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.static(path.join(__dirname, "public")));
- 
- 
+
+
 /*
 Connection au server MySQL
 */
- 
+
 const con = mysql.createConnection({
     host: "localhost",
     user: "scott",
@@ -49,7 +49,7 @@ con.connect(function (err) {
     if (err) throw err;
     console.log("connected!");
 });
- 
+
 /*
 Description des routes
 */
@@ -61,7 +61,7 @@ app.get("/", function (req, res) {
             siteTitle: "SportZone",
             pageTitle: "Accueil",
             items: result,
-            activePage: 'accueil' 
+            activePage: 'accueil'
         });
     });
 });
@@ -107,7 +107,7 @@ app.get("/connexion", (req, res) => {
 app.get("/inscription", (req, res) => {
     res.render("pages/inscription"); // Render le fichier connexion.ejs
 });
- 
+
 // Route pour la page À propos de l'utilisateur
 app.get('/AProposUtilisateur', (req, res) => {
     con.query("SELECT * FROM avis_desUtilisateurs", function (err,
@@ -124,11 +124,51 @@ app.get('/AProposUtilisateur', (req, res) => {
 
 // Route pour la page à propos des evenements
 app.get("/AProposEvenement", (req, res) => {
-    res.render("pages/AProposEvenement",{
+    res.render("pages/AProposEvenement", {
         activePage: 'accueil'
     });
-});  
+});
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/inscription', function (req, res) {
+
+    const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
+    const parametres = [
+        req.body.nom,
+        req.body.prenom,
+        req.body.email,
+        req.body.mot_de_passe
+    ];
+
+    con.query(requete, parametres, function (err, result) {
+        if (err) throw err;
+        res.redirect("/");
+    });
+});
+
+app.post('/connexion', function (req, res) {
+    const requete = "SELECT * FROM utilisateurs WHERE email = ? AND mot_de_passe = ?";
+    const parametres = [req.body.email, req.body.mot_de_passe];
+
+    con.query(requete, parametres, function (err, result) {
+        if (err) {
+            console.error("Erreur lors de la connexion :", err);
+            return res.status(500).send('Erreur serveur');
+        }
+
+        if (result.length > 0) {
+            // Utilisateur trouvé, connexion réussie
+            console.log("Utilisateur connecté :", result[0]);
+            res.redirect("/profile"); // Redirigez vers la page de profil ou une autre page appropriée
+        } else {
+            // Utilisateur non trouvé, connexion échouée
+            console.log("Échec de la connexion : utilisateur non trouvé");
+            res.status(401).send('Adresse courriel ou mot de passe incorrect');
+        }
+    });
+});
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
         result) {
@@ -140,14 +180,14 @@ app.get("/event/add", function (req, res) {
         });
     });
 });
- 
+
 /*
 Permettre l'utilisation de body lors des POST request
 */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
- 
+
 app.post("/event/add", function (req, res) {
     const requete = "INSERT INTO e_events (e_name, e_start_date, e_start_end, e_desc, e_location) VALUES (?, ?, ?, ?, ?)";
     const parametres = [
@@ -162,6 +202,7 @@ app.post("/event/add", function (req, res) {
         res.redirect("/");
     });
 });
+
 
 /*
 Edit un evenement
