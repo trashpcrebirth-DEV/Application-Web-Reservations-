@@ -124,7 +124,6 @@ app.get('/AProposUtilisateur', (req, res) => {
 
 // Route pour la page à propos des événements
 app.get("/AProposEvenement", (req, res) => {
-<<<<<<< HEAD
 
     con.query("SELECT * FROM Liste_Evenements ORDER BY date_evenement", (err, results) => {
         const evenementsParMois = [
@@ -154,12 +153,6 @@ app.get("/AProposEvenement", (req, res) => {
 
 
 
-=======
-    res.render("pages/AProposEvenement", {
-        activePage: 'accueil'
-    });
-});
->>>>>>> aeb2602607010ceabb187aad0d1f246221f12cad
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
