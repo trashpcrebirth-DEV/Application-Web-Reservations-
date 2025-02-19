@@ -8,7 +8,55 @@
 </head>
 <body>
     <%- include ("../partials/header.ejs") %>
+    <section class="section">
+        <div class="section-content">
+            <h1>Nos Événements de 2025</h1>
+            <p>Découvrez les événements sportifs que nous organisons tout au long de l'année</p>
+        </div>
+    </section>
 
+    <main class="lineTemps-container">
+        <% evenementsParMois.forEach((mois) => { %>
+            <div class="mois-section">
+                <div class="mois-marker">
+                    <span><%= mois.month %></span>
+                </div>
+    
+                <div class="evenements-list">
+                    <% if (mois.items.length > 0) { %>
+                        <% mois.items.forEach((evenement) => { %>
+                            <div class="evenement-card">
+                                <div class="evenement-content">
+                                    <div class="evenement-image">
+                                        <img src="<%= evenement.image %>" alt="<%= evenement.titre %>">
+                                    </div>
+                                    <h3><%= evenement.titre %></h3>
+                                    <div class="evenement-details">
+                                        <div class="detail">
+                                            <i class="icon-calendar"></i>
+                                            <%= evenement.date %>
+                                        </div>
+                                        <div class="detail">
+                                            <i class="icon-location"></i>
+                                            <%= evenement.lieu %>
+                                        </div>
+                                        <div class="detail">
+                                            <i class="icon-users"></i>
+                                            <%= evenement.participants %>
+                                        </div>
+                                    </div>
+                                    <p class="evenement-description"><%= evenement.description %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="pas-evenement">Aucun événement prévu ce mois-ci.</p>
+                    <% } %>
+                </div>
+            </div>
+        <% }); %>
+    </main>
+    
     <%- include ("../partials/footer.ejs") %>
 </body>
 </html>

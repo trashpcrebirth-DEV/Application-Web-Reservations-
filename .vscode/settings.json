@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
     "sqltools.connections": [
         {
             "mysqlOptions": {
@@ -8,7 +7,7 @@
             },
             "previewLimit": 50,
             "server": "localhost",
-            "port": 3307,
+            "port": 3306,
             "driver": "MySQL",
             "name": "mysql-server",
             "database": "scott",
@@ -16,7 +15,4 @@
             "password": "oracle"
         }
     ]
-=======
-    "liveServer.settings.port": 5501
->>>>>>> 3d0a4ba56f5b9a1ed3fb310585001520783440ce
 }

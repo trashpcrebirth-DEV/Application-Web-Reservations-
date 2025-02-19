@@ -105,12 +105,37 @@ app.get('/AProposUtilisateur', (req, res) => {
     });
 });
 
-// Route pour la page à propos des evenements
+// Route pour la page à propos des événements
 app.get("/AProposEvenement", (req, res) => {
-    res.render("pages/AProposEvenement",{
-        activePage: 'accueil'
+
+    con.query("SELECT * FROM Liste_Evenements ORDER BY date_evenement", (err, results) => {
+        const evenementsParMois = [
+            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+        ].map((month, index) => ({
+            month, 
+            items: results
+                .filter(evenement => new Date(evenement.date_evenement).getMonth() === index) // https://stackoverflow.com/questions/52282799/how-to-create-a-query-string-filtering-the-search-by-specific-parameters
+                .map(evenement => ({
+                    titre: evenement.nom,
+                    date: new Date(evenement.date_evenement).toLocaleDateString(),
+                    lieu: evenement.lieu,
+                    description: evenement.description,
+                    participants: evenement.participants,
+                    image: evenement.image_url 
+                }))
+        }));
+
+        // Envoi des données à la vue
+        res.render("pages/AProposEvenement", {
+            activePage: 'accueil',
+            evenementsParMois
+        });
     });
-});  
+});
+
+
+
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
