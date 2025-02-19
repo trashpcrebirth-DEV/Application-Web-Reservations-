@@ -73,8 +73,25 @@ app.get("/reservation", (req, res) => {
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
-    res.render("pages/profile", { activePage: 'profile' }); // Render le fichier profile.ejs
+    const userId = 1; // ID de l'utilisateur
+
+    const query = "SELECT * FROM utilisateurs WHERE id = ?";
+    
+    con.query(query, [userId], (err, result) => {
+        if (err) throw err;
+
+        if (result.length > 0) {
+            const user = result[0];
+            res.render("pages/profile", {
+                activePage: 'profile',
+                user: user
+            });
+        } else {
+            res.status(404).send("Utilisateur non trouvé");
+        }
+    });
 });
+
 
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
