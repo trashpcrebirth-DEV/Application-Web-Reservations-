@@ -87,6 +87,19 @@ app.get("/reservation", (req, res) => {
     });
 });
 
+// Route API pour récupérer les réservations au format JSON
+app.get("/api/reservation", (req, res) => {
+    const dateReservation = req.query.date; // Date sélectionnée
+    con.query("SELECT * FROM reservations WHERE DATE(date_time) = ?", [dateReservation], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Erreur serveur" });
+        }
+        res.json({ reservations: results });
+    });
+});
+
+
 
 
 
