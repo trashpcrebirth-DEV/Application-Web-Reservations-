@@ -67,9 +67,41 @@ app.get("/", function (req, res) {
 });
 
 // Route pour la page de réservation
+// app.get("/reservation", (req, res) => {
+//     res.render("pages/reservation", { activePage: 'reservation' }); // Render le fichier reservation.ejs
+// });
+
+// Route pour la page de réservation
 app.get("/reservation", (req, res) => {
-    res.render("pages/reservation", { activePage: 'reservation' }); // Render le fichier reservation.ejs
+    const dateReservation = req.query.date; // Date sélectionnée envoyée en paramètre
+    
+    // Requête SQL pour récupérer les réservations pour cette date
+    con.query("SELECT * FROM reservations WHERE DATE(date_time) = ?", [dateReservation], (err, results) => {
+        if (err) throw err;
+        
+        // Rendre la vue avec les résultats des réservations
+        res.render("pages/reservation", {
+            activePage: 'reservation',
+            reservations: results
+        });
+    });
 });
+
+// Route API pour récupérer les réservations au format JSON
+app.get("/api/reservation", (req, res) => {
+    const dateReservation = req.query.date; // Date sélectionnée
+    con.query("SELECT * FROM reservations WHERE DATE(date_time) = ?", [dateReservation], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Erreur serveur" });
+        }
+        res.json({ reservations: results });
+    });
+});
+
+
+
+
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
@@ -275,6 +307,4 @@ app.get("/event/delete/:id", function (req, res) {
     });
 });
 
-app.get("/reservation", function (req, res) {
-    res.render("pages/reservation");  
-});
+

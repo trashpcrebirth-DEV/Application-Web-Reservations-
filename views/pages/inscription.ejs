@@ -12,13 +12,12 @@
 
     <div class="container">
         <div class="form-container">
-            <a href="/" class="logo-link">
-                <img style="margin-left: 25%;" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png"
-                    alt="Sportzone_Logo">
+            <a href="/">
+                <img class="logo-link" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="Sportzone_Logo">
             </a>
             <h2 class="centrer">INSCRIPTION</h2>
 
-            <form action="/inscription" method="POST">
+            <form id="inscriptionForm" action="/inscription" method="POST">
                 <label for="nom">Nom</label>
                 <br>
                 <input type="text" id="nom" name="nom" required>
@@ -35,9 +34,12 @@
                 <br>
                 <input type="password" id="mot_de_passe" name="mot_de_passe" required>
                 <br>
-                <label for="password">Confirmation de mot de passe </label>
+                <label for="confirm_password">Confirmation de mot de passe</label>
                 <br>
                 <input type="password" id="confirm_password" name="confirm_password" required>
+                <br>
+                <div id="passwordError" class="error-message" style="color: red; display:none;">Les mots de passe ne
+                    correspondent pas.</div>
                 <br>
                 <input type="submit" value="S'INSCRIRE">
             </form>
@@ -51,6 +53,8 @@
         <img src="Images/bf29a9d2-cfc5-42f0-a6e9-9e1fe83b91a7.jpg" alt="Centre_Sportif">
 
     </div>
+
+    <script src="/Javascript/Inscription.js"></script>
 
 </body>
 

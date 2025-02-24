@@ -11,32 +11,39 @@
 <body style="font-family:Arial, Helvetica, sans-serif;">
 
     <div class="container">
-        <div class="form-container">
-            <a href="/" class="logo-link">
-                <img style="margin-left: 25%;" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png"
-                    alt="Sportzone_Logo">
+        <div class="form-logo-container">
+            <a href="/">
+                <img class="logo-link" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="Sportzone_Logo">
             </a>
-            <h2 class="centrer">CONNEXION</h2>
+            <div class="form-container">
+                <h2 class="centrer" style="margin-top: 10%; margin-bottom: 10%;">CONNEXION</h2>
 
-            <form action="/connexion" method="POST">
-                <label for="email">Adresse courriel</label>
-                <br>
-                <input type="email" id="email" name="email" required>
-                <br>
-                <label for="password">Mot de passe</label>
-                <br>
-                <input type="password" id="mot_de_passe" name="mot_de_passe" required>
-                <br>
-                <input type="submit" value="S'INSCRIRE">
-            </form>
+                <form action="/connexion" method="POST">
+                    <label for="email">Adresse courriel</label>
+                    <br>
+                    <input type="email" id="email" name="email" required>
+                    <br>
+                    <label for="password">Mot de passe</label>
+                    <br>
+                    <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                    <br>
+                    <input type="submit" value="SE CONNECTER">
+                </form>
 
-            <div class="link">
-                <p class="centrer"><a href="Mot_de_passe_oublie.html">Mot de passe oublié ?</a></p>
+                <div class="link">
+                    <p class="centrer"><a href="Mot_de_passe_oublie.html">Mot de passe oublié ?</a></p>
+                    <p class="centrer">Pas de compte ? <a href="/inscription">Inscrivez-vous</a></p>
+                </div>
             </div>
         </div>
 
-        <img src="Images/bf29a9d2-cfc5-42f0-a6e9-9e1fe83b91a7.jpg" alt="Centre_Sportif">
+        <div class="image-container">
+            
+            <img class="slideshow-image" src="Images/1-f079d3ff.jpg" alt="Image non trouvée">
+        </div>
     </div>
+
+    <script src="/Javascript/connexion.js"></script>
 
 </body>
 
