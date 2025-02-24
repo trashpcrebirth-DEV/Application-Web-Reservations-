@@ -143,7 +143,6 @@ app.get("/AProposEvenement", (req, res) => {
                 }))
         }));
 
-        // Envoi des données à la vue
         res.render("pages/AProposEvenement", {
             activePage: 'accueil',
             evenementsParMois
