@@ -27,16 +27,24 @@ document.getElementById('inscriptionForm').addEventListener('submit', function (
                 mot_de_passe: password
             })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('email').style.borderColor = 'red';
-                    document.getElementById('emailError').innerText = data.error;
-                    document.getElementById('emailError').style.display = 'block';
-                } else {
-                    window.location.href = '/';
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => { throw new Error(data.error); });
                 }
+                return response.json();
             })
-            .catch(error => console.error('Error:', error));
+            .then(data => {
+                window.location.href = '/';
+            })
+            .catch(error => {
+                document.getElementById('email').style.borderColor = 'red';
+                document.getElementById('emailError').innerText = error.message;
+                document.getElementById('emailError').style.display = 'block';
+            });
     }
+});
+
+document.getElementById('email').addEventListener('input', function () {
+    document.getElementById('email').style.borderColor = '';
+    document.getElementById('emailError').style.display = 'none';
 });

@@ -211,7 +211,7 @@ app.post('/inscription', function (req, res) {
 
             con.query(requete, parametres, function (err, result) {
                 if (err) throw err;
-                res.redirect("/");
+                res.status(200).json({ message: "Inscription réussie" });
             });
         }
     });
@@ -230,7 +230,7 @@ app.post('/connexion', function (req, res) {
         if (result.length > 0) {
             // Utilisateur trouvé, connexion réussie
             console.log("Utilisateur connecté :", result[0]);
-            res.redirect("/");
+            res.redirect("/accueil");
         } else {
             // Utilisateur non trouvé, connexion échouée
             console.log("Échec de la connexion : utilisateur non trouvé");
