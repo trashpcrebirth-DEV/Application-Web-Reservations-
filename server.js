@@ -34,6 +34,8 @@ app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /*
 Connection au server MySQL
@@ -100,9 +102,6 @@ app.get("/api/reservation", (req, res) => {
 });
 
 
-
-
-
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
     const userId = 1; // ID de l'utilisateur
@@ -120,6 +119,32 @@ app.get("/profile", (req, res) => {
             });
         } else {
             res.status(404).send("Utilisateur non trouvé");
+        }
+    });
+});
+
+app.post('/modifier', (req, res) => {
+    const { id, nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
+    console.log(req.body);
+    // Assuming you are updating the user in the database using an SQL query
+    const query = `
+        UPDATE utilisateurs 
+        SET nom = ?, prenom = ?, mot_de_passe = ?, date_naissance = ?, 
+            telephone = ?, langue = ?, email = ?, adresse = ? 
+        WHERE id = ?
+    `;
+
+    con.query(query, [nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse, id], (err, result) => {
+        if (err) {
+            console.error("Error updating user:", err);
+            return res.status(500).send("Error updating user information");
+        }
+
+        if (result.affectedRows > 0) {
+            // If update is successful, redirect to the profile page of the updated user
+            res.redirect(`/profile?id=${id}`);
+        } else {
+            res.status(404).send("User not found or no changes made");
         }
     });
 });
@@ -182,12 +207,6 @@ app.get("/AProposEvenement", (req, res) => {
     });
 });
 
-
-
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.post('/inscription', function (req, res) {
     const email = req.body.email;
 
@@ -247,12 +266,6 @@ app.get("/event/add", function (req, res) {
         });
     });
 });
-
-/*
-Permettre l'utilisation de body lors des POST request
-*/
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 
 app.post("/event/add", function (req, res) {
