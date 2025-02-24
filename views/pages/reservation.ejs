@@ -1,83 +1,70 @@
-<!-- Author: Billy Cham-->
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réservation</title>
-    <link rel="stylesheet" href="/CSS/Reservation.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réservation</title>
+  <link rel="stylesheet" href="/CSS/Reservation.css">
 </head>
-
 <body class="banner">
-    <%- include ("../partials/header.ejs") %>
-        <!--BODY-->
-        <div class="bar">
-            <label>Catégorie:</label>
-            <input type="text">
-        </div>
+  <%- include ("../partials/header.ejs") %>
+  <!--BODY-->
+  <div class="bar">
+    <label>Catégorie:</label>
+    <input type="text">
+  </div>
 
-        <!--Généré par ChatGPT à revoir-->
-        <div class="calendrier-container">
-            <h1>Calendrier</h1>
+  <!-- Calendrier -->
+  <div class="calendrier-container">
+    <h1>Calendrier</h1>
+    <div class="calendrier">
+      <div class="calendrier-header">
+        <button class="avant" id="prevMonth">&lt;</button>
+        <span class="month-year" id="monthYear">Janvier 2025</span>
+        <button class="apres" id="nextMonth">&gt;</button>
+      </div>
+      <div class="calendrier-grid">
+        <div class="day-header">Dim</div>
+        <div class="day-header">Lun</div>
+        <div class="day-header">Mar</div>
+        <div class="day-header">Mer</div>
+        <div class="day-header">Jeu</div>
+        <div class="day-header">Ven</div>
+        <div class="day-header">Sam</div>
+      </div>
+      <div id="daysGrid" class="calendrier-grid"></div>
+    </div>
+  </div>
 
-            <!-- Calendrier -->
-            <div class="calendrier">
-                <div class="calendrier-header">
-                    <button class="avant" id="prevMonth">&lt;</button>
-                    <span class="month-year" id="monthYear">Janvier 2025</span>
-                    <button class="apres" id="nextMonth">&gt;</button>
-                </div>
+  <!-- Boîte de réservation -->
+  <div id="reservationBox" class="reservation-box hidden">
+    <h2>Réservation</h2>
+    <p id="selectedDate"></p>
+    <!-- Liste des réservations -->
+    <div id="reservationList">
+      <% if (reservations && reservations.length > 0) { %>
+        <ul>
+          <% reservations.forEach(function(reservation) { %>
+            <li>
+              <strong>ID:</strong> <%= reservation.id_reservation %><br>
+              <strong>Date:</strong> <%= reservation.date_time %><br>
+              <strong>Prix:</strong> <%= reservation.prix %>€<br>
+              <strong>Statut:</strong> <%= reservation.statut %><br>
+            </li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p>Aucune réservation pour cette date.</p>
+      <% } %>
+    </div>
+    <!-- Conteneur des boutons -->
+    <div id="reservationButtons">
+      <!-- Always have a Fermer button -->
+      <button class="fermer" onclick="closeReservationBox()">Fermer</button>
+    </div>
+  </div>
 
-                <div class="calendrier-grid">
-                    <div class="day-header">Dim</div>
-                    <div class="day-header">Lun</div>
-                    <div class="day-header">Mar</div>
-                    <div class="day-header">Mer</div>
-                    <div class="day-header">Jeu</div>
-                    <div class="day-header">Ven</div>
-                    <div class="day-header">Sam</div>
-                </div>
-
-                <div id="daysGrid" class="calendrier-grid">
-                </div>
-            </div>
-        </div>
-        <!-- Boîte de réservation -->
-        <div id="reservationBox" class="reservation-box hidden">
-            <h2>Réservation</h2>
-            <p id="selectedDate"></p>
-
-            <!-- Liste des réservations -->
-            <div id="reservationList">
-                <% if (reservations.length> 0) { %>
-                    <ul>
-                        <% reservations.forEach(function(reservation) { %>
-                            <li>
-                                <strong>ID:</strong>
-                                <%= reservation.id_reservation %><br>
-                                    <strong>Date:</strong>
-                                    <%= reservation.date_time %><br>
-                                        <strong>Prix:</strong>
-                                        <%= reservation.prix %>€<br>
-                                            <strong>Statut:</strong>
-                                            <%= reservation.statut %><br>
-                            </li>
-                            <% }); %>
-                    </ul>
-                    <% } else { %>
-                        <p>Aucune réservation pour cette date.</p>
-                        <% } %>
-            </div>
-            <button onclick="closeReservationBox()">Fermer</button>
-            <button onclick="reserver()">Réserver</button>
-        </div>
-
-        <script src="/Javascript/calendrier.js"></script>
-
-        <!--FIN DU BODY-->
-        <%- include ("../partials/footer.ejs") %>
-
+  <script src="/Javascript/calendrier.js"></script>
+  <%- include ("../partials/footer.ejs") %>
 </body>
-
 </html>

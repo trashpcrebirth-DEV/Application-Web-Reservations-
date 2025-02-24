@@ -1,153 +1,175 @@
-    /* BODY */
+/* BODY */
 
-    .bar {
-        position: absolute;  
-        top: 200px;         
-        left: 140px; 
-        color: white; 
-        padding: 5px;
-        display: flex;  
-        align-items: center; 
-        gap: 10px; 
-    }
+.bar {
+    position: absolute;  
+    top: 200px;         
+    left: 140px; 
+    color: white; 
+    padding: 5px;
+    display: flex;  
+    align-items: center; 
+    gap: 10px; 
+}
 
-    .bar input {
-        padding: 5px;
-        border: 1px solid white;
-        border-radius: 5px;
-        background-color: gray;
-        width: 535px;
-    
-    }
+.bar input {
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: gray;
+    width: 535px;
+}
 
+/* Calendrier container */
+.calendrier-container {
+    position: absolute;
+    top: 250px;
+    left: 145px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 600px;
+    text-align: center;
+}
 
-    /*Généré par CHATGPT à revoir!*/
-    .calendrier-container {
-        position: absolute;
-        top: 250px;
-        left: 145px;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        width: 600px;
-        
-        text-align: center;
-    }
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
 
-    h1 {
-        margin-bottom: 20px;
-        color: #333;
-    }
+.calendrier {
+    width: 100%;
+    font-size: 14px;
+}
 
-    .calendrier {
-        width: 100%;
-        font-size: 14px;
+.calendrier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+    margin-bottom: 15px;
+}
 
-    }
+.calendrier-header button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
 
-    .calendrier-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;    
-        margin-bottom: 15px;
-        
-    }
+.calendrier-header button:hover {
+    background-color: #f1f1f1;
+}
 
-    .calendrier-header button {
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 5px;
-        cursor: pointer;
-    }
+.month-year {
+    font-weight: bold;
+}
 
-    .calendrier-header button:hover {
-        background-color: #f1f1f1;
-    }
+.calendrier-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
 
-    .month-year {
-        font-weight: bold;
-    }
+.day-header {
+    font-weight: bold;
+    padding: 10px;
+}
 
-    .calendrier-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
-    
-    }
+.day {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
 
-    .day-header {
-        font-weight: bold;
-        padding: 10px;
-    
-    }
+.day:hover {
+    background-color: #e0e0e0;
+}
 
-    .day {
-        padding: 10px;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+.empty {
+    background-color: #f5f5f5;
+}
 
-    .day:hover {
-        background-color: #e0e0e0;
-    }
+/* Boîte de réservation */
+.reservation-box {
+    position: absolute;
+    top: 250px;
+    left: 800px; /* À droite du calendrier */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;  /* Increased width for more room */
+    max-height: 600px;  /* Limit height */
+    overflow-y: auto;  /* Add vertical scrollbar if needed */
+    text-align: left;  /* Left align text for readability */
+    display: none; /* Hidden by default */
+}
 
-    .empty {
-        background-color: #f5f5f5;
-    }   
+.hidden {
+    display: none;
+}
 
+.reservation-box h2 {
+    margin-bottom: 10px;
+    text-align: center;
+}
 
-    .reservation-box {
-        position: absolute;
-        top: 250px;
-        left: 800px; /* À droite du calendrier */
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        width: 250px;
-        text-align: center;
-        display: none; /* Caché par défaut */
-    }
+/* Styles généraux pour les boutons dans la boîte de réservation */
+.reservation-box button {
+    margin: 5px;
+    padding: 8px 15px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-    .hidden {
-        display: none;
-    }
+/* Bouton Fermer (rouge) */
+.reservation-box button.fermer {
+    background-color: red;
+}
 
-    .reservation-box h2 {
-        margin-bottom: 10px;
-    }
+.reservation-box button.fermer:hover {
+    background-color: darkred;
+}
 
-    .reservation-box button {
-        margin: 5px;
-        padding: 8px 15px;
-        border: none;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    
-    /* Style spécifique pour le bouton "Fermer" */
-    .reservation-box button:first-of-type {
-        background-color: red;
-    }
-    
-    .reservation-box button:first-of-type:hover {
-        background-color: darkred;
-    }
-    
-    /* Style spécifique pour le bouton "Réserver" */
-    .reservation-box button:last-of-type {
-        background-color: #007bff;
-    }
-    
-    .reservation-box button:last-of-type:hover {
-        background-color: #0056b3;
-    }
-    
-    
+/* Bouton Réserver (bleu) */
+.reservation-box button.reserver {
+    background-color: #007bff;
+}
 
-    /* FIN DU BODY */
+.reservation-box button.reserver:hover {
+    background-color: #0056b3;
+}
 
+/* --- New rules for horizontal reservation display --- */
+.reservation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+}
+
+.reservation-item .reservation-details {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    align-items: center;
+    flex-wrap: wrap;  /* Allow wrapping if needed */
+}
+
+.reservation-item .reservation-details span {
+    flex: 1;
+    text-align: left;
+    white-space: normal;  /* Allow text to wrap */
+}
+
+/* Ensure the individual "Réserver" button inside reservation-item doesn't shrink */
+.reservation-item button.reserver {
+    flex-shrink: 0;
+}
+
+/* FIN DU BODY */
