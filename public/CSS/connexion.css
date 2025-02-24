@@ -112,12 +112,3 @@ input[type="submit"]:hover {
     text-align: center;
     color: #e0e0e0;
 }
-
-.error-message {
-    text-align: center;
-    color: red;
-    font-size: 0.8em;
-    /* Make the font size smaller */
-    display: none;
-    /* Hide the error message by default */
-}
