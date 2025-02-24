@@ -34,6 +34,8 @@ app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /*
 Connection au server MySQL
@@ -100,9 +102,6 @@ app.get("/api/reservation", (req, res) => {
 });
 
 
-
-
-
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
     const userId = 1; // ID de l'utilisateur
@@ -120,6 +119,32 @@ app.get("/profile", (req, res) => {
             });
         } else {
             res.status(404).send("Utilisateur non trouvé");
+        }
+    });
+});
+
+app.post('/modifier', (req, res) => {
+    const { id, nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
+    console.log(req.body);
+    // Assuming you are updating the user in the database using an SQL query
+    const query = `
+        UPDATE utilisateurs 
+        SET nom = ?, prenom = ?, mot_de_passe = ?, date_naissance = ?, 
+            telephone = ?, langue = ?, email = ?, adresse = ? 
+        WHERE id = ?
+    `;
+
+    con.query(query, [nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse, id], (err, result) => {
+        if (err) {
+            console.error("Error updating user:", err);
+            return res.status(500).send("Error updating user information");
+        }
+
+        if (result.affectedRows > 0) {
+            // If update is successful, redirect to the profile page of the updated user
+            res.redirect(`/profile?id=${id}`);
+        } else {
+            res.status(404).send("User not found or no changes made");
         }
     });
 });
@@ -175,6 +200,7 @@ app.get("/AProposEvenement", (req, res) => {
                 }))
         }));
 
+        // Envoi des données à la vue
         res.render("pages/AProposEvenement", {
             activePage: 'accueil',
             evenementsParMois
@@ -182,38 +208,19 @@ app.get("/AProposEvenement", (req, res) => {
     });
 });
 
-
-
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.post('/inscription', function (req, res) {
-    const email = req.body.email;
 
-    // Check if email already exists
-    const checkEmailQuery = "SELECT * FROM utilisateurs WHERE email = ?";
-    con.query(checkEmailQuery, [email], function (err, result) {
+    const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
+    const parametres = [
+        req.body.nom,
+        req.body.prenom,
+        req.body.email,
+        req.body.mot_de_passe
+    ];
+
+    con.query(requete, parametres, function (err, result) {
         if (err) throw err;
-
-        if (result.length > 0) {
-            // Email already exists
-            res.status(400).json({ error: "Adresse courriel existe déjà" });
-        } else {
-            // Insert new user
-            const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
-            const parametres = [
-                req.body.nom,
-                req.body.prenom,
-                req.body.email,
-                req.body.mot_de_passe
-            ];
-
-            con.query(requete, parametres, function (err, result) {
-                if (err) throw err;
-                res.status(200).json({ message: "Inscription réussie" });
-            });
-        }
+        res.redirect("/");
     });
 });
 
@@ -224,18 +231,21 @@ app.post('/connexion', function (req, res) {
     con.query(requete, parametres, function (err, result) {
         if (err) {
             console.error("Erreur lors de la connexion :", err);
-            res.status(500).json({ error: "Erreur interne du serveur" });
-        } else if (result.length > 0) {
+            res.redirect("/");
+        }
+
+        if (result.length > 0) {
             // Utilisateur trouvé, connexion réussie
             console.log("Utilisateur connecté :", result[0]);
-            res.status(200).json({ message: "Connexion réussie", redirectUrl: "/accueil" });
+            res.redirect("/profile"); // Redirigez vers la page de profil ou une autre page appropriée
         } else {
             // Utilisateur non trouvé, connexion échouée
             console.log("Échec de la connexion : utilisateur non trouvé");
-            res.status(401).json({ error: "Information invalide" });
+            res.status(401).send('Adresse courriel ou mot de passe incorrect');
         }
     });
 });
+
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
         result) {
@@ -247,12 +257,6 @@ app.get("/event/add", function (req, res) {
         });
     });
 });
-
-/*
-Permettre l'utilisation de body lors des POST request
-*/
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 
 app.post("/event/add", function (req, res) {
