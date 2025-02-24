@@ -74,11 +74,11 @@ app.get("/", function (req, res) {
 // Route pour la page de réservation
 app.get("/reservation", (req, res) => {
     const dateReservation = req.query.date; // Date sélectionnée envoyée en paramètre
-    
+
     // Requête SQL pour récupérer les réservations pour cette date
     con.query("SELECT * FROM reservations WHERE DATE(date_time) = ?", [dateReservation], (err, results) => {
         if (err) throw err;
-        
+
         // Rendre la vue avec les résultats des réservations
         res.render("pages/reservation", {
             activePage: 'reservation',
@@ -108,7 +108,7 @@ app.get("/profile", (req, res) => {
     const userId = 1; // ID de l'utilisateur
 
     const query = "SELECT * FROM utilisateurs WHERE id = ?";
-    
+
     con.query(query, [userId], (err, result) => {
         if (err) throw err;
 
@@ -159,10 +159,10 @@ app.get("/AProposEvenement", (req, res) => {
 
     con.query("SELECT * FROM Liste_Evenements ORDER BY date_evenement", (err, results) => {
         const evenementsParMois = [
-            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
             "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
         ].map((month, index) => ({
-            month, 
+            month,
             items: results
                 .filter(evenement => new Date(evenement.date_evenement).getMonth() === index) // https://stackoverflow.com/questions/52282799/how-to-create-a-query-string-filtering-the-search-by-specific-parameters
                 .map(evenement => ({
@@ -171,7 +171,7 @@ app.get("/AProposEvenement", (req, res) => {
                     lieu: evenement.lieu,
                     description: evenement.description,
                     participants: evenement.participants,
-                    image: evenement.image_url 
+                    image: evenement.image_url
                 }))
         }));
 
@@ -212,7 +212,7 @@ app.post('/connexion', function (req, res) {
     con.query(requete, parametres, function (err, result) {
         if (err) {
             console.error("Erreur lors de la connexion :", err);
-            return res.status(500).send('Erreur serveur');
+            res.redirect("/");
         }
 
         if (result.length > 0) {

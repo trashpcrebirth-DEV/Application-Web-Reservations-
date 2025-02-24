@@ -11,47 +11,50 @@
 <body style="font-family:Arial, Helvetica, sans-serif;">
 
     <div class="container">
-        <div class="form-container">
+        <div class="form-logo-container">
             <a href="/">
                 <img class="logo-link" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="Sportzone_Logo">
             </a>
-            <h2 class="centrer">INSCRIPTION</h2>
+            <div class="form-container">
+                <h2 class="centrer" style="margin-top: 10%; margin-bottom: 10%;">INSCRIPTION</h2>
 
-            <form id="inscriptionForm" action="/inscription" method="POST">
-                <label for="nom">Nom</label>
-                <br>
-                <input type="text" id="nom" name="nom" required>
-                <br>
-                <label for="prenom">Prénom</label>
-                <br>
-                <input type="text" id="prenom" name="prenom" required>
-                <br>
-                <label for="email">Adresse courriel</label>
-                <br>
-                <input type="email" id="email" name="email" required>
-                <br>
-                <label for="password">Mot de passe</label>
-                <br>
-                <input type="password" id="mot_de_passe" name="mot_de_passe" required>
-                <br>
-                <label for="confirm_password">Confirmation de mot de passe</label>
-                <br>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-                <br>
-                <div id="passwordError" class="error-message" style="color: red; display:none;">Les mots de passe ne
-                    correspondent pas.</div>
-                <br>
-                <input type="submit" value="S'INSCRIRE">
-            </form>
+                <form id="inscriptionForm" action="/inscription" method="POST">
+                    <label for="nom">Nom</label>
+                    <br>
+                    <input type="text" id="nom" name="nom" required>
+                    <br>
+                    <label for="prenom">Prénom</label>
+                    <br>
+                    <input type="text" id="prenom" name="prenom" required>
+                    <br>
+                    <label for="email">Adresse courriel</label>
+                    <br>
+                    <input type="email" id="email" name="email" required>
+                    <br>
+                    <label for="password">Mot de passe</label>
+                    <br>
+                    <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                    <br>
+                    <label for="confirm_password">Confirmation de mot de passe</label>
+                    <br>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <br>
+                    <div id="passwordError" class="error-message" style="color: red; display:none;">Les mots de passe ne
+                        correspondent pas.</div>
+                    <br>
+                    <input type="submit" value="S'INSCRIRE">
+                </form>
 
-            <div class="link">
-                <p class="centrer"><a href="Mot_de_passe_oublie.html">Mot de passe oublié ?</a></p>
-                <p class="centrer">Déjà un compte ? <a href="/connexion">Connexion</a></p>
+                <div class="link">
+                    <p class="centrer"><a href="Mot_de_passe_oublie.html">Mot de passe oublié ?</a></p>
+                    <p class="centrer">Déjà un compte ? <a href="/connexion">Connexion</a></p>
+                </div>
             </div>
         </div>
 
-        <img src="Images/bf29a9d2-cfc5-42f0-a6e9-9e1fe83b91a7.jpg" alt="Centre_Sportif">
-
+        <div class="image-container">
+            <img src="Images/bf29a9d2-cfc5-42f0-a6e9-9e1fe83b91a7.jpg" alt="Centre_Sportif">
+        </div>
     </div>
 
     <script src="/Javascript/Inscription.js"></script>
