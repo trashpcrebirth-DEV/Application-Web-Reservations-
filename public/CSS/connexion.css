@@ -47,6 +47,15 @@ body {
     border-radius: 10px;
 }
 
+.slideshow-image {
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
+}
+
+.slideshow-image.show {
+    opacity: 1;
+}
+
 label[for="email"],
 label[for="password"] {
     font-weight: bolder;

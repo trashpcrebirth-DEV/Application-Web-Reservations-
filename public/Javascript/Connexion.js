@@ -5,15 +5,32 @@ const images = [
 
 let currentIndex = 0;
 
-function changeImage() {
+function initializeImage() {
     const imgElement = document.querySelector('.slideshow-image');
     if (imgElement) {
-        currentIndex = (currentIndex + 1) % images.length;
         imgElement.src = images[currentIndex];
-        console.log(`Image changed to: ${imgElement.src}`);
+        imgElement.classList.add('show');
     } else {
         console.error('Image element not found');
     }
 }
 
-setInterval(changeImage, 5000);
+function changeImage() {
+    const imgElement = document.querySelector('.slideshow-image');
+    if (imgElement) {
+        imgElement.classList.remove('show');
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % images.length;
+            imgElement.src = images[currentIndex];
+            imgElement.classList.add('show');
+            console.log(`Image changed to: ${imgElement.src}`);
+        }, 700); // Wait for the fade-out transition to complete
+    } else {
+        console.error('Image element not found');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeImage();
+    setInterval(changeImage, 5000);
+});
