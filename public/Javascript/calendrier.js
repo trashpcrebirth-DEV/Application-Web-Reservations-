@@ -1,6 +1,10 @@
 // Initialisation de la date actuelle
 let currentDate = new Date();
 
+function formatTime(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
 function showReservationBox(day, month, year) {
   const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   const reservationBox = document.getElementById('reservationBox');
@@ -35,13 +39,14 @@ function showReservationBox(day, month, year) {
 
           // Construire le contenu horizontalement
           resItem.innerHTML = `
-            <div class="reservation-details">
-              <span><strong>ID:</strong> ${res.id_reservation}</span>
-              <span><strong>Date:</strong> ${res.date_time}</span>
-              <span><strong>Prix:</strong> ${res.prix}€</span>
-              <span><strong>Statut:</strong> ${res.statut}</span>
-            </div>
-          `;
+    <div class="reservation-details">
+        <span><strong>ID:</strong> ${res.id_reservation}</span>
+        <span><strong>Heure:</strong> ${formatTime(res.date_time)}</span>
+        <span><strong>Prix:</strong> ${res.prix}€</span>
+        <span><strong>Statut:</strong> ${res.statut}</span>
+    </div>
+`;
+
 
           // Créer un bouton "Réserver" spécifique à cette réservation
           const reserveButton = document.createElement("button");
@@ -64,6 +69,8 @@ function showReservationBox(day, month, year) {
       reservationList.innerHTML = "<p>Erreur de chargement</p>";
     });
 }
+
+
 
 function closeReservationBox() {
   const reservationBox = document.getElementById('reservationBox');
@@ -118,5 +125,7 @@ function prevMonth() {
 
 document.getElementById('nextMonth').addEventListener('click', nextMonth);
 document.getElementById('prevMonth').addEventListener('click', prevMonth);
+
+
 
 updateCalendar();
