@@ -13,10 +13,14 @@
         <div class="forme">
             <div class="profile-container">
                 <div class="profile-cercle">
-                    <span class="initial"><%= user.nom[0] %></span> <!-- Initiale du nom -->
+                    <span class="initial">
+                        <%= user.nom[0] %>
+                    </span> <!-- Initiale du nom -->
                 </div>
                 <div class="profile-info">
-                    <h1>Nom: <%= user.nom %> <%= user.prenom %></h1> <!-- Nom et prénom de l'utilisateur -->
+                    <h1>Nom: <%= user.nom %>
+                            <%= user.prenom %>
+                    </h1> <!-- Nom et prénom de l'utilisateur -->
                 </div>
             </div>
             <div class="info-container">
@@ -24,30 +28,46 @@
                 <div class="info-row">
                     <div class="info-column">
                         <div class="info-box">
-                            <p><strong>ID:</strong> <%= user.id %></p> <!-- ID de l'utilisateur -->
+                            <p><strong>ID:</strong>
+                                <%= user.id %>
+                            </p> <!-- ID de l'utilisateur -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Date d'inscription:</strong> <%= user.date_inscription.toLocaleDateString() %></p> <!-- Date d'inscription -->
+                            <p><strong>Date d'inscription:</strong>
+                                <%= user.date_inscription.toLocaleDateString() %>
+                            </p> <!-- Date d'inscription -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Téléphone:</strong> <%= user.telephone %></p> <!-- Numéro de téléphone -->
+                            <p><strong>Téléphone:</strong>
+                                <%= user.telephone %>
+                            </p> <!-- Numéro de téléphone -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Email:</strong> <%= user.email %></p> <!-- Email -->
+                            <p><strong>Email:</strong>
+                                <%= user.email %>
+                            </p> <!-- Email -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Statut:</strong> <%= user.statut || "Actif" %></p> <!-- statut de l'utilisateur -->
+                            <p><strong>Statut:</strong>
+                                <%= user.statut || "Actif" %>
+                            </p> <!-- statut de l'utilisateur -->
                         </div>
                     </div>
                     <div class="info-column">
                         <div class="info-box">
-                            <p><strong>Date de naissance:</strong> <%= user.date_naissance.toLocaleDateString() %></p> <!-- Date de naissance -->
+                            <p><strong>Date d'inscription:</strong>
+                                <%= user.date_inscription ? user.date_inscription.toLocaleDateString() : '' %>
+                            </p>
                         </div>
                         <div class="info-box">
-                            <p><strong>Langue:</strong> <%= user.langue %></p> <!-- Langue -->
+                            <p><strong>Langue:</strong>
+                                <%= user.langue %>
+                            </p> <!-- Langue -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Adresse:</strong> <%= user.adresse %></p> <!-- Adresse -->
+                            <p><strong>Adresse:</strong>
+                                <%= user.adresse %>
+                            </p> <!-- Adresse -->
                         </div>
                         <div class="info-box">
                             <p><strong>Mot de passe:</strong> ********</p>

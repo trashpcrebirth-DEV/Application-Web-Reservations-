@@ -190,18 +190,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/inscription', function (req, res) {
+    const email = req.body.email;
 
-    const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
-    const parametres = [
-        req.body.nom,
-        req.body.prenom,
-        req.body.email,
-        req.body.mot_de_passe
-    ];
-
-    con.query(requete, parametres, function (err, result) {
+    // Check if email already exists
+    const checkEmailQuery = "SELECT * FROM utilisateurs WHERE email = ?";
+    con.query(checkEmailQuery, [email], function (err, result) {
         if (err) throw err;
-        res.redirect("/");
+
+        if (result.length > 0) {
+            // Email already exists
+            res.status(400).json({ error: "Adresse courriel existe déjà" });
+        } else {
+            // Insert new user
+            const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
+            const parametres = [
+                req.body.nom,
+                req.body.prenom,
+                req.body.email,
+                req.body.mot_de_passe
+            ];
+
+            con.query(requete, parametres, function (err, result) {
+                if (err) throw err;
+                res.redirect("/");
+            });
+        }
     });
 });
 
@@ -218,7 +231,7 @@ app.post('/connexion', function (req, res) {
         if (result.length > 0) {
             // Utilisateur trouvé, connexion réussie
             console.log("Utilisateur connecté :", result[0]);
-            res.redirect("/profile"); // Redirigez vers la page de profil ou une autre page appropriée
+            res.redirect("/");
         } else {
             // Utilisateur non trouvé, connexion échouée
             console.log("Échec de la connexion : utilisateur non trouvé");
