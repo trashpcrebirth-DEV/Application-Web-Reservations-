@@ -31,7 +31,48 @@ function changeImage() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeImage();
-    setInterval(changeImage, 5000);
+document.getElementById('connexionForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('mot_de_passe').value;
+
+    // Perform AJAX request to check email and password
+    fetch('/connexion', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            mot_de_passe: password
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            window.location.href = data.redirectUrl;
+        })
+        .catch(error => {
+            document.getElementById('email').style.borderColor = 'red';
+            document.getElementById('mot_de_passe').style.borderColor = 'red';
+            document.getElementById('errorMessage').innerText = error.message;
+            document.getElementById('errorMessage').style.display = 'block';
+        });
+});
+
+document.getElementById('email').addEventListener('input', function () {
+    document.getElementById('email').style.borderColor = '';
+    document.getElementById('mot_de_passe').style.borderColor = '';
+    document.getElementById('errorMessage').style.display = 'none';
+});
+
+document.getElementById('mot_de_passe').addEventListener('input', function () {
+    document.getElementById('email').style.borderColor = '';
+    document.getElementById('mot_de_passe').style.borderColor = '';
+    document.getElementById('errorMessage').style.display = 'none';
 });

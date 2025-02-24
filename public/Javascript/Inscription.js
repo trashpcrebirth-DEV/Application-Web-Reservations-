@@ -34,7 +34,7 @@ document.getElementById('inscriptionForm').addEventListener('submit', function (
                 return response.json();
             })
             .then(data => {
-                window.location.href = '/';
+                window.location.href = '/accueil';
             })
             .catch(error => {
                 document.getElementById('email').style.borderColor = 'red';

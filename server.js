@@ -224,17 +224,15 @@ app.post('/connexion', function (req, res) {
     con.query(requete, parametres, function (err, result) {
         if (err) {
             console.error("Erreur lors de la connexion :", err);
-            res.redirect("/");
-        }
-
-        if (result.length > 0) {
+            res.status(500).json({ error: "Erreur interne du serveur" });
+        } else if (result.length > 0) {
             // Utilisateur trouvé, connexion réussie
             console.log("Utilisateur connecté :", result[0]);
-            res.redirect("/accueil");
+            res.status(200).json({ message: "Connexion réussie", redirectUrl: "/accueil" });
         } else {
             // Utilisateur non trouvé, connexion échouée
             console.log("Échec de la connexion : utilisateur non trouvé");
-            res.status(401).send('Adresse courriel ou mot de passe incorrect');
+            res.status(401).json({ error: "Information invalide" });
         }
     });
 });
