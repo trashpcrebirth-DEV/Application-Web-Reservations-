@@ -39,7 +39,7 @@ body {
 
 .paragraph {
     position: absolute;
-    top: 28.5%;
+    top: 29%;
     left: 5%;
     right: 600px;
     color: #FFF;
@@ -79,7 +79,7 @@ body {
 .CINQ-CENT {
     position: absolute;
     top: 50%;
-    left: 40%;
+    left: 39%;
     font-family: Poppins;
     font-size: 50px;
     font-style: italic;
@@ -368,7 +368,7 @@ body {
 
 /*Animation defilante https://nosmoking.developpez.com/demos/css/css-marque-rtl.html */
 .words-animation {
-    margin-top: 7.25%;
+    margin-top: 7.425%;
     height: 35px; 
     overflow: hidden;
     position: relative;
