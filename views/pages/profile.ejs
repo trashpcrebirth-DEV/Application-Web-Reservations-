@@ -6,67 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="../CSS/profile.css">
+    <script>
+        function enableEdit() {
+            document.querySelectorAll('.editable').forEach(function(element) {
+                element.disabled = false; // Enable all editable fields
+            });
+            document.getElementById('saveButton').style.display = 'inline-block'; // Show the Save button
+            document.getElementById('saveForm').style.display = 'block'; // Show the form for saving
+            document.querySelector('.modifier').style.display = 'none'; // Hide the "Modify" button
+        }
+    </script>
 </head>
 
 <body style="background-color:rgb(22, 23, 21);">
     <%- include ("../partials/header.ejs") %>
-        <div class="forme">
-            <div class="profile-container">
-                <div class="profile-cercle">
-                    <span class="initial">
-                        <%= user.nom[0] %>
-                    </span> <!-- Initiale du nom -->
-                </div>
-                <div class="profile-info">
-                    <h1>Nom: <%= user.nom %>
-                            <%= user.prenom %>
-                    </h1> <!-- Nom et prénom de l'utilisateur -->
-                </div>
+    <div class="forme">
+        <div class="profile-container">
+            <div class="profile-cercle">
+                <span class="initial"><%= user.nom[0] %></span> <!-- Initiale du nom -->
             </div>
-            <div class="info-container">
-                <h2>Dossier</h2>
+            <div class="profile-info">
+                <h1>Nom: <%= user.nom %> <%= user.prenom %></h1> <!-- Nom et prénom de l'utilisateur -->
+            </div>
+        </div>
+        <div class="info-container">
+            <h2>Dossier</h2>
+            <form action="/modifier" method="POST" id="saveForm">
                 <div class="info-row">
                     <div class="info-column">
                         <div class="info-box">
-                            <p><strong>ID:</strong>
-                                <%= user.id %>
-                            </p> <!-- ID de l'utilisateur -->
+                            <p><strong>ID:</strong> <%= user.id %></p> <!-- ID de l'utilisateur -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Date d'inscription:</strong>
-                                <%= user.date_inscription.toLocaleDateString() %>
-                            </p> <!-- Date d'inscription -->
+                            <p><strong>Date d'inscription:</strong> <%= user.date_inscription ? user.date_inscription.toLocaleDateString() : '' %></p> <!-- Date d'inscription -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Téléphone:</strong>
-                                <%= user.telephone %>
+                            <p><strong>Téléphone:</strong> 
+                                <input type="text" name="telephone" value="<%= user.telephone || '' %>" class="editable" disabled>
                             </p> <!-- Numéro de téléphone -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Email:</strong>
-                                <%= user.email %>
+                            <p><strong>Email:</strong> 
+                                <input type="email" name="email" value="<%= user.email || '' %>" class="editable" disabled>
                             </p> <!-- Email -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Statut:</strong>
-                                <%= user.statut || "Actif" %>
+                            <p><strong>Statut:</strong> 
+                                <input type="text" name="statut" value="<%= user.statut || 'Actif' %>" disabled>
                             </p> <!-- statut de l'utilisateur -->
                         </div>
                     </div>
                     <div class="info-column">
                         <div class="info-box">
-                            <p><strong>Date d'inscription:</strong>
-                                <%= user.date_inscription ? user.date_inscription.toLocaleDateString() : '' %>
-                            </p>
+                            <p><strong>Date de naissance:</strong> 
+                                <input type="date" name="date_naissance" value="<%= user.date_naissance ? user.date_naissance.toLocaleDateString() : '' %>" class="editable" disabled>
+                            </p> <!-- Date de naissance -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Langue:</strong>
-                                <%= user.langue %>
+                            <p><strong>Langue:</strong> 
+                                <input type="text" name="langue" value="<%= user.langue || '' %>" class="editable" disabled>
                             </p> <!-- Langue -->
                         </div>
                         <div class="info-box">
-                            <p><strong>Adresse:</strong>
-                                <%= user.adresse %>
+                            <p><strong>Adresse:</strong> 
+                                <input type="text" name="adresse" value="<%= user.adresse || '' %>" class="editable" disabled>
                             </p> <!-- Adresse -->
                         </div>
                         <div class="info-box">
@@ -74,16 +77,26 @@
                         </div>
                     </div>
                 </div>
-                <form action="/modifier" method="POST">
-                    <button type="submit" class="modifier">Modifier</button>
-                </form>
+                
+                <!-- Hidden fields for ID, nom, prenom, mot_de_passe, statut -->
+                <input type="hidden" name="id" value="<%= user.id %>">
+                <input type="hidden" name="nom" value="<%= user.nom %>">
+                <input type="hidden" name="prenom" value="<%= user.prenom %>">
+                <input type="hidden" name="mot_de_passe" value="<%= user.mot_de_passe %>">
+                <input type="hidden" name="statut" value="<%= user.statut %>">
+                
+                <!-- Buttons -->
+                <button type="button" class="modifier" onclick="enableEdit()">Modifier</button> <!-- Modifier -->
+                <button type="submit" class="modifier" id="saveButton" style="display:none;">Sauvegarder</button> <!-- Sauvegarder -->
+            </form>
+
+            <form action="/deconnexion" method="POST">
                 <br>
-                <form action="/deconnexion" method="POST">
-                    <button type="submit" class="deconnecter">Se déconnecter</button>
-                </form>
-            </div>
+                <button type="submit" class="deconnecter">Se déconnecter</button>
+            </form>
         </div>
-        <%- include ("../partials/footer.ejs") %>
+    </div>
+    <%- include ("../partials/footer.ejs") %>
 </body>
 
 </html>
