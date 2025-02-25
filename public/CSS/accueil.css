@@ -6,11 +6,14 @@
     font-family: sans-serif;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* BODY */
@@ -59,7 +62,7 @@ html, body {
 .CINQ-CENT {
     position: absolute;
     top: 60%;
-    left:10%;
+    left: 10%;
     font-family: Poppins;
     font-size: 50px;
     font-style: italic;
@@ -110,7 +113,7 @@ html, body {
 
 .ligne-bleu1 {
     position: absolute;
-    top:60%;
+    top: 60%;
     left: 23.5%;
     width: 285px;
     height: 4px;
@@ -134,7 +137,7 @@ html, body {
     padding: 75px;
     padding-top: 100px;
     padding-left: 200px;
-    padding-right:50px;
+    padding-right: 50px;
     border-radius: 25px;
     animation: fadeIn 2.5s ease forwards;
 }
@@ -164,7 +167,7 @@ html, body {
 
 .ligne-bleu2 {
     position: absolute;
-    top:60%;
+    top: 60%;
     left: 25%;
     width: 245px;
     height: 4px;
@@ -230,7 +233,7 @@ html, body {
 
 .ligne-bleu3 {
     position: absolute;
-    top:60%;
+    top: 60%;
     left: 28.5%;
     width: 185px;
     height: 4px;
@@ -239,18 +242,181 @@ html, body {
     margin: 6.5% 0;
 }
 
+    */
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-text-fill-color*/
+.a-propos {
+    position: relative;
+    margin-top: 500px;
+    padding: 80px 40px;
+    color: white;
+    background: linear-gradient(180deg, rgba(23, 91, 237, 0.05) 0%, #1a1a1a 100%), url('../images/imageAccueil1.png');
+    font-family: Poppins;
+}
+
+.a-propos h2 {
+    font-size: 42px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 80px;
+    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.a-propos h2::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #175BED;
+}
+
+.a-propos-texte {
+    width: 45%;
+    position: relative;
+}
+
+.a-propos-texte.gauche {
+    float: left;
+    
+    background-color: rgba(58, 52, 52, 0.8);
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 12px;
+    box-shadow: 0 0 10px 0.1px #175bed;
+    color: white;
+    font-family: Poppins, sans-serif;
+    line-height: 1.5;
+}
+
+.a-propos-texte.droite {
+    float: right;
+
+    background-color: rgba(58, 52, 52, 0.8);
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 12px;
+    box-shadow: 0 0 10px 0.1px #175bed;
+    color: white;
+    font-family: Poppins, sans-serif;
+    line-height: 1.5;
+}
+
+
+.a-propos-texte h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: white;
+    line-height: 1.3;
+    font-style: italic;
+}
+
+.a-propos-texte p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+/* Ligne séparatrice verticale entre les colonnes et une sur la bordure de la section*/
+.a-propos::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 70%;
+    background: linear-gradient(180deg,
+            rgba(23, 91, 237, 0) 0%,
+            rgba(23, 91, 237, 0.5) 50%,
+            rgba(23, 91, 237, 0) 100%);
+}
+
+.a-propos::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,
+            rgba(23, 91, 237, 0) 0%,
+            rgba(23, 91, 237, 0.5) 50%,
+            rgba(23, 91, 237, 0) 100%);
+}
+
+
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
+/*Animation defilante https://nosmoking.developpez.com/demos/css/css-marque-rtl.html */
+.words-animation {
+    margin-top: 7.25%;
+    height: 35px; 
+    overflow: hidden;
+    position: relative;
+    margin-left: 5.5%;
+}
+
+.words-animation span {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+    color: #175BED;
+    font-family: Poppins;
+    font-style:italic;
+    font-weight:bold;
+    font-size: 19px;
+    animation: rotateWords 3s linear infinite 0s;
+    padding: 5px 10px;
+}
+
+.words-animation span:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.words-animation span:nth-child(3) {
+    animation-delay: 2s;
+}
+
+@keyframes rotateWords {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    5% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    35% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
 /* FIN DU BODY */
-
-
-
