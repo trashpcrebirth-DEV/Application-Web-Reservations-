@@ -14,6 +14,10 @@ body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/user.jpg);
 }
 
+footer{
+    margin-top:5%;
+}
+
 .conteneur {
     width: 90%;
     max-width: 1500px;

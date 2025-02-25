@@ -4,7 +4,6 @@
     padding: 60px 0 20px;
     font-family: Poppins, sans-serif;
     position: relative;
-    margin-top: 5%;
 }
 
 .footer::before {
@@ -31,7 +30,7 @@
 
 .footer-section h3 {
     color: #175BED;
-    font-size: 1.5rem;
+    font-size: 25px;
     margin-bottom: 20px;
     font-weight: 600;
 }
