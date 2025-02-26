@@ -39,20 +39,23 @@ function showReservationBox(day, month, year) {
 
           // Construire le contenu horizontalement
           resItem.innerHTML = `
-    <div class="reservation-details">
-        <span><strong>ID:</strong> ${res.id_reservation}</span>
-        <span><strong>Heure:</strong> ${formatTime(res.date_time)}</span>
-        <span><strong>Prix:</strong> ${res.prix}€</span>
-        <span><strong>Statut:</strong> ${res.statut}</span>
-    </div>
-`;
-
+            <div class="reservation-details">
+                <span><strong>ID:</strong> ${res.id_reservation}</span>
+                <span><strong>Heure:</strong> ${formatTime(res.date_time)}</span>
+                <span><strong>Prix:</strong> ${res.prix}€</span>
+                <span><strong>Statut:</strong> ${res.statut}</span>
+            </div>
+          `;
 
           // Créer un bouton "Réserver" spécifique à cette réservation
           const reserveButton = document.createElement("button");
           reserveButton.textContent = "Réserver";
           reserveButton.classList.add("reserver");
-          // Vous pouvez personnaliser l'action ici, par exemple en passant l'ID
+
+          // Ajouter l'attribut data-id pour stocker l'ID de la réservation
+          reserveButton.setAttribute("data-id", res.id_reservation);
+
+          // Définir l'action du bouton
           reserveButton.onclick = function() {
             reserver(res.id_reservation);
           };
@@ -72,6 +75,7 @@ function showReservationBox(day, month, year) {
 
 
 
+
 function closeReservationBox() {
   const reservationBox = document.getElementById('reservationBox');
   reservationBox.classList.add('hidden');
@@ -79,9 +83,38 @@ function closeReservationBox() {
 }
 
 function reserver(idReservation) {
-  alert("Réservation confirmée pour l'ID: " + idReservation);
-  // Ajoutez ici la logique d'envoi au serveur via fetch POST, si nécessaire.
+  fetch('/api/reserver', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: idReservation })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Trouver le bouton et le conteneur de la réservation
+      const button = document.querySelector(`button[data-id="${idReservation}"]`);
+      const reservationItem = button.closest(".reservation-item");
+
+      // Changer le statut affiché
+      const statusElement = reservationItem.querySelector(".reservation-details span:last-child");
+      statusElement.innerHTML = "<strong>Statut:</strong> Réservé";
+
+      // Désactiver le bouton et changer son style
+      button.textContent = "Réservé";
+      button.disabled = true;
+      button.style.backgroundColor = "grey";
+    } else {
+      alert("Erreur : la réservation n'a pas pu être effectuée.");
+    }
+  })
+  .catch(error => {
+    console.error("Erreur lors de la réservation :", error);
+    alert("Une erreur est survenue, veuillez réessayer.");
+  });
 }
+
 
 function updateCalendar() {
   const monthYearText = document.getElementById('monthYear');

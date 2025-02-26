@@ -101,6 +101,27 @@ app.get("/api/reservation", (req, res) => {
     });
 });
 
+app.post('/api/reserver', (req, res) => {
+    const { id } = req.body;
+
+    con.query("UPDATE reservations SET statut = 'Réservé' WHERE id_reservation = ?", [id], (err, result) => {
+        if (err) {
+            console.error("Error updating reservation:", err);
+            res.status(500).json({ success: false, error: "Server error" });
+            return;
+        }
+
+        if (result.affectedRows > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    });
+});
+
+
+  
+
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
