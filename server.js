@@ -208,21 +208,40 @@ app.get("/AProposEvenement", (req, res) => {
     });
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.post('/inscription', function (req, res) {
+    const email = req.body.email;
 
-    const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
-    const parametres = [
-        req.body.nom,
-        req.body.prenom,
-        req.body.email,
-        req.body.mot_de_passe
-    ];
-
-    con.query(requete, parametres, function (err, result) {
+    // Check if email already exists
+    const checkEmailQuery = "SELECT * FROM utilisateurs WHERE email = ?";
+    con.query(checkEmailQuery, [email], function (err, result) {
         if (err) throw err;
-        res.redirect("/");
+
+        if (result.length > 0) {
+            // Email already exists
+            res.status(400).json({ error: "Adresse courriel existe déjà" });
+        } else {
+            // Insert new user
+            const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
+            const parametres = [
+                req.body.nom,
+                req.body.prenom,
+                req.body.email,
+                req.body.mot_de_passe
+            ];
+
+            con.query(requete, parametres, function (err, result) {
+                if (err) throw err;
+                res.status(200).json({ message: "Inscription réussie" });
+            });
+        }
     });
 });
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.post('/connexion', function (req, res) {
     const requete = "SELECT * FROM utilisateurs WHERE email = ? AND mot_de_passe = ?";
@@ -231,17 +250,15 @@ app.post('/connexion', function (req, res) {
     con.query(requete, parametres, function (err, result) {
         if (err) {
             console.error("Erreur lors de la connexion :", err);
-            res.redirect("/");
+            return res.status(500).json({ success: false, message: "Erreur serveur" });
         }
 
         if (result.length > 0) {
-            // Utilisateur trouvé, connexion réussie
-            console.log("Utilisateur connecté :", result[0]);
-            res.redirect("/profile"); // Redirigez vers la page de profil ou une autre page appropriée
+            // Connexion réussie
+            return res.json({ success: true });
         } else {
-            // Utilisateur non trouvé, connexion échouée
-            console.log("Échec de la connexion : utilisateur non trouvé");
-            res.status(401).send('Adresse courriel ou mot de passe incorrect');
+            // Connexion échouée
+            return res.json({ success: false, message: "Adresse courriel/mot de passe invalide" });
         }
     });
 });

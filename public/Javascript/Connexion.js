@@ -1,7 +1,6 @@
 const images = [
     "Images/1-f079d3ff.jpg",
     "Images/bf29a9d2-cfc5-42f0-a6e9-9e1fe83b91a7.jpg"
-
 ];
 
 let currentIndex = 0;
@@ -34,4 +33,32 @@ function changeImage() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeImage();
     setInterval(changeImage, 5000);
+});
+
+document.getElementById('connexionForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('mot_de_passe').value;
+
+    fetch('/connexion', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email, mot_de_passe: password })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/';
+            } else {
+                document.getElementById('email').style.borderColor = 'red';
+                document.getElementById('mot_de_passe').style.borderColor = 'red';
+                document.getElementById('loginError').style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 });
