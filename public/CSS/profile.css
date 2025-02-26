@@ -19,6 +19,11 @@ body {
     height: 20%;
 }
 
+input[type="text"], input[type="email"], [type="date"] {
+    width: 60%;
+    float: right;
+}
+
 .profile-cercle {
     width: 100px;
     height: 100px;

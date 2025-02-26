@@ -18,7 +18,7 @@
             <div class="form-container">
                 <h2 class="centrer" style="margin-top: 10%; margin-bottom: 10%;">CONNEXION</h2>
 
-                <form action="/connexion" method="POST">
+                <form id="connexionForm" action="/connexion" method="POST">
                     <label for="email">Adresse courriel</label>
                     <br>
                     <input type="email" id="email" name="email" required>
@@ -26,6 +26,9 @@
                     <label for="password">Mot de passe</label>
                     <br>
                     <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                    <br>
+                    <div id="loginError" class="error-message" style="display: none;">Adresse courriel/mot de passe
+                        invalide</div>
                     <br>
                     <input type="submit" value="SE CONNECTER">
                 </form>
@@ -38,7 +41,6 @@
         </div>
 
         <div class="image-container">
-
             <img class="slideshow-image" src="Images/1-f079d3ff.jpg" alt="Image non trouvée">
         </div>
     </div>
