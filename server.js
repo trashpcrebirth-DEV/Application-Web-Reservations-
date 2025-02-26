@@ -38,6 +38,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /*
+Configuration des sessions
+*/
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+/*
 Connection au server MySQL
 */
 
@@ -63,7 +73,8 @@ app.get("/", function (req, res) {
             siteTitle: "SportZone",
             pageTitle: "Accueil",
             items: result,
-            activePage: 'accueil'
+            activePage: 'accueil',
+            user: req.session.user // Pass user session to the view
         });
     });
 });
@@ -84,7 +95,9 @@ app.get("/reservation", (req, res) => {
         // Rendre la vue avec les résultats des réservations
         res.render("pages/reservation", {
             activePage: 'reservation',
-            reservations: results
+            reservations: results,
+            user: req.session.user // Pass user session to the view
+
         });
     });
 });
@@ -120,12 +133,13 @@ app.post('/api/reserver', (req, res) => {
 });
 
 
-  
+
 
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
-    const userId = 1; // ID de l'utilisateur
+
+    const userId = req.session.user.id; // Utiliser l'ID de l'utilisateur connecté
 
     const query = "SELECT * FROM utilisateurs WHERE id = ?";
 
@@ -134,9 +148,10 @@ app.get("/profile", (req, res) => {
 
         if (result.length > 0) {
             const user = result[0];
+            user.date_inscription = new Date(user.date_inscription); // Convertir en objet Date
             res.render("pages/profile", {
                 activePage: 'profile',
-                user: user
+                user: user // Pass user information to the view
             });
         } else {
             res.status(404).send("Utilisateur non trouvé");
@@ -174,6 +189,7 @@ app.post('/modifier', (req, res) => {
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
     res.render("pages/contact", { activePage: 'contact' }); // Render le fichier contact.ejs
+
 });
 
 // Route pour la page de connexion
@@ -195,7 +211,8 @@ app.get('/AProposUtilisateur', (req, res) => {
             siteTitle: "SportZone",
             pageTitle: "Nos utilisateurs",
             activePage: 'accueil',
-            avis: results
+            avis: results,
+            user: req.session.user
         });
     });
 });
@@ -228,7 +245,9 @@ app.get("/AProposEvenement", (req, res) => {
         // Envoi des données à la vue
         res.render("pages/AProposEvenement", {
             activePage: 'accueil',
-            evenementsParMois
+            evenementsParMois,
+            user: req.session.user // Pass user session to the view
+
         });
     });
 });
@@ -280,13 +299,28 @@ app.post('/connexion', function (req, res) {
 
         if (result.length > 0) {
             // Connexion réussie
+            console.log("Connexion réussie pour l'utilisateur:", result[0]);
+            req.session.user = result[0]; // Sauvegarder l'utilisateur dans la session
             return res.json({ success: true });
+
         } else {
             // Connexion échouée
             return res.json({ success: false, message: "Adresse courriel/mot de passe invalide" });
         }
     });
 });
+
+// Route pour la déconnexion
+app.get('/deconnexion', function (req, res) {
+    req.session.destroy(function (err) {
+        if (err) {
+            console.error("Erreur lors de la déconnexion :", err);
+            return res.status(500).json({ success: false, message: "Erreur serveur" });
+        }
+        res.redirect('/'); // Rediriger vers la page d'accueil après la déconnexion
+    });
+});
+
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
