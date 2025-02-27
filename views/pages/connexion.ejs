@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/CSS/Connexion.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body style="font-family:Arial, Helvetica, sans-serif;">
@@ -25,10 +26,12 @@
                     <br>
                     <label for="password">Mot de passe</label>
                     <br>
-                    <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                    <div class="password-container">
+                        <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                        <i class="fa fa-eye" id="togglePassword"></i>
+                    </div>
                     <br>
-                    <div id="loginError" class="error-message" style="display: none;">Adresse courriel/mot de passe
-                        invalide</div>
+                    <div id="loginError" class="error-message" style="display: none;">Adresse courriel/mot de passe invalide</div>
                     <br>
                     <input type="submit" value="SE CONNECTER">
                 </form>

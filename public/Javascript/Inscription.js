@@ -1,50 +1,55 @@
-document.getElementById('inscriptionForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent form submission
+document.addEventListener('DOMContentLoaded', () => {
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('mot_de_passe');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPassword = document.getElementById('confirm_password');
 
-    var password = document.getElementById('mot_de_passe').value;
-    var confirmPassword = document.getElementById('confirm_password').value;
-    var email = document.getElementById('email').value;
+    togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
 
-    if (password !== confirmPassword) {
-        document.getElementById('mot_de_passe').style.borderColor = 'red';
-        document.getElementById('confirm_password').style.borderColor = 'red';
-        document.getElementById('passwordError').style.display = 'block';
-    } else {
-        document.getElementById('mot_de_passe').style.borderColor = '';
-        document.getElementById('confirm_password').style.borderColor = '';
-        document.getElementById('passwordError').style.display = 'none';
+    toggleConfirmPassword.addEventListener('click', () => {
+        const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPassword.setAttribute('type', type);
+        toggleConfirmPassword.classList.toggle('fa-eye-slash');
+    });
 
-        // Perform AJAX request to check email and submit form
+    document.getElementById('inscriptionForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        var nom = document.getElementById('nom').value;
+        var prenom = document.getElementById('prenom').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('mot_de_passe').value;
+        var confirmPassword = document.getElementById('confirm_password').value;
+
+        if (password !== confirmPassword) {
+            document.getElementById('passwordError').style.display = 'block';
+            return;
+        }
+
         fetch('/inscription', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                nom: document.getElementById('nom').value,
-                prenom: document.getElementById('prenom').value,
-                email: email,
-                mot_de_passe: password
-            })
+            body: JSON.stringify({ nom: nom, prenom: prenom, email: email, mot_de_passe: password })
         })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => { throw new Error(data.error); });
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                window.location.href = '/';
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    document.getElementById('email').style.borderColor = 'red';
+                    document.getElementById('mot_de_passe').style.borderColor = 'red';
+                    document.getElementById('confirm_password').style.borderColor = 'red';
+                    document.getElementById('emailError').style.display = 'block';
+                }
             })
             .catch(error => {
-                document.getElementById('email').style.borderColor = 'red';
-                document.getElementById('emailError').innerText = error.message;
-                document.getElementById('emailError').style.display = 'block';
+                console.error('Error:', error);
             });
-    }
-});
-
-document.getElementById('email').addEventListener('input', function () {
-    document.getElementById('email').style.borderColor = '';
-    document.getElementById('emailError').style.display = 'none';
+    });
 });

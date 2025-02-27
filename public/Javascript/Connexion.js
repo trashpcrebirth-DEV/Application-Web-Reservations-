@@ -33,6 +33,15 @@ function changeImage() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeImage();
     setInterval(changeImage, 5000);
+
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('mot_de_passe');
+
+    togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
 });
 
 document.getElementById('connexionForm').addEventListener('submit', function (event) {

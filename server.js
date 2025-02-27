@@ -256,7 +256,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/inscription', function (req, res) {
-    const email = req.body.email;
+    const { nom, prenom, email, mot_de_passe } = req.body;
 
     // Check if email already exists
     const checkEmailQuery = "SELECT * FROM utilisateurs WHERE email = ?";
@@ -265,25 +265,19 @@ app.post('/inscription', function (req, res) {
 
         if (result.length > 0) {
             // Email already exists
-            res.status(400).json({ error: "Adresse courriel existe déjà" });
+            res.status(400).json({ success: false, error: "Adresse courriel existe déjà" });
         } else {
             // Insert new user
             const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
-            const parametres = [
-                req.body.nom,
-                req.body.prenom,
-                req.body.email,
-                req.body.mot_de_passe
-            ];
+            const parametres = [nom, prenom, email, mot_de_passe];
 
             con.query(requete, parametres, function (err, result) {
                 if (err) throw err;
-                res.status(200).json({ message: "Inscription réussie" });
+                res.json({ success: true });
             });
         }
     });
 });
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -317,6 +311,7 @@ app.get('/deconnexion', function (req, res) {
             console.error("Erreur lors de la déconnexion :", err);
             return res.status(500).json({ success: false, message: "Erreur serveur" });
         }
+        console.log("Déconnexion réussie");
         res.redirect('/'); // Rediriger vers la page d'accueil après la déconnexion
     });
 });
