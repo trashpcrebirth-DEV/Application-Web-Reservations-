@@ -218,7 +218,10 @@ app.get('/AProposUtilisateur', (req, res) => {
 });
 
 app.get('/AProposInstallations', (req, res) => {
-    res.render("pages/AProposInstallations", { activePage: 'accueil' });
+    res.render("pages/AProposInstallations", { 
+        activePage: 'accueil',
+        user: req.session.user
+     });
 });
 
 // Route pour la page à propos des événements

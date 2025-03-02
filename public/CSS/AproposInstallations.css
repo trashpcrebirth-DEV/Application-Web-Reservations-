@@ -1,0 +1,376 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.conteneur {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.banniere {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('/placeholder.svg?height=1080&width=1920');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+.banniere::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    opacity: 0.3;
+    animation: glissement 15s linear infinite;
+    background-size: 200% 200%;
+}
+
+.banniere h2 {
+    font-size: 55px;
+    margin-bottom: 20px;
+    position: relative;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: linear-gradient(45deg, #175bed, #4287f5);
+    text-shadow:
+    0 0 10px #175bed,
+    0 0 20px #175bed,
+    0 0 30px #175bed;
+    animation: flottant 3s ease-in-out infinite;
+    text-transform: uppercase;
+}
+
+.banniere p {
+    font-size: 14.5px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 30px;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.introduction {
+    padding: 80px 0;
+    background: linear-gradient(45deg, #0a0a0a, #111);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(23, 91, 237, 0.05) 0%, #1a1a1a 100%), url('../images/images-installations/sports.gif');
+    background-size: cover;
+}
+
+.introduction::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: #175bed;
+    filter: blur(100px);
+    opacity: 0.1;
+    animation: flottant 6s ease-in-out infinite;
+}
+
+.introduction h3 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    color: #175bed;
+    text-align: center;
+    position: relative;
+}
+
+.introduction p {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.installations {
+    padding: 80px 0;
+    background: #0a0a0a;
+}
+
+.categorie {
+    margin-bottom: 60px;
+}
+
+.categorie h4 {
+    font-size: 2rem;
+    color: #175bed;
+    margin-bottom: 30px;
+    position: relative;
+    padding-left: 20px;
+    border-left: 4px solid #175bed;
+}
+
+.grille-installations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.carte-installation {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(23, 91, 237, 0.2);
+}
+
+.carte-installation:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 30px rgba(23, 91, 237, 0.5);
+}
+
+.carte-installation::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg,
+        transparent,
+        rgba(23, 91, 237, 0.1),
+        transparent
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.carte-installation:hover::before {
+    transform: translateX(100%);
+}
+
+.image-installation {
+    height: 180px;
+    background-color: #175bed;
+    background-size: cover;
+    background-position: center;
+}
+
+.carte-installation h5 {
+    font-size: 1.3rem;
+    color: #175bed;
+    margin: 20px;
+    position: relative;
+}
+
+.carte-installation p {
+    margin: 0 20px 20px;
+    color: #ccc;
+    font-size: 12.5px;
+}
+
+.services-complementaires {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0a0a0a, #0d3ba0);
+    position: relative;
+    overflow: hidden;
+}
+
+.grille-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.carte-service {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.carte-service:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(23, 91, 237, 0.3);
+}
+
+.icone-service {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 50px;
+}
+
+.icone-service::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    filter: blur(15px);
+    opacity: 0.5;
+    z-index: -1;
+}
+
+.reservation-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.reservation-section::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: glissement 10s linear infinite;
+}
+
+.reservation-section h3 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.bouton-reservation {
+    display: inline-block;
+    padding: 15px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #f4f4f4;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+    margin-top: 2%;
+}
+
+.bouton-reservation::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 72, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.bouton-reservation:hover {
+    background-color: rgba(4, 0, 255, 0.1);
+    box-shadow: 0 0 20px rgba(214, 214, 214, 0.921);
+    transform: scale(1.05);
+}
+
+.bouton-reservation:hover::before {
+    left: 100%;
+}
+
+/* Animation au survol https://www.florin-pop.com/blog/2019/03/css-pulse-effect/ */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(238, 238, 238, 0.774);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+/* Animations https://www.geeksforgeeks.org/css-floating-animation/ */
+@keyframes flottant {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes lueur {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes glissement {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.bouton-reservation:hover {
+    animation: pulse 1.5s infinite;
+}
+
+/* Images d'installations (placeholders) */
+.terrain-foot { background-image: url('../images/images-installations/terrain-soccer.png'); }
+.terrain-basket { background-image: url('../images/images-installations/terrain-basketball.png'); }
+.terrain-volley { background-image: url('../images/images-installations/terrain-volleyball.png'); }
+.terrain-handball { background-image: url('../images/images-installations/terrain-handball.png'); }
+.piscine-olympique { background-image: url('../images/images-installations/piscine-olympique.png'); }
+.piscine-loisirs { background-image: url('../images/images-installations/piscine-loisir.png'); }
+.bassin-apprentissage { background-image: url('../images/images-installations/piscine-bassin.png'); }
+.salle-musculation { background-image: url('../images/images-installations/salle-musculation.png'); }
+.studio-cours { background-image: url('../images/images-installations/studio.png'); }
+.courts-tennis { background-image: url('../images/images-installations/terrain-tennis.png'); }
+.terrains-badminton { background-image: url('../images/images-installations/terrain-badminton.png'); }
+.courts-squash { background-image: url('../images/images-installations/terrain-squash.png'); }
+.mur-escalade { background-image: url('../images/images-installations/mur-escalade.png'); }
+.piste-athletisme { background-image: url('../images/images-installations/terrain-course.png'); }
+.dojo { background-image: url('../images/images-installations/dojo.png'); }
+.hockey { background-image: url('../images/images-installations/arena-hockey.png'); }
+.skating { background-image: url('../images/images-installations/parc-skating.png'); }
+.cricket{ background-image: url('../images/images-installations/terrain-cricket.png'); }
+.golf{ background-image: url('../images/images-installations/terrain-golf.png'); }
+
+.image-installation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(23, 91, 237, 0.5), transparent);
+    opacity: 0.6;
+}

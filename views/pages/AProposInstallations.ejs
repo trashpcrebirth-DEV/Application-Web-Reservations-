@@ -1,11 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>À propos de nos installations | SportZone</title>
+    <link rel="stylesheet" href="/CSS/AProposInstallations.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+    <%- include ("../partials/header.ejs") %>
+
+    <section class="banniere">
+        <div class="conteneur">
+            <h2>À propos de nos installations</h2>
+            <p>Découvrez nos 42 installations sportives de qualité supérieure</p>
+        </div>
+    </section>
+
+    <section class="introduction">
+        <div class="conteneur">
+            <h3>Bienvenue chez SportZone</h3>
+            <p>Notre centre sportif vous offre plus de 30 installations modernes et professionnelles pour tous vos besoins sportifs. Que vous soyez débutant ou athlète confirmé, nos équipements de pointe vous permettront d'atteindre vos objectifs dans un environnement stimulant et accueillant.</p>
+        </div>
+    </section>
+
+    <section class="installations">
+        <div class="conteneur">
+            <h3>Nos installations sportives</h3>
+            
+            <div class="categorie">
+                <h4>Sports collectifs</h4>
+                <div class="grille-installations">
+                    <div class="carte-installation">
+                        <div class="image-installation terrain-foot"></div>
+                        <h5>Terrains de football</h5>
+                        <p>3 terrains de football réglementaires avec gazon synthétique de dernière génération.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation terrain-basket"></div>
+                        <h5>Terrains de basketball</h5>
+                        <p>3 terrains intérieurs et 2 terrains extérieurs avec revêtement professionnel.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation terrain-volley"></div>
+                        <h5>Terrains de volleyball</h5>
+                        <p>3 terrains intérieurs avec filets ajustables pour tous niveaux de jeu.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation terrain-handball"></div>
+                        <h5>Terrains de handball</h5>
+                        <p>2 terrains réglementaires avec marquage officiel et équipement complet.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation hockey"></div>
+                        <h5>Arena de Hockey</h5>
+                        <p>L'aréna de hockey de SportZone offre une glace de qualité professionnelle pour matchs, entraînements et tournois.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation cricket"></div>
+                        <h5>Terrain de cricket</h5>
+                        <p>Le rare terrain de cricket à Montréal est l’endroit idéal pour jouer, s’entraîner et partager la passion du jeu..</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categorie">
+                <h4>Sports aquatiques</h4>
+                <div class="grille-installations">
+                    <div class="carte-installation">
+                        <div class="image-installation piscine-olympique"></div>
+                        <h5>Piscine olympique</h5>
+                        <p>Bassin de 50m avec 8 couloirs et gradins pour les compétitions.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation piscine-loisirs"></div>
+                        <h5>Piscine de loisirs</h5>
+                        <p>Bassin ludique avec jets d'eau, toboggans et espace détente.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation bassin-apprentissage"></div>
+                        <h5>Bassin d'apprentissage</h5>
+                        <p>Bassin peu profond idéal pour les débutants et les cours de natation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categorie">
+                <h4>Fitness et musculation</h4>
+                <div class="grille-installations">
+                    <div class="carte-installation">
+                        <div class="image-installation salle-musculation"></div>
+                        <h5>Salles de musculation</h5>
+                        <p>2 salles avec plus de 100 machines et poids libres sur 500m² d'espace d'entraînement.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation studio-cours"></div>
+                        <h5>Studios de cours collectifs</h5>
+                        <p>3 salles dédiées aux cours de fitness, yoga, pilates et autres activités.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categorie">
+                <h4>Sports de raquette</h4>
+                <div class="grille-installations">
+                    <div class="carte-installation">
+                        <div class="image-installation courts-tennis"></div>
+                        <h5>Courts de tennis</h5>
+                        <p>3 courts intérieurs et 2 courts extérieurs en terre battue et résine.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation terrains-badminton"></div>
+                        <h5>Terrains de badminton</h5>
+                        <p>6 terrains réglementaires avec éclairage optimal pour le jeu.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation courts-squash"></div>
+                        <h5>Courts de squash</h5>
+                        <p>3 courts aux normes internationales avec murs en verre.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categorie">
+                <h4>Installations spécialisées</h4>
+                <div class="grille-installations">
+                    <div class="carte-installation">
+                        <div class="image-installation mur-escalade"></div>
+                        <h5>Mur d'escalade</h5>
+                        <p>Mur de 15m de hauteur avec différents niveaux de difficulté.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation piste-athletisme"></div>
+                        <h5>Piste d'athlétisme</h5>
+                        <p>Piste de 400m avec 8 couloirs et zones pour les sauts et lancers.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation dojo"></div>
+                        <h5>Dojo</h5>
+                        <p>Espace de 300m² dédié aux arts martiaux avec tatamis homologués.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation skating"></div>
+                        <h5>Le Parc</h5>
+                        <p>Le parc de skating de SportZone propose des rampes, rails et bowls pour skateurs de tous niveaux.</p>
+                    </div>
+                    <div class="carte-installation">
+                        <div class="image-installation golf"></div>
+                        <h5>Aire de golf</h5>
+                        <p>Grâce à notre partenaire, le terrain de golf extérieur offre un parcours exceptionnel pour tous les passionnés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-complementaires">
+        <div class="conteneur">
+            <h3>Services complémentaires</h3>
+            <div class="grille-services">
+                <div class="carte-service">
+                    <div class="icone-service vestiaires"><i class="fa-regular fa-circle-user"></i></div>
+                    <h5>Vestiaires modernes</h5>
+                    <p>Vestiaires spacieux avec casiers sécurisés et douches individuelles.</p>
+                </div>
+                <div class="carte-service">
+                    <div class="icone-service parking"><i class="fa-solid fa-car"></i></div>
+                    <h5>Parking gratuit</h5>
+                    <p>Plus de 200 places de stationnement pour nos membres et visiteurs.</p>
+                </div>
+                <div class="carte-service">
+                    <div class="icone-service cafeteria"><i class="fa-solid fa-utensils"></i></div>
+                    <h5>Cafétéria sportive</h5>
+                    <p>Espace de restauration proposant des repas équilibrés et boissons énergisantes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reservation-section">
+        <div class="conteneur">
+            <h3>Prêt à découvrir nos installations?</h3>
+            <p>Venez visiter SportZone et découvrez par vous-même la qualité de nos équipements</p>
+            <div class="boutons">
+                <a href="/reservation" class="bouton-reservation"><i class="fa-solid fa-calendar"></i> RÉSERVER MAINTENANT!</a> 
+            </div>
+        </div>
+    </section>
+    <%- include ("../partials/footer.ejs") %>
 </body>
 </html>
