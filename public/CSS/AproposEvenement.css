@@ -8,9 +8,8 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: #121212; 
     background-color: #fff;
 }
 
@@ -214,17 +213,19 @@ body {
     animation: fadeIn 1s ease forwards;
 }
 
-/* Icons */
 .icon-calendar::before {
     content: '📅';
+    font-style: normal;
 }
 
 .icon-location::before {
     content: '📍';
+    font-style: normal;
 }
 
 .icon-users::before {
     content: '👥';
+    font-style: normal;
 }
 
 .services-complementaires {
