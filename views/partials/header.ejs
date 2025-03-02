@@ -22,10 +22,9 @@
                         href="/reservation">Réservation</a></li>
                 <li class="<%= activePage === 'contact' ? 'bar-page-actuel' : '' %>"><a href="/contact">Contact</a></li>
                 <% if (!user) { %>
-                    <li class="boite-bleu"><a href="/connexion"><i class="fa-solid fa-user"></i> Se connecter</a>
-                    </li>
+                    <li class="boite-bleu"><a href="/connexion"><i class="fa-solid fa-user"></i> Se connecter</a> </li>
                     <% } else { %>
-                        <li><a href="/profile"><span>Profile</span></a></li>
+                        <li class="boite-bleu"><a href="/profile"><i class="fa-solid fa-user"></i><span> Profile</span></a></li>
                         <% } %>
             </ul>
         </div>
