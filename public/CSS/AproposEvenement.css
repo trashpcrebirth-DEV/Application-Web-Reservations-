@@ -14,29 +14,68 @@ body {
     background-color: #fff;
 }
 
-.section {
-    background-color: #f5f8ff;
-    padding: 4%;
-    text-align: center;
-}
-
-.section-content {
-    max-width: 800px;
+.conteneur {
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
 }
 
-.section h1 {
-    font-size: 40px;
-    color: #333;
-    margin-bottom: 2%;
-    font-family: 'Poppins';
+.banniere {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('/placeholder.svg?height=1080&width=1920');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+.banniere::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    opacity: 0.3;
+    animation: glissement 15s linear infinite;
+    background-size: 200% 200%;
+}
+
+.banniere h2 {
+    font-size: 55px;
+    margin-bottom: 20px;
+    position: relative;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: linear-gradient(45deg, #175bed, #4287f5);
+    text-shadow:
+    0 0 10px #175bed,
+    0 0 20px #175bed,
+    0 0 30px #175bed;
+    animation: flottant 3s ease-in-out infinite;
     text-transform: uppercase;
 }
 
-.section p {
-    color: #666;
-    font-size: 17.5px;
-    font-family: 'Poppins';   
+.banniere p {
+    font-size: 14.5px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 30px;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
 }
 
 .lineTemps-container {
@@ -188,7 +227,132 @@ body {
     content: '👥';
 }
 
-/* Responsive Design */
+.services-complementaires {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0a0a0a, #0d3ba0);
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+}
+
+.grille-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.carte-service {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.carte-service:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(23, 91, 237, 0.3);
+}
+
+.icone-service {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 50px;
+}
+
+.icone-service::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    filter: blur(15px);
+    opacity: 0.5;
+    z-index: -1;
+}
+
+.contacter-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+}
+
+.contacter-section::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: glissement 10s linear infinite;
+}
+
+.contacter-section h3 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    position: relative;
+    color: #ffffff
+}
+
+.bouton-contacter {
+    display: inline-block;
+    padding: 15px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #f4f4f4;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+    margin-top: 2%;
+}
+
+.bouton-contacter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 72, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.bouton-contacter:hover {
+    background-color: rgba(4, 0, 255, 0.1);
+    box-shadow: 0 0 20px rgba(214, 214, 214, 0.921);
+    transform: scale(1.05);
+}
+
+.bouton-contacter:hover::before {
+    left: 100%;
+}
+
+/* design devient responsive */
 @media (max-width: 768px) {
     .timeline-container::before {
         left: 2rem;

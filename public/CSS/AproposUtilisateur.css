@@ -14,10 +14,6 @@ body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/user.jpg);
 }
 
-footer{
-    margin-top:5%;
-}
-
 .conteneur {
     width: 90%;
     max-width: 1500px;
@@ -159,7 +155,79 @@ footer{
     top:68.5%;
     right: 4.5%;
 }
-/* Responsive */
+
+.contacter-section {
+    margin-top: 5%;
+    padding: 100px 0;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+}
+
+.contacter-section::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: glissement 10s linear infinite;
+}
+
+.contacter-section h3 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    position: relative;
+    color: #ffffff
+}
+
+.bouton-contacter {
+    display: inline-block;
+    padding: 15px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #f4f4f4;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+    margin-top: 2%;
+}
+
+.bouton-contacter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 72, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.bouton-contacter:hover {
+    background-color: rgba(4, 0, 255, 0.1);
+    box-shadow: 0 0 20px rgba(214, 214, 214, 0.921);
+    transform: scale(1.05);
+}
+
+.bouton-contacter:hover::before {
+    left: 100%;
+}
+
+/* ca devient responsive */
 @media (min-width: 768px) {
     .card-avis {
         flex: 0 0 48.75%;

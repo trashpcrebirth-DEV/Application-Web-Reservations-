@@ -8,9 +8,9 @@
 </head>
 <body>
     <%- include ("../partials/header.ejs") %>
-    <section class="section">
-        <div class="section-content">
-            <h1>Nos Événements de 2025</h1>
+    <section class="banniere">
+        <div class="conteneur">
+            <h2>Nos Événements de 2025</h1>
             <p>Découvrez les événements sportifs que nous organisons tout au long de l'année</p>
         </div>
     </section>
@@ -57,6 +57,38 @@
         <% }); %>
     </main>
     
+    <section class="services-complementaires">
+        <div class="conteneur">
+            <h3>Services complémentaires</h3>
+            <div class="grille-services">
+                <div class="carte-service">
+                    <div class="icone-service vestiaires"><i class="fa-regular fa-circle-user"></i></div>
+                    <h5>Vestiaires modernes</h5>
+                    <p>Vestiaires spacieux avec casiers sécurisés et douches individuelles.</p>
+                </div>
+                <div class="carte-service">
+                    <div class="icone-service parking"><i class="fa-solid fa-car"></i></div>
+                    <h5>Parking gratuit</h5>
+                    <p>Plus de 200 places de stationnement pour nos membres et visiteurs.</p>
+                </div>
+                <div class="carte-service">
+                    <div class="icone-service cafeteria"><i class="fa-solid fa-utensils"></i></div>
+                    <h5>Cafétéria sportive</h5>
+                    <p>Espace de restauration proposant des repas équilibrés et boissons énergisantes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="contacter-section">
+        <div class="conteneur">
+            <h3>Prêt à organiser un évenement?</h3>
+            <p>Venez nous contact pour organiser un évenement ici à SportZone et découvrez par vous-même la qualité de notre service.</p>
+            <div class="boutons">
+                <a href="/contact" class="bouton-contacter"><i class="fa-solid fa-calendar"></i> CONTACTER NOUS!</a> 
+            </div>
+        </div>
+    </section>
     <%- include ("../partials/footer.ejs") %>
 </body>
 </html>
