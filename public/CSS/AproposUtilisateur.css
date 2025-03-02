@@ -21,23 +21,60 @@ body {
 }
 
 
-.affichage-titre {
-    background-color: #f4f4f4;
+.banniere {
+    min-height: 27.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 3% 0;
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('../images/banniere2.gif');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
 }
 
-.affichage-titre h1 {
-    font-size: 45px;
-    margin-bottom: 1rem;
-    font-family: Poppins;  
-    text-transform: uppercase;  
+.banniere::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    opacity: 0.3;
+    animation: glissement 15s linear infinite;
+    background-size: 200% 200%;
 }
 
-.affichage-titre p {
-    font-size: 20px;
-    color: #666;
-    font-family: Poppins;
+.banniere h2 {
+    font-size: 55px;
+    margin-bottom: 20px;
+    position: relative;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: linear-gradient(45deg, #175bed, #4287f5);
+    text-shadow:
+    0 0 10px #175bed,
+    0 0 20px #175bed,
+    0 0 30px #175bed;
+    animation: flottant 3s ease-in-out infinite;
+    text-transform: uppercase;
+}
+
+.banniere p {
+    font-size: 14.5px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 30px;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
 }
 
 .avis {
@@ -157,7 +194,7 @@ body {
 }
 
 .contacter-section {
-    margin-top: 5%;
+    margin-top: 5.25%;
     padding: 100px 0;
     background: linear-gradient(135deg, #175bed, #0a3d9c);
     text-align: center;
@@ -253,4 +290,20 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Animations https://www.geeksforgeeks.org/css-floating-animation/ */
+@keyframes flottant {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes lueur {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes glissement {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }

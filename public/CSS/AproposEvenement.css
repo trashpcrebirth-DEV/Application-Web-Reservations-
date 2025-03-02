@@ -23,14 +23,14 @@ body {
 }
 
 .banniere {
-    min-height: 60vh;
+    min-height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     position: relative;
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('/placeholder.svg?height=1080&width=1920');
+                url('../images/banniere.gif');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -397,4 +397,20 @@ body {
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+/* Animations https://www.geeksforgeeks.org/css-floating-animation/ */
+@keyframes flottant {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes lueur {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes glissement {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }

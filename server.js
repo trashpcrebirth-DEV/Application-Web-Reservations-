@@ -188,7 +188,9 @@ app.post('/modifier', (req, res) => {
 
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
-    res.render("pages/contact", { activePage: 'contact' }); // Render le fichier contact.ejs
+    res.render("pages/contact", { activePage: 'contact',
+        user: req.session.user
+    }); // Render le fichier contact.ejs
 
 });
 
