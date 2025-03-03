@@ -13,13 +13,13 @@
     <%- include ("../partials/header.ejs") %>
 
     <div class="conteneur-principal">
-        <h1 class="titre-page">Contactez-nous</h1>
+        <h1 class="titre-page">Nous contacter</h1>
         
         <div class="grille-formulaires">
             <div class="carte-formulaire">
                 <div class="entete-carte">
                     <span class="icone-carte"><i class="fas fa-star"></i></span>
-                    <h2 class="titre-section">Partagez votre expérience</h2>
+                    <h2 class="titre-section">Partagez votre expérience avec un avis</h2>
                 </div>
                 
                 <form action="#" method="POST" class="formulaire">
@@ -64,6 +64,10 @@
                              Envoyer votre avis
                         </button>
                     </div>
+
+                    <div>
+                        <li class="contact-gif"></li>
+                    </div>
                 </form>
             </div>
             
@@ -94,13 +98,36 @@
                         <select id="type-evenement" name="type-evenement" required>
                             <option value="" disabled selected>Sélectionnez un type</option>
                             <option value="tournoi">Tournoi sportif</option>
-                            <option value="entrainement">Entraînement d'équipe</option>
-                            <option value="match">Match amical</option>
+                            <option value="match">Matchs amicals</option>
                             <option value="entreprise">Événement d'entreprise</option>
                             <option value="autre">Autre</option>
                         </select>
                     </div>
                     
+                    <div class="groupe-champ">
+                        <label for="type-evenement"><i class="fas fa-futbol"></i> Lieu</label>
+                        <select id="type-evenement" name="type-evenement" required>
+                            <option value="" disabled selected>Sélectionnez un lieu</option>
+                            <option value="Basketball">Terrain Basketball</option>
+                            <option value="foot">Terrain Football/Soccer</option>
+                            <option value="gymnase">Gymnase Handball</option>
+                            <option value="cricket">Terrain Cricket</option>
+                            <option value="piscine">Pisicine SportZone</option>
+                            <option value="piscine-loisir">Pisicine Loisir</option>
+                            <option value="muscu">Salle de musculation</option>
+                            <option value="studio">Studio collectif</option>
+                            <option value="tennis">Cours de Tennis</option>
+                            <option value="tennis">Gymnase Badminton</option>
+                            <option value="squash">Gymnase Squash</option>
+                            <option value="escalade">Emplacement d'escalade</option>
+                            <option value="piste">Piste athlétique</option>
+                            <option value="dojo">Dojo</option>
+                            <option value="parc">Le Parc</option>
+                            <option value="golf">Parc pour Golf</option>
+                        </select>
+                        
+                    </div>
+
                     <div class="groupe-champ moitie">
                         <label for="date-evenement"><i class="fas fa-calendar-day"></i> Date souhaitée</label>
                         <input type="date" id="date-evenement" name="date-evenement" required>
