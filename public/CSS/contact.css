@@ -1,50 +1,211 @@
-.banner {
-    width: 100;
-    height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/background.gif);
-    background-size: cover;
-    background-position: center;
-}
-
-h2 {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .banniere {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(../images/background.gif) center / cover
+      fixed;
+    font-family: "Montserrat", sans-serif;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .conteneur-principal {
+    width: 90%;
+    max-width: 1400px;
+    margin: 3% auto;
+    padding: 0 2%;
+  }
+  
+  .titre-page {
     text-align: center;
     color: white;
-}
-
-form {
-    background-color: white;
-    padding: 20px;
+    font-size: 2.5em;
+    font-weight: 600;
+    margin-bottom: 3%;
+  }
+  
+  .grille-formulaires {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3%;
+    margin-bottom: 5%;
+  }
+  
+  .carte-formulaire {
+    flex: 1 1 45%;
+    min-width: 300px;
+    background: white;
     border-radius: 8px;
-    width: 50%;
-    margin: 0 auto;
-}
-
-label {
-    font-weight: bolder;
+    margin-bottom: 3%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .entete-carte {
+    background: #175bed;
+    padding: 5%;
+    text-align: center;
+    color: white;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .titre-section {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  /* Formulaire optimisé */
+  .formulaire {
+    padding: 5%;
+  }
+  
+  .groupe-champ {
+    margin-bottom: 4%;
+  }
+  
+  .moitie {
+    width: 48%;
+    display: inline-block;
+    margin-right: 3%;
+  }
+  
+  /* https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child*/
+  .moitie:nth-child(even) {
+    margin-right: 0;
+  }
+  
+  label {
     display: block;
-    margin-bottom: 8px;
-}
-
-input[type="text"],
-input[type="email"],
-textarea {
-    width: 97%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #175BED;
+    margin-bottom: 2%;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 2.5%;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    resize: none;
-}
-
-input[type="submit"] {
-    background-color: #175BED;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #175bed;
+    box-shadow: 0 0 0 2px rgba(23, 91, 237, 0.1);
+  }
+  
+  /* Sélecteur de note optimisé */
+  .selecteur-note {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+  
+  .selecteur-note input[type="radio"] {
+    display: none;
+  }
+  
+  .label-note {
+    font-size: 25px;
+    color: #ddd;
+    cursor: pointer;
+    margin-right: 2%;
+  }
+  
+  .selecteur-note input[type="radio"]:checked ~ label {
+    color: #175bed;
+  }
+  
+  .selecteur-note label:hover,
+  .selecteur-note label:hover ~ label {
+    color: #175bed;
+  }
+  
+  /* Bouton optimisé */
+  .bouton-envoi {
+    background: #175bed;
     color: white;
     border: none;
+    padding: 2.5% 5%;
+    border-radius: 4px;
+    font-size: 17px;
+    font-weight: 600;
     cursor: pointer;
-    padding: 12px;
-    border-radius: 10px;
-}
-
-input[type="submit"]:hover {
-    background-color: #0f46a3;
-}
+    width: 100%;
+    font-family: inherit;
+  }
+  
+  .bouton-envoi:hover {
+    background: #1450d3;
+  }
+  
+  /* ca devient responsive */
+  @media (max-width: 992px) {
+    .grille-formulaires {
+      flex-direction: column;
+    }
+  
+    .carte-formulaire {
+      flex: 1 1 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .conteneur-principal {
+      width: 95%;
+      margin: 5% auto;
+    }
+  
+    .titre-page {
+      font-size: 2em;
+    }
+  
+    .moitie {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .titre-page {
+      font-size: 1.8em;
+    }
+  
+    .formulaire {
+      padding: 6%;
+    }
+  }
+  
+  .icone-carte {
+    width: 70px;
+    height: 70px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5% auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .icone-carte i {
+    font-size: 2em;
+    color: #175bed;
+  }
+  
+  .groupe-champ i{
+    color:#175bed;
+  }

@@ -1,28 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
+    <title>Contact - Réservation de Terrains Sportifs</title>
     <link rel="stylesheet" href="../CSS/contact.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
 </head>
 
-<body class="banner">
+<body class="banniere">
     <%- include ("../partials/header.ejs") %>
 
-        <form action="#" method="POST">
-            <label for="nom">Nom:</label><br>
-            <input type="text" required><br><br>
-    
-            <label for="email">Email:</label><br>
-            <input type="email" required><br><br>
-    
-            <label for="message">Message:</label><br>
-            <textarea rows="4" required></textarea><br><br>
-    
-            <input type="submit" value="Soumettre">
-        </form>
+    <div class="conteneur-principal">
+        <h1 class="titre-page">Contactez-nous</h1>
+        
+        <div class="grille-formulaires">
+            <div class="carte-formulaire">
+                <div class="entete-carte">
+                    <span class="icone-carte"><i class="fas fa-star"></i></span>
+                    <h2 class="titre-section">Partagez votre expérience</h2>
+                </div>
+                
+                <form action="#" method="POST" class="formulaire">
+                    <div class="groupe-champ">
+                        <label for="nom"><i class="fas fa-user"></i> Votre nom</label>
+                        <input type="text" id="nom" name="nom" placeholder="Entrez votre nom" required>
+                    </div>
+                    
+                    <div class="groupe-champ">
+                        <label for="email"><i class="fas fa-envelope"></i> Votre email</label>
+                        <input type="email" id="email" name="email" placeholder="Entrez votre email" required>
+                    </div>
+                    
+                    <div class="groupe-champ">
+                        <label for="note"><i class="fas fa-star"></i> Votre note</label>
+                        <div class="selecteur-note">
+                            <input type="radio" id="note5" name="note" value="5">
+                            <label for="note5" class="label-note">★</label>
+                            
+                            <input type="radio" id="note4" name="note" value="4">
+                            <label for="note4" class="label-note">★</label>
+                            
+                            <input type="radio" id="note3" name="note" value="3">
+                            <label for="note3" class="label-note">★</label>
+                            
+                            <input type="radio" id="note2" name="note" value="2">
+                            <label for="note2" class="label-note">★</label>
+                            
+                            <input type="radio" id="note1" name="note" value="1">
+                            <label for="note1" class="label-note">★</label>
+                        </div>
+                    </div>
+                    
+                    <div class="groupe-champ">
+                        <label for="commentaire"><i class="fas fa-comment"></i> Votre avis</label>
+                        <textarea id="commentaire" name="commentaire" rows="4" placeholder="Partagez votre expérience avec nous" required></textarea>
+                    </div>
+                    
+                    <div class="groupe-bouton">
+                        <button type="submit" class="bouton-envoi">
+                            <i class="fas fa-paper-plane"></i>
+                             Envoyer votre avis
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="carte-formulaire">
+                <div class="entete-carte">
+                    <span class="icone-carte"><i class="fas fa-calendar-alt"></i></span>
+                    <h2 class="titre-section">Organisez votre événement</h2>
+                </div>
+                
+                <form action="#" method="POST" class="formulaire">
+                    <div class="groupe-champ">
+                        <label for="nom-organisateur"><i class="fas fa-user"></i> Nom de l'organisateur</label>
+                        <input type="text" id="nom-organisateur" name="nom-organisateur" placeholder="Entrez votre nom" required>
+                    </div>
+                    
+                    <div class="groupe-champ moitie">
+                        <label for="email-organisateur"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email-organisateur" name="email-organisateur" placeholder="Entrez votre email" required>
+                    </div>
+                    
+                    <div class="groupe-champ moitie">
+                        <label for="telephone"><i class="fas fa-phone"></i> Téléphone</label>
+                        <input type="text" id="telephone" name="telephone" placeholder="Votre numéro" required>
+                    </div>
+                    
+                    <div class="groupe-champ">
+                        <label for="type-evenement"><i class="fas fa-futbol"></i> Type d'événement</label>
+                        <select id="type-evenement" name="type-evenement" required>
+                            <option value="" disabled selected>Sélectionnez un type</option>
+                            <option value="tournoi">Tournoi sportif</option>
+                            <option value="entrainement">Entraînement d'équipe</option>
+                            <option value="match">Match amical</option>
+                            <option value="entreprise">Événement d'entreprise</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="groupe-champ moitie">
+                        <label for="date-evenement"><i class="fas fa-calendar-day"></i> Date souhaitée</label>
+                        <input type="date" id="date-evenement" name="date-evenement" required>
+                    </div>
+                    
+                    <div class="groupe-champ moitie">
+                        <label for="nombre-participants"><i class="fas fa-users"></i> Participants</label>
+                        <input type="number" id="nombre-participants" name="nombre-participants" min="1" placeholder="Nombre" required>
+                    </div>
+                    
+                    <div class="groupe-champ">
+                        <label for="details-evenement"><i class="fas fa-info-circle"></i> Détails de l'événement</label>
+                        <textarea id="details-evenement" name="details-evenement" rows="4" placeholder="Décrivez votre événement" required></textarea>
+                    </div>
+                    
+                    <div class="groupe-bouton">
+                        <button type="submit" class="bouton-envoi">
+                            <i class="fas fa-paper-plane"></i>
+                             Demander un devis
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <%- include ("../partials/footer.ejs") %>
 </body>
-
 </html>
+
