@@ -77,7 +77,7 @@
                     <h2 class="titre-section">Organisez votre événement</h2>
                 </div>
                 
-                <form action="#" method="POST" class="formulaire">
+                <form action="/ajouter-evenement" method="POST" class="formulaire"  enctype="multipart/form-data">
                     <div class="groupe-champ">
                         <label for="nom-organisateur"><i class="fas fa-user"></i> Nom de l'organisateur</label>
                         <input type="text" id="nom-organisateur" name="nom-organisateur" placeholder="Entrez votre nom" required>
@@ -94,19 +94,18 @@
                     </div>
                     
                     <div class="groupe-champ">
-                        <label for="type-evenement"><i class="fas fa-futbol"></i> Type d'événement</label>
-                        <select id="type-evenement" name="type-evenement" required>
-                            <option value="" disabled selected>Sélectionnez un type</option>
-                            <option value="tournoi">Tournoi sportif</option>
-                            <option value="match">Matchs amicals</option>
-                            <option value="entreprise">Événement d'entreprise</option>
-                            <option value="autre">Autre</option>
-                        </select>
+                        <label for="nom"><i class="fa-solid fa-clipboard"></i> Entrez le nom de l'évenement</label>
+                        <input type="text" id="nom" name="nom" placeholder="Entrez le nom de l'évenement" required>
+                    </div>
+
+                    <div class="groupe-champ">
+                        <label for="image_url "><i class="fas fa-image"></i> Ajouter une image de l'événement</label>
+                        <input type="file" id="image_url " name="image_url" accept="image/*">
                     </div>
                     
                     <div class="groupe-champ">
-                        <label for="type-evenement"><i class="fas fa-futbol"></i> Lieu</label>
-                        <select id="type-evenement" name="type-evenement" required>
+                        <label for="lieu"><i class="fas fa-futbol"></i> Lieu</label>
+                        <select id="lieu" name="lieu" required>
                             <option value="" disabled selected>Sélectionnez un lieu</option>
                             <option value="Basketball">Terrain Basketball</option>
                             <option value="foot">Terrain Football/Soccer</option>
@@ -129,18 +128,18 @@
                     </div>
 
                     <div class="groupe-champ moitie">
-                        <label for="date-evenement"><i class="fas fa-calendar-day"></i> Date souhaitée</label>
-                        <input type="date" id="date-evenement" name="date-evenement" required>
+                        <label for="date_evenement"><i class="fas fa-calendar-day"></i> Date souhaitée</label>
+                        <input type="date" id="date_evenement" name="date_evenement" required>
                     </div>
                     
                     <div class="groupe-champ moitie">
-                        <label for="nombre-participants"><i class="fas fa-users"></i> Participants</label>
-                        <input type="number" id="nombre-participants" name="nombre-participants" min="1" placeholder="Nombre" required>
+                        <label for="participants"><i class="fas fa-users"></i> Participants</label>
+                        <input type="number" id="participants" name="participants" min="1" placeholder="Nombre" required>
                     </div>
                     
                     <div class="groupe-champ">
-                        <label for="details-evenement"><i class="fas fa-info-circle"></i> Détails de l'événement</label>
-                        <textarea id="details-evenement" name="details-evenement" rows="4" placeholder="Décrivez votre événement" required></textarea>
+                        <label for="description"><i class="fas fa-info-circle"></i> Détails de l'événement</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Décrivez votre événement" required></textarea>
                     </div>
                     
                     <div class="groupe-bouton">

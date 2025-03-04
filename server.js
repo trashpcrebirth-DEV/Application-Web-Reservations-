@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 import mysql from "mysql2";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
+import multer from "multer";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -185,13 +186,38 @@ app.post('/modifier', (req, res) => {
     });
 });
 
-
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
     res.render("pages/contact", { activePage: 'contact',
         user: req.session.user
     }); // Render le fichier contact.ejs
+});
 
+//Prend l'image uploadée et l'ajoute à la base de données
+const upload = multer({ dest: "uploads/" });
+
+// Route pour la page d'ajout d'événement
+app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
+    const { nom, date_evenement, lieu, description, participants } = req.body;
+    const image_url = req.file ? req.file.path : null;
+
+    console.log("Body:", req.body);
+    console.log("Fichier:", req.file);
+
+    if (!nom || !date_evenement || !lieu || !description || !participants || !image_url) {
+        return res.status(400).json({ error: "Tous les champs sont requis." });
+    }
+
+    const formattedDate = dateFormat(date_evenement, "yyyy-mm-dd");
+    const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url) VALUES (?, ?, ?, ?, ?, ?)";
+
+    con.query(query, [nom, formattedDate, lieu, description, participants, image_url], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de l'insertion de l'événement :", err);
+            return res.status(500).json({ error: "Erreur serveur" });
+        }
+        res.status(200).json({ success: true, message: "Événement ajouté avec succès" });
+    });
 });
 
 // Route pour la page de connexion
