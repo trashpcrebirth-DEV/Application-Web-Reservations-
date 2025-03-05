@@ -103,12 +103,24 @@ app.get("/reservation", (req, res) => {
 
 // Route API pour récupérer les réservations au format JSON
 app.get("/api/reservation", (req, res) => {
-    const dateReservation = req.query.date; // Date sélectionnée
-    con.query("SELECT * FROM reservations WHERE DATE(date_time) = ?", [dateReservation], (err, results) => {
+    const { date, sport } = req.query;
+
+    let query = "SELECT * FROM reservations WHERE DATE(date_time) = ?";
+    let params = [date];
+
+    if (sport && sport.trim() !== "" && sport !== "Tous les sports") {
+        query += " AND categorie_sport = ?";
+        params.push(sport);
+    }
+
+    console.log("Requête SQL exécutée :", query, params); // Debug
+
+    con.query(query, params, (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: "Erreur serveur" });
         }
+        console.log("Résultats de la requête :", results); // Debug
         res.json({ reservations: results });
     });
 });
