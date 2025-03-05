@@ -49,19 +49,26 @@ function showReservationBox(day, month, year) {
 
           // Créer un bouton "Réserver" spécifique à cette réservation
           const reserveButton = document.createElement("button");
-          reserveButton.textContent = "Réserver";
+          reserveButton.textContent = res.statut === "Réservé" ? "Réservé" : "Réserver";
           reserveButton.classList.add("reserver");
 
           // Ajouter l'attribut data-id pour stocker l'ID de la réservation
           reserveButton.setAttribute("data-id", res.id_reservation);
 
-          // Définir l'action du bouton
-          reserveButton.onclick = function() {
-            reserver(res.id_reservation);
-          };
+          // Si la réservation est déjà prise, désactiver le bouton et le mettre en gris
+          if (res.statut === "Réservé") {
+            reserveButton.disabled = true;
+            reserveButton.style.backgroundColor = "grey";
+          } else {
+            // Définir l'action du bouton seulement si la réservation est disponible
+            reserveButton.onclick = function () {
+              reserver(res.id_reservation);
+            };
+          }
 
           // Ajouter le bouton à la fin du conteneur de réservation
           resItem.appendChild(reserveButton);
+
           // Ajouter ce conteneur à la liste
           reservationList.appendChild(resItem);
         });
@@ -72,9 +79,6 @@ function showReservationBox(day, month, year) {
       reservationList.innerHTML = "<p>Erreur de chargement</p>";
     });
 }
-
-
-
 
 function closeReservationBox() {
   const reservationBox = document.getElementById('reservationBox');
@@ -90,31 +94,30 @@ function reserver(idReservation) {
     },
     body: JSON.stringify({ id: idReservation })
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Trouver le bouton et le conteneur de la réservation
-      const button = document.querySelector(`button[data-id="${idReservation}"]`);
-      const reservationItem = button.closest(".reservation-item");
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Trouver le bouton et le conteneur de la réservation
+        const button = document.querySelector(`button[data-id="${idReservation}"]`);
+        const reservationItem = button.closest(".reservation-item");
 
-      // Changer le statut affiché
-      const statusElement = reservationItem.querySelector(".reservation-details span:last-child");
-      statusElement.innerHTML = "<strong>Statut:</strong> Réservé";
+        // Changer le statut affiché
+        const statusElement = reservationItem.querySelector(".reservation-details span:last-child");
+        statusElement.innerHTML = "<strong>Statut:</strong> Réservé";
 
-      // Désactiver le bouton et changer son style
-      button.textContent = "Réservé";
-      button.disabled = true;
-      button.style.backgroundColor = "grey";
-    } else {
-      alert("Erreur : la réservation n'a pas pu être effectuée.");
-    }
-  })
-  .catch(error => {
-    console.error("Erreur lors de la réservation :", error);
-    alert("Une erreur est survenue, veuillez réessayer.");
-  });
+        // Désactiver le bouton et changer son style
+        button.textContent = "Réservé";
+        button.disabled = true;
+        button.style.backgroundColor = "grey";
+      } else {
+        alert("Erreur : la réservation n'a pas pu être effectuée.");
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors de la réservation :", error);
+      alert("Une erreur est survenue, veuillez réessayer.");
+    });
 }
-
 
 function updateCalendar() {
   const monthYearText = document.getElementById('monthYear');

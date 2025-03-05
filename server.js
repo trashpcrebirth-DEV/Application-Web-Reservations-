@@ -81,11 +81,6 @@ app.get("/", function (req, res) {
 });
 
 // Route pour la page de réservation
-// app.get("/reservation", (req, res) => {
-//     res.render("pages/reservation", { activePage: 'reservation' }); // Render le fichier reservation.ejs
-// });
-
-// Route pour la page de réservation
 app.get("/reservation", (req, res) => {
     const dateReservation = req.query.date; // Date sélectionnée envoyée en paramètre
 
@@ -115,23 +110,23 @@ app.get("/api/reservation", (req, res) => {
     });
 });
 
-app.post('/api/reserver', (req, res) => {
+app.post('/api/reserver', async (req, res) => {
     const { id } = req.body;
-
-    con.query("UPDATE reservations SET statut = 'Réservé' WHERE id_reservation = ?", [id], (err, result) => {
-        if (err) {
-            console.error("Error updating reservation:", err);
-            res.status(500).json({ success: false, error: "Server error" });
-            return;
-        }
-
-        if (result.affectedRows > 0) {
-            res.json({ success: true });
-        } else {
-            res.json({ success: false });
-        }
-    });
+    
+    try {
+        // Utiliser con.promise() pour gérer correctement await
+        await con.promise().query("UPDATE reservations SET statut = 'Réservé' WHERE id_reservation = ?", [id]);
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la réservation :", error);
+        res.json({ success: false });
+    }
 });
+
+
+  
+  
 
 
 
