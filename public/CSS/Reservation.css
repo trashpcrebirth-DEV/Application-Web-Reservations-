@@ -1,28 +1,25 @@
-/* BODY */
-
 .bar {
-    position: relative;  
-    top: 0px;         
-    margin-left: 140px;  /* Replacing 'left' with margin-left */
-    color: white; 
+    position: relative;
+    margin-left: 140px;
+    color: white;
     padding: 5px;
-    display: flex;  
-    align-items: center; 
-    gap: 10px; 
-}
-
-.bar input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .bar select {
     padding: 5px;
     border: 1px solid white;
     border-radius: 5px;
     background-color: gray;
-    width: 535px;
-}
-
-/* Calendrier container */
-.calendrier-container {
+    color: white;
+    width: 200px;
+  }
+  
+  .calendrier-container {
     position: relative;
-    margin-left: 145px;  /* Replacing 'left' with margin-left */
+    margin-left: 145px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -30,71 +27,61 @@
     width: 600px;
     text-align: center;
     margin-bottom: 50px;
-}
-
-h1 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.calendrier {
+  }
+  
+  .calendrier {
     width: 100%;
     font-size: 14px;
-}
-
-.calendrier-header {
+  }
+  
+  .calendrier-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;    
+    align-items: center;
     margin-bottom: 15px;
-}
-
-.calendrier-header button {
+  }
+  
+  .calendrier-header button {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 5px;
     cursor: pointer;
-}
-
-.calendrier-header button:hover {
+  }
+  
+  .calendrier-header button:hover {
     background-color: #f1f1f1;
-}
-
-.month-year {
-    font-weight: bold;
-}
-
-.calendrier-grid {
+  }
+  
+  .calendrier-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
-}
-
-.day-header {
+  }
+  
+  .day-header {
     font-weight: bold;
     padding: 10px;
-}
-
-.day {
+  }
+  
+  .day {
     padding: 10px;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
-}
-
-.day:hover {
+  }
+  
+  .day:hover {
     background-color: #e0e0e0;
-}
-
-.empty {
+  }
+  
+  .empty {
     background-color: #f5f5f5;
-}
-
-/* Boîte de réservation */
-.reservation-box {
+  }
+  
+  .reservation-box {
     position: absolute;
-    left: 800px;  /* This is a fixed position, it may push content to the right */
+    left: 800px;
     top: 190px;
     background-color: white;
     border-radius: 10px;
@@ -104,90 +91,64 @@ h1 {
     max-height: 600px;
     overflow-y: auto;
     display: none;
-    
-}
-
-.hidden {
+  }
+  
+  .hidden {
     display: none;
-}
-
-.reservation-box h2 {
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Styles généraux pour les boutons dans la boîte de réservation */
-.reservation-box button {
+  }
+  
+  .reservation-box button {
     margin: 5px;
     padding: 8px 15px;
     border: none;
     color: white;
     border-radius: 5px;
     cursor: pointer;
-}
-
-/* Bouton Fermer (rouge) */
-.reservation-box button.fermer {
+  }
+  
+  .reservation-box button.fermer {
     background-color: red;
-}
-
-.reservation-box button.fermer:hover {
+  }
+  
+  .reservation-box button.fermer:hover {
     background-color: darkred;
-}
-
-/* Bouton Réserver (bleu) */
-.reservation-box button.reserver {
+  }
+  
+  .reservation-box button.reserver {
     background-color: #007bff;
-}
-
-.reservation-box button.reserver:hover {
+  }
+  
+  .reservation-box button.reserver:hover {
     background-color: #0056b3;
-}
-
-/* --- New rules for horizontal reservation display --- */
-.reservation-item {
+  }
+  
+  .reservation-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ddd;
     padding: 5px 0;
-}
-
-.reservation-item .reservation-details {
+  }
+  
+  .reservation-item .reservation-details {
     display: flex;
     gap: 10px;
     flex: 1;
     align-items: center;
-    flex-wrap: wrap;  /* Allow wrapping if needed */
-}
-
-.reservation-item .reservation-details span {
+    flex-wrap: wrap;
+  }
+  
+  .reservation-item .reservation-details span {
     flex: 1;
     text-align: left;
-    white-space: normal;  /* Allow text to wrap */
-}
-
-/* Ensure the individual "Réserver" button inside reservation-item doesn't shrink */
-.reservation-item button.reserver {
-    flex-shrink: 0;
-}
-
-/* Bouton Annuler (orange) */
-.reservation-item button.annuler {
+    white-space: normal;
+  }
+  
+  .reservation-item button.annuler {
     background-color: orange;
-    margin-left: 10px; /* Espacement entre les boutons */
-}
-
-.reservation-item button.annuler:hover {
+    margin-left: 10px;
+  }
+  
+  .reservation-item button.annuler:hover {
     background-color: darkorange;
-}
-
-.bar select {
-    padding: 5px;
-    border: 1px solid white;
-    border-radius: 5px;
-    background-color: gray;
-    color: white;
-    width: 200px;
-}
-/* FIN DU BODY */
+  }
