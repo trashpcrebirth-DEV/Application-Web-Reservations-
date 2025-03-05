@@ -194,15 +194,22 @@ app.get("/contact", (req, res) => {
 });
 
 //Prend l'image uploadée et l'ajoute à la base de données
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "./public/images/images-evenement" });
 
-// Route pour la page d'ajout d'événement
+// Route pour l'ajout d'événement
 app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
-    const { nom, date_evenement, lieu, description, participants } = req.body;
+    const { nom, date_evenement, lieu, type, description, participants } = req.body;
     const image_url = req.file ? req.file.path : null;
 
     console.log("Body:", req.body);
     console.log("Fichier:", req.file);
+    let formattedParticipants = participants; // Initialisation de la variable
+
+    if (type === "Individuel") {
+        formattedParticipants += " participants"; // Ajoute " participants" à la valeur existante
+    } else if (type === "Equipe") {
+        formattedParticipants += " équipes"; // Ajoute " équipes" à la valeur existante
+    }
 
     if (!nom || !date_evenement || !lieu || !description || !participants || !image_url) {
         return res.status(400).json({ error: "Tous les champs sont requis." });
@@ -211,14 +218,40 @@ app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
     const formattedDate = dateFormat(date_evenement, "yyyy-mm-dd");
     const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url) VALUES (?, ?, ?, ?, ?, ?)";
 
-    con.query(query, [nom, formattedDate, lieu, description, participants, image_url], (err, result) => {
+    con.query(query, [nom, formattedDate, lieu, description, formattedParticipants, image_url], (err, result) => {
         if (err) {
             console.error("Erreur lors de l'insertion de l'événement :", err);
             return res.status(500).json({ error: "Erreur serveur" });
         }
-        res.status(200).json({ success: true, message: "Événement ajouté avec succès" });
+        res.redirect(`/contact?alertEvenement=success`);
     });
 });
+
+//Route pour ajouter un avis
+app.post('/ajouter-avis', (req, res) => {
+    console.log(req.body);
+
+    const { nom, note, commentaire } = req.body;
+    const dateAujourdhui = new Date(); // Récupère la date du jour
+    const image_url = "?";
+
+
+    if (!nom || !note || !commentaire) {
+        return res.status(400).json({ error: "Tous les champs sont requis." });
+    }
+
+    const query = "INSERT INTO avis_desUtilisateurs (nom, note, commentaire, date, image) VALUES (?, ?, ?, ?, ?)";
+    
+    con.query(query, [nom, note, commentaire, dateAujourdhui, image_url], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de l'insertion de l'avis :", err);
+            return res.status(500).json({ error: "Erreur serveur" });
+        }
+        res.redirect(`/contact?alertAvis=success`);
+
+    });
+});
+
 
 // Route pour la page de connexion
 app.get("/connexion", (req, res) => {

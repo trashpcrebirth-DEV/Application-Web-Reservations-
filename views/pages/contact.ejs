@@ -22,7 +22,7 @@
                     <h2 class="titre-section">Partagez votre expérience avec un avis</h2>
                 </div>
                 
-                <form action="#" method="POST" class="formulaire">
+                <form action="/ajouter-avis" method="POST" class="formulaire">
                     <div class="groupe-champ">
                         <label for="nom"><i class="fas fa-user"></i> Votre nom</label>
                         <input type="text" id="nom" name="nom" placeholder="Entrez votre nom" required>
@@ -103,7 +103,7 @@
                         <input type="file" id="image_url " name="image_url" accept="image/*">
                     </div>
                     
-                    <div class="groupe-champ">
+                    <div class="groupe-champ moitie">
                         <label for="lieu"><i class="fas fa-futbol"></i> Lieu</label>
                         <select id="lieu" name="lieu" required>
                             <option value="" disabled selected>Sélectionnez un lieu</option>
@@ -124,7 +124,15 @@
                             <option value="parc">Le Parc</option>
                             <option value="golf">Parc pour Golf</option>
                         </select>
-                        
+                    </div>
+
+                    <div class="groupe-champ moitie">
+                        <label for="type"><i class="fa-solid fa-filter"></i> Type d'évenement</label>
+                        <select id="type" name="type" required>
+                            <option value="" disabled selected>Sélectionnez un type</option>
+                            <option value="Individuel">Individuel</option>
+                            <option value="Equipe">En équipe</option>
+                        </select>
                     </div>
 
                     <div class="groupe-champ moitie">
@@ -154,6 +162,22 @@
     </div>
 
     <%- include ("../partials/footer.ejs") %>
+
+    <script>
+        // vérifie si le paramètre 'alert' est dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const alertMessageAvis = urlParams.get('alertAvis');
+        const alertMessageEvenement = urlParams.get('alertEvenement');
+
+    
+        if (alertMessageAvis === 'success') {
+            alert('Votre avis a été transféré avec succès!');
+        }
+
+        if(alertMessageEvenement === 'success') {
+            alert("Votre demande d'evenement a été envoyée avec succès!");
+        }
+    </script>
 </body>
 </html>
 
