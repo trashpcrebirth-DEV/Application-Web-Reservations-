@@ -236,7 +236,7 @@ app.post('/ajouter-avis', (req, res) => {
 
     const { nom, note, commentaire } = req.body;
     const dateAujourdhui = new Date(); // Récupère la date du jour
-    const image_url = "?";
+    const image_url = "/images/default-avatar.png"; //la fonctionnalité de photo de profile n'est pas encore implémentée
 
 
     if (!nom || !note || !commentaire) {
