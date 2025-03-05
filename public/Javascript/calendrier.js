@@ -6,6 +6,8 @@ function formatTime(dateString) {
   return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 function showReservationBox(day, month, year) {
+  console.log("showReservationBox appelée avec :", day, month, year); // Debug
+
   const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   const reservationBox = document.getElementById('reservationBox');
   const selectedDate = document.getElementById('selectedDate');
@@ -19,25 +21,25 @@ function showReservationBox(day, month, year) {
   reservationBox.classList.remove('hidden');
   reservationBox.style.display = "block";
 
-  // Vider la liste
+  // Vider la liste et les boutons
   reservationList.innerHTML = "";
-  // Toujours conserver le bouton Fermer dans le conteneur
   reservationButtons.innerHTML = `<button class="fermer" onclick="closeReservationBox()">Fermer</button>`;
 
   // Charger les réservations via l'API
   fetch(`/api/reservation?date=${formattedDate}`)
     .then(response => response.json())
     .then(data => {
-      console.log("Données reçues de l'API:", data);
+      console.log("Données reçues de l'API:", data); // Debug
+
       if (!data.reservations || data.reservations.length === 0) {
         reservationList.innerHTML = "<p>Aucune réservation pour cette date.</p>";
       } else {
-        // Pour chaque réservation, créer un conteneur en ligne
         data.reservations.forEach(res => {
-          const resItem = document.createElement("div");
-          resItem.classList.add("reservation-item"); // Utilisez cette classe pour appliquer un style horizontal
+          console.log("Réservation reçue :", res); // Debug
 
-          // Construire le contenu horizontalement
+          const resItem = document.createElement("div");
+          resItem.classList.add("reservation-item");
+
           resItem.innerHTML = `
             <div class="reservation-details">
                 <span><strong>ID:</strong> ${res.id_reservation}</span>
@@ -47,29 +49,35 @@ function showReservationBox(day, month, year) {
             </div>
           `;
 
-          // Créer un bouton "Réserver" spécifique à cette réservation
           const reserveButton = document.createElement("button");
           reserveButton.textContent = res.statut === "Réservé" ? "Réservé" : "Réserver";
           reserveButton.classList.add("reserver");
-
-          // Ajouter l'attribut data-id pour stocker l'ID de la réservation
           reserveButton.setAttribute("data-id", res.id_reservation);
 
-          // Si la réservation est déjà prise, désactiver le bouton et le mettre en gris
           if (res.statut === "Réservé") {
             reserveButton.disabled = true;
             reserveButton.style.backgroundColor = "grey";
+
+            // Ajouter un bouton Annuler pour cette réservation
+            const annulerButton = document.createElement("button");
+            annulerButton.textContent = "Annuler";
+            annulerButton.classList.add("annuler");
+            annulerButton.setAttribute("data-id", res.id_reservation);
+            annulerButton.onclick = function () {
+              annulerReservation(res.id_reservation);
+            };
+
+            // Ajouter les boutons à la réservation
+            resItem.appendChild(reserveButton);
+            resItem.appendChild(annulerButton);
           } else {
-            // Définir l'action du bouton seulement si la réservation est disponible
             reserveButton.onclick = function () {
               reserver(res.id_reservation);
             };
+            resItem.appendChild(reserveButton);
           }
 
-          // Ajouter le bouton à la fin du conteneur de réservation
-          resItem.appendChild(reserveButton);
-
-          // Ajouter ce conteneur à la liste
+          // Ajouter la réservation à la liste
           reservationList.appendChild(resItem);
         });
       }
@@ -77,6 +85,43 @@ function showReservationBox(day, month, year) {
     .catch(error => {
       console.error("Erreur lors du chargement des réservations:", error);
       reservationList.innerHTML = "<p>Erreur de chargement</p>";
+    });
+}
+
+function annulerReservation(reservationId) {
+  fetch('/api/annuler', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: reservationId })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Trouver l'élément de réservation correspondant
+        const reservationItem = document.querySelector(`.reservation-item button[data-id="${reservationId}"]`).closest(".reservation-item");
+
+        // Mettre à jour le statut affiché
+        const statusElement = reservationItem.querySelector(".reservation-details span:last-child");
+        statusElement.innerHTML = "<strong>Statut:</strong> Disponible";
+
+        // Réactiver le bouton Réserver
+        const reserveButton = reservationItem.querySelector(".reserver");
+        reserveButton.textContent = "Réserver";
+        reserveButton.disabled = false;
+        reserveButton.style.backgroundColor = "#007bff";
+
+        // Supprimer le bouton Annuler
+        const annulerButton = reservationItem.querySelector(".annuler");
+        annulerButton.remove();
+      } else {
+        alert("Erreur : l'annulation n'a pas pu être effectuée.");
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors de l'annulation :", error);
+      alert("Une erreur est survenue, veuillez réessayer.");
     });
 }
 
@@ -109,6 +154,18 @@ function reserver(idReservation) {
         button.textContent = "Réservé";
         button.disabled = true;
         button.style.backgroundColor = "grey";
+
+        // Ajouter un bouton Annuler pour cette réservation
+        const annulerButton = document.createElement("button");
+        annulerButton.textContent = "Annuler";
+        annulerButton.classList.add("annuler");
+        annulerButton.setAttribute("data-id", idReservation);
+        annulerButton.onclick = function () {
+          annulerReservation(idReservation);
+        };
+
+        // Ajouter le bouton Annuler à la réservation
+        reservationItem.appendChild(annulerButton);
       } else {
         alert("Erreur : la réservation n'a pas pu être effectuée.");
       }

@@ -127,7 +127,19 @@ app.post('/api/reserver', async (req, res) => {
     }
 });
 
-
+app.post('/api/annuler', async (req, res) => {
+    const { id } = req.body;
+    
+    try {
+        // Utiliser con.promise() pour gérer correctement await
+        await con.promise().query("UPDATE reservations SET statut = 'Disponible' WHERE id_reservation = ?", [id]);
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la réservation :", error);
+        res.json({ success: false });
+    }
+});
   
   
 

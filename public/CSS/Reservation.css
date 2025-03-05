@@ -172,4 +172,14 @@ h1 {
     flex-shrink: 0;
 }
 
+/* Bouton Annuler (orange) */
+.reservation-item button.annuler {
+    background-color: orange;
+    margin-left: 10px; /* Espacement entre les boutons */
+}
+
+.reservation-item button.annuler:hover {
+    background-color: darkorange;
+}
+
 /* FIN DU BODY */
