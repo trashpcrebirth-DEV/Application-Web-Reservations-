@@ -48,6 +48,9 @@ app.use(session({
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
+app.use('/images', express.static('public/images'));
+
+
 /*
 Connection au server MySQL
 */
@@ -194,7 +197,7 @@ const upload = multer({ dest: "./public/images/images-evenement" });
 // Route pour l'ajout d'événement
 app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
     const { nom, date_evenement, lieu, type, description, participants } = req.body;
-    const image_url = req.file ? req.file.path : null;
+    const image_url = `/images/images-evenement/${req.file.filename}`;
 
     console.log("Body:", req.body);
     console.log("Fichier:", req.file);
@@ -228,7 +231,7 @@ app.post('/ajouter-avis', (req, res) => {
 
     const { nom, note, commentaire } = req.body;
     const dateAujourdhui = new Date(); // Récupère la date du jour
-    const image_url = "?";
+    const image_url = "/images/default-avatar.png"; //la fonctionnalité de photo de profile n'est pas encore implémentée
 
 
     if (!nom || !note || !commentaire) {
