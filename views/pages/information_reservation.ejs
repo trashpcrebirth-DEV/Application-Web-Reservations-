@@ -1,0 +1,153 @@
+<!-- details-reservation.ejs -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la réservation | SportZone</title>
+    <link rel="stylesheet" href="/CSS/information_reservation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <%- include ("../partials/header.ejs") %>
+        <div class="conteneur">
+            <a href="/reservation" class="lien-retour">
+                <i class="fas fa-arrow-left"></i> Retour aux réservations
+            </a>
+
+            <div class="carte-details">
+                <div class="entete">
+                    <h1>Réservation #<%= reservation.id %>
+                    </h1>
+                    <span class="statut <%= reservation.statut === 'Confirmée' ? 'confirme' : 'en-attente' %>">
+                        <%= reservation.statut %>
+                    </span>
+                </div>
+
+                <div class="contenu">
+                    <div class="grille">
+                        <div class="section">
+                            <h2>Détails de la réservation</h2>
+
+                            <div class="element-info">
+                                <i class="fas fa-calendar icone"></i>
+                                <div>
+                                    <p class="etiquette">Date</p>
+                                    <p class="valeur">
+                                        <%= reservation.date %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="element-info">
+                                <i class="fas fa-clock icone"></i>
+                                <div>
+                                    <p class="etiquette">Heure</p>
+                                    <p class="valeur">
+                                        <%= reservation.heureDebut %> - <%= reservation.heureFin %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="element-info">
+                                <i class="fas fa-basketball-ball icone"></i>
+                                <div>
+                                    <p class="etiquette">Sport</p>
+                                    <p class="valeur">
+                                        <%= reservation.sport %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="element-info">
+                                <i class="fas fa-map-marker-alt icone"></i>
+                                <div>
+                                    <p class="etiquette">Terrain</p>
+                                    <p class="valeur">
+                                        <%= reservation.nomTerrain %> (#<%= reservation.numeroTerrain %>)
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="element-info">
+                                <i class="fa-solid fa-dollar-sign icone"></i>
+                                <div>
+                                    <p class="etiquette">Prix total</p>
+                                    <p class="valeur prix">
+                                        <%= reservation.prixTotal %> $
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h2>Informations du client</h2>
+
+                            <div class="bloc-info">
+                                <p class="etiquette">Nom</p>
+                                <p class="valeur">
+                                    <%= reservation.nomClient %>
+                                </p>
+                            </div>
+
+                            <div class="bloc-info">
+                                <p class="etiquette">Email</p>
+                                <p class="valeur">
+                                    <%= reservation.email %>
+                                </p>
+                            </div>
+
+                            <div class="bloc-info">
+                                <p class="etiquette">Téléphone</p>
+                                <p class="valeur">
+                                    <%= reservation.telephone %>
+                                </p>
+                            </div>
+
+                            <div class="bloc-info">
+                                <p class="etiquette">Nombre de joueurs</p>
+                                <p class="valeur">
+                                    <%= reservation.nombreJoueurs %>
+                                </p>
+                            </div>
+
+                            <% if (reservation.notes) { %>
+                                <div class="bloc-info">
+                                    <p class="etiquette">Notes</p>
+                                    <p class="valeur notes">
+                                        <%= reservation.notes %>
+                                    </p>
+                                </div>
+                                <% } %>
+
+                                    <div class="info-paiement">
+                                        <h3>Informations de paiement</h3>
+                                        <div
+                                            class="statut-paiement <%= reservation.statutPaiement === 'Payé' ? 'paye' : 'en-attente' %>">
+                                            <span class="point"></span>
+                                            <%= reservation.statutPaiement %>
+                                        </div>
+                                        <p class="methode-paiement">
+                                            <span class="etiquette">Méthode:</span>
+                                            <span class="valeur">
+                                                <%= reservation.methodePaiement %>
+                                            </span>
+                                        </p>
+                                    </div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <a href="/reservations/<%= reservation.id %>/modifier" class="bouton primaire">Réserver</a>
+                        <a href="/reservations/<%= reservation.id %>/annuler" class="bouton contour">Annuler la
+                            réservation</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include ("../partials/footer.ejs") %>
+</body>
+
+</html>

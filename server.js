@@ -10,7 +10,6 @@ import mysql from "mysql2";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import multer from "multer";
-import bcrypt from 'bcrypt';
 
 
 const app = express();
@@ -156,7 +155,34 @@ app.post('/api/annuler', async (req, res) => {
 });
 
 
+app.get("/reservation-information/:id", function (req, res) {
+    const reservationTest = {
+        id: 123,
+        statut: 'Confirmée',
+        date: '10 Mars 2025',
+        heureDebut: '14:00',
+        heureFin: '16:00',
+        sport: 'Basketball',
+        nomTerrain: 'Terrain principal',
+        numeroTerrain: '3',
+        prixTotal: '45.00',
+        nomClient: 'Thomas Dubois',
+        email: 'thomas.dubois@example.com',
+        telephone: '06 12 34 56 78',
+        nombreJoueurs: 8,
+        notes: 'Nous aimerions avoir accès aux vestiaires 15 minutes avant le début de la réservation.',
+        statutPaiement: 'Payé',
+        methodePaiement: 'Carte bancaire'
+      };
 
+    res.render("pages/information_reservation", {
+        siteTitle: "SportZone",
+        pageTitle: "Détails de la réservation",
+        activePage: "reservation",
+        user: req.session.user,
+        reservation: reservationTest
+    });
+});
 
 
 
