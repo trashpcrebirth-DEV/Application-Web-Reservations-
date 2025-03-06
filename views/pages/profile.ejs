@@ -32,6 +32,7 @@
                         <%= user.nom %>
                             <%= user.prenom %>
                     </h1> <!-- Nom et prénom de l'utilisateur -->
+                    <p><a href="/historique">Historique</a></p> <!-- Lien vers l'historique des réservations -->
                 </div>
             </div>
             <div class="info-container" style="background-color: rgb(240, 240, 240);">
@@ -39,11 +40,6 @@
                 <form action="/modifier" method="POST" id="saveForm">
                     <div class="info-row">
                         <div class="info-column">
-                            <div class="info-box">
-                                <p><strong>ID:</strong>
-                                    <input type="text" name="id" value="<%= user.id || '' %>" disabled>
-                                </p> <!-- ID de l'utilisateur -->
-                            </div>
                             <div class="info-box">
                                 <p><strong>Date d'inscription:</strong>
                                     <input type="text" name="date_inscription"

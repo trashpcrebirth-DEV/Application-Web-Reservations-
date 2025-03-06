@@ -127,11 +127,11 @@ app.get("/api/reservation", (req, res) => {
 
 app.post('/api/reserver', async (req, res) => {
     const { id } = req.body;
-    
+
     try {
         // Utiliser con.promise() pour gérer correctement await
         await con.promise().query("UPDATE reservations SET statut = 'Réservé' WHERE id_reservation = ?", [id]);
-        
+
         res.json({ success: true });
     } catch (error) {
         console.error("Erreur lors de la mise à jour de la réservation :", error);
@@ -141,19 +141,19 @@ app.post('/api/reserver', async (req, res) => {
 
 app.post('/api/annuler', async (req, res) => {
     const { id } = req.body;
-    
+
     try {
         // Utiliser con.promise() pour gérer correctement await
         await con.promise().query("UPDATE reservations SET statut = 'Disponible' WHERE id_reservation = ?", [id]);
-        
+
         res.json({ success: true });
     } catch (error) {
         console.error("Erreur lors de la mise à jour de la réservation :", error);
         res.json({ success: false });
     }
 });
-  
-  
+
+
 
 
 
@@ -182,6 +182,7 @@ app.get("/profile", (req, res) => {
     });
 });
 
+
 app.post('/modifier', (req, res) => {
     const { id, nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
     console.log(req.body);
@@ -208,9 +209,32 @@ app.post('/modifier', (req, res) => {
     });
 });
 
+// Route API pour récupérer l'historique des réservations
+app.get("/api/historique", (req, res) => {
+    const userId = req.session.user.id; // Utiliser l'ID de l'utilisateur connecté
+
+    const query = `
+        SELECT r.categorie_sport, r.date_time, r.prix
+        FROM reservations r
+        JOIN utilisateurs u ON r.user_id = u.id
+        WHERE u.id = ?
+        ORDER BY r.date_time DESC
+    `;
+
+    con.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error("Erreur lors de la récupération de l'historique des réservations :", err);
+            return res.status(500).json({ error: "Erreur serveur" });
+        }
+
+        res.json({ reservations: results });
+    });
+});
+
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
-    res.render("pages/contact", { activePage: 'contact',
+    res.render("pages/contact", {
+        activePage: 'contact',
         user: req.session.user
     }); // Render le fichier contact.ejs
 });
@@ -263,7 +287,7 @@ app.post('/ajouter-avis', (req, res) => {
     }
 
     const query = "INSERT INTO avis_desUtilisateurs (nom, note, commentaire, date, image) VALUES (?, ?, ?, ?, ?)";
-    
+
     con.query(query, [nom, note, commentaire, dateAujourdhui, image_url], (err, result) => {
         if (err) {
             console.error("Erreur lors de l'insertion de l'avis :", err);
@@ -301,10 +325,10 @@ app.get('/AProposUtilisateur', (req, res) => {
 });
 
 app.get('/AProposInstallations', (req, res) => {
-    res.render("pages/AProposInstallations", { 
+    res.render("pages/AProposInstallations", {
         activePage: 'accueil',
         user: req.session.user
-     });
+    });
 });
 
 // Route pour la page à propos des événements
@@ -352,6 +376,7 @@ app.post('/inscription', function (req, res) {
         if (result.length > 0) {
             // Email already exists
             res.status(400).json({ success: false, error: "Adresse courriel existe déjà" });
+            console.log("Adresse courriel existe déjà");
         } else {
             // Insert new user
             const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
@@ -360,6 +385,10 @@ app.post('/inscription', function (req, res) {
             con.query(requete, parametres, function (err, result) {
                 if (err) throw err;
                 res.json({ success: true });
+                console.log("Nouvel utilisateur inscrit :", parametres);
+
+
+
             });
         }
     });

@@ -19,7 +19,9 @@ body {
     height: 20%;
 }
 
-input[type="text"], input[type="email"], [type="date"] {
+input[type="text"],
+input[type="email"],
+[type="date"] {
     width: 60%;
     float: right;
 }
@@ -106,4 +108,31 @@ input[type="text"], input[type="email"], [type="date"] {
 
 .modifier:hover {
     background-color: #2f0fa3;
+}
+
+/* Styles pour la table des réservations */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
 }
