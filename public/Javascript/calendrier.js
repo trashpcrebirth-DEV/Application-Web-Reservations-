@@ -110,6 +110,7 @@ function closeReservationBox() {
 }
 
 function reserver(idReservation) {
+  /*
   fetch('/api/reserver', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -141,6 +142,9 @@ function reserver(idReservation) {
     .catch(() => {
       alert("Une erreur est survenue, veuillez réessayer.");
     });
+    */
+
+    window.location.href = `/reservation-information/${idReservation}`;
 }
 
 function updateCalendar() {
