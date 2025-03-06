@@ -126,18 +126,24 @@ app.get("/api/reservation", (req, res) => {
     });
 });
 
-app.post('/api/reserver', async (req, res) => {
-    const { id } = req.body;
+//route pour réserver
+app.post('/reserver/:id', (req, res) => {
+    const reservationId = req.params.id;
+    
+    const query = `UPDATE reservations SET statut = ? WHERE id_reservation = ?`;
 
-    try {
-        // Utiliser con.promise() pour gérer correctement await
-        await con.promise().query("UPDATE reservations SET statut = 'Réservé' WHERE id_reservation = ?", [id]);
+    con.query(query, ["Réservé", reservationId], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la mise à jour :", err);
+            return res.status(500).send("Erreur lors de la mise à jour de la réservation");
+        }
 
-        res.json({ success: true });
-    } catch (error) {
-        console.error("Erreur lors de la mise à jour de la réservation :", error);
-        res.json({ success: false });
-    }
+        if (result.affectedRows > 0) {
+            res.redirect(`/reservation-information/${reservationId}`);
+        } else {
+            res.status(404).send("Réservation non trouvée ou déjà mise à jour");
+        }
+    });
 });
 
 app.post('/api/annuler', async (req, res) => {
@@ -156,31 +162,25 @@ app.post('/api/annuler', async (req, res) => {
 
 
 app.get("/reservation-information/:id", function (req, res) {
-    const reservationTest = {
-        id: 123,
-        statut: 'Confirmée',
-        date: '10 Mars 2025',
-        heureDebut: '14:00',
-        heureFin: '16:00',
-        sport: 'Basketball',
-        nomTerrain: 'Terrain principal',
-        numeroTerrain: '3',
-        prixTotal: '45.00',
-        nomClient: 'Thomas Dubois',
-        email: 'thomas.dubois@example.com',
-        telephone: '06 12 34 56 78',
-        nombreJoueurs: 8,
-        notes: 'Nous aimerions avoir accès aux vestiaires 15 minutes avant le début de la réservation.',
-        statutPaiement: 'Payé',
-        methodePaiement: 'Carte bancaire'
-      };
+    const reservationId = req.params.id;
 
-    res.render("pages/information_reservation", {
-        siteTitle: "SportZone",
-        pageTitle: "Détails de la réservation",
-        activePage: "reservation",
-        user: req.session.user,
-        reservation: reservationTest
+    con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Erreur serveur");
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send("Réservation non trouvée");
+        }
+
+        res.render("pages/information_reservation", {
+            siteTitle: "SportZone",
+            pageTitle: "Détails de la réservation",
+            activePage: "reservation",
+            user: req.session.user,
+            reservation: results[0] 
+        });
     });
 });
 
