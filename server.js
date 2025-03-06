@@ -10,6 +10,8 @@ import mysql from "mysql2";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import multer from "multer";
+import bcrypt from 'bcrypt';
+
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -209,28 +211,6 @@ app.post('/modifier', (req, res) => {
     });
 });
 
-// Route API pour récupérer l'historique des réservations
-app.get("/api/historique", (req, res) => {
-    const userId = req.session.user.id; // Utiliser l'ID de l'utilisateur connecté
-
-    const query = `
-        SELECT r.categorie_sport, r.date_time, r.prix
-        FROM reservations r
-        JOIN utilisateurs u ON r.user_id = u.id
-        WHERE u.id = ?
-        ORDER BY r.date_time DESC
-    `;
-
-    con.query(query, [userId], (err, results) => {
-        if (err) {
-            console.error("Erreur lors de la récupération de l'historique des réservations :", err);
-            return res.status(500).json({ error: "Erreur serveur" });
-        }
-
-        res.json({ reservations: results });
-    });
-});
-
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
     res.render("pages/contact", {
@@ -365,12 +345,12 @@ app.get("/AProposEvenement", (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/inscription', function (req, res) {
+app.post('/inscription', async function (req, res) {
     const { nom, prenom, email, mot_de_passe } = req.body;
 
     // Check if email already exists
     const checkEmailQuery = "SELECT * FROM utilisateurs WHERE email = ?";
-    con.query(checkEmailQuery, [email], function (err, result) {
+    con.query(checkEmailQuery, [email], async function (err, result) {
         if (err) throw err;
 
         if (result.length > 0) {
@@ -378,40 +358,49 @@ app.post('/inscription', function (req, res) {
             res.status(400).json({ success: false, error: "Adresse courriel existe déjà" });
             console.log("Adresse courriel existe déjà");
         } else {
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+
             // Insert new user
             const requete = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
-            const parametres = [nom, prenom, email, mot_de_passe];
+            const parametres = [nom, prenom, email, hashedPassword];
 
             con.query(requete, parametres, function (err, result) {
                 if (err) throw err;
                 res.json({ success: true });
                 console.log("Nouvel utilisateur inscrit :", parametres);
-
-
-
             });
         }
     });
 });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/connexion', function (req, res) {
-    const requete = "SELECT * FROM utilisateurs WHERE email = ? AND mot_de_passe = ?";
-    const parametres = [req.body.email, req.body.mot_de_passe];
+    const { email, mot_de_passe } = req.body;
+    const requete = "SELECT * FROM utilisateurs WHERE email = ?";
+    const parametres = [email];
 
-    con.query(requete, parametres, function (err, result) {
+    con.query(requete, parametres, async function (err, result) {
         if (err) {
             console.error("Erreur lors de la connexion :", err);
             return res.status(500).json({ success: false, message: "Erreur serveur" });
         }
 
         if (result.length > 0) {
-            // Connexion réussie
-            console.log("Connexion réussie pour l'utilisateur:", result[0]);
-            req.session.user = result[0]; // Sauvegarder l'utilisateur dans la session
-            return res.json({ success: true });
+            const user = result[0];
+            const match = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
 
+            if (match) {
+                // Connexion réussie
+                console.log("Connexion réussie pour l'utilisateur:", user);
+                req.session.user = user; // Sauvegarder l'utilisateur dans la session
+                return res.json({ success: true });
+            } else {
+                // Connexion échouée
+                return res.json({ success: false, message: "Adresse courriel/mot de passe invalide" });
+            }
         } else {
             // Connexion échouée
             return res.json({ success: false, message: "Adresse courriel/mot de passe invalide" });

@@ -22,16 +22,17 @@
                 <form id="connexionForm" action="/connexion" method="POST">
                     <label for="email">Adresse courriel</label>
                     <br>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email">
                     <br>
                     <label for="password">Mot de passe</label>
                     <br>
                     <div class="password-container">
-                        <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+                        <input type="password" id="mot_de_passe" name="mot_de_passe">
                         <i class="fa fa-eye" id="togglePassword"></i>
                     </div>
                     <br>
-                    <div id="loginError" class="error-message" style="display: none;">Adresse courriel/mot de passe invalide</div>
+                    <div id="loginError" class="error-message" style="display: none;">Adresse courriel/mot de passe
+                        invalide</div>
                     <br>
                     <input type="submit" value="SE CONNECTER">
                 </form>
