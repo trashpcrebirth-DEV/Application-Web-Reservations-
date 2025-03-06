@@ -1,7 +1,7 @@
 /*
     Importing the required modules
 */
-
+import bcrypt from "bcrypt";
 import express from "express";
 import session from "express-session";
 import path from "path";
