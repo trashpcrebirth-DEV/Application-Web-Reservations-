@@ -81,7 +81,7 @@ input[type="password"] {
     position: absolute;
     left: 37vw;
     right: 5vw;
-    /* Positionner l'icône à droite à l'intérieur du champ */
+    
     top: 1vw;
     transform: translateY(-50%);
     cursor: pointer;
@@ -136,7 +136,6 @@ input[type="submit"]:hover {
 .link {
     margin-top: 10px;
     text-align: center;
-    color: #000;
 }
 
 .link a {

@@ -90,7 +90,6 @@ input[type="password"] {
 .password-container .fa-eye {
     position: absolute;
     right: 60.5vw;
-    /* Positionner l'icône à droite à l'intérieur du champ */
     top: 31vw;
     transform: translateY(-50%);
     cursor: pointer;
