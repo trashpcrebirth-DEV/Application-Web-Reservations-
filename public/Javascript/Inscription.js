@@ -1,8 +1,13 @@
+// ...existing code...
+
 document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('togglePassword');
     const password = document.getElementById('mot_de_passe');
     const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
     const confirmPassword = document.getElementById('confirm_password');
+    const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+    const passwordStrengthMessage = document.getElementById('passwordStrengthMessage');
+    const passwordWeakError = document.getElementById('passwordWeakError');
 
     togglePassword.addEventListener('click', () => {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -16,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleConfirmPassword.classList.toggle('fa-eye-slash');
     });
 
+    password.addEventListener('input', () => {
+        const strength = getPasswordStrength(password.value);
+        updatePasswordStrengthBar(strength);
+        updatePasswordStrengthMessage(strength);
+        passwordWeakError.style.display = 'none';
+    });
+
     document.getElementById('inscriptionForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent form submission
 
@@ -24,6 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         var email = document.getElementById('email').value;
         var password = document.getElementById('mot_de_passe').value;
         var confirmPassword = document.getElementById('confirm_password').value;
+
+        const strength = getPasswordStrength(password);
+        if (strength <= 2) {
+            passwordWeakError.style.display = 'block';
+            return;
+        }
 
         if (password !== confirmPassword) {
             document.getElementById('passwordError').style.display = 'block';
@@ -52,4 +70,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error:', error);
             });
     });
+
+    function getPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]/)) strength++;
+        if (password.match(/[A-Z]/)) strength++;
+        if (password.match(/[0-9]/)) strength++;
+        if (password.match(/[^a-zA-Z0-9]/)) strength++;
+        return strength;
+    }
+
+    function updatePasswordStrengthBar(strength) {
+        const strengthBar = passwordStrengthBar;
+        strengthBar.style.width = (strength * 20) + '%';
+        if (strength <= 2) {
+            strengthBar.style.backgroundColor = 'red';
+        } else if (strength <= 4) {
+            strengthBar.style.backgroundColor = 'orange';
+        } else {
+            strengthBar.style.backgroundColor = 'green';
+        }
+    }
+
+    function updatePasswordStrengthMessage(strength) {
+        const strengthMessage = passwordStrengthMessage;
+        if (strength <= 2) {
+            strengthMessage.textContent = 'Faible';
+            strengthMessage.style.color = 'red';
+        } else if (strength <= 4) {
+            strengthMessage.textContent = 'Moyen';
+            strengthMessage.style.color = 'orange';
+        } else {
+            strengthMessage.textContent = 'Fort';
+            strengthMessage.style.color = 'green';
+        }
+    }
 });

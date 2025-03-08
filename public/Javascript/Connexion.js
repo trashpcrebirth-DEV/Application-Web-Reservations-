@@ -1,6 +1,10 @@
 const images = [
-    "Images/1-f079d3ff.jpg",
-    "Images/bf29a9d2-cfc5-42f0-a6e9-9e1fe83b91a7.jpg"
+   "/images/images-connexion/Equipe_Soccer.jpg",
+    "/images/images-connexion/Badminton.jpg"
+    , "/images/images-connexion/Hockey.jpg"
+    , "/images/images-connexion/salle-musculation.png"
+    , "/images/images-connexion/Volleyball.jpg"
+    
 ];
 
 let currentIndex = 0;
