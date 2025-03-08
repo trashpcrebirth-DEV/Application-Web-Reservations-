@@ -21,6 +21,7 @@ body {
 
 .form-container {
     width: 100%;
+    height: auto;
     padding: 20px;
     background-color: #2c2c2c;
     border-radius: 10px;
@@ -29,7 +30,6 @@ body {
 
 .logo-link {
     display: block;
-    margin: 0 auto 10px auto;
     max-width: 300px;
     height: auto;
 }
@@ -68,7 +68,7 @@ input[type="password"] {
 .password-container input {
     width: 70%;
     padding: 10px 20px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     margin-left: 10%;
     background-color: #3c3c3c;
     color: #e0e0e0;
@@ -136,6 +136,7 @@ input[type="submit"]:hover {
 .link {
     margin-top: 10px;
     text-align: center;
+    color: #000;
 }
 
 .link a {
@@ -160,4 +161,5 @@ input[type="submit"]:hover {
     font-size: 0.8em;
     display: none;
 }
+
 

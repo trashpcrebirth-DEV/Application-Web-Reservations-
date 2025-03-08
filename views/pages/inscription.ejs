@@ -17,7 +17,7 @@
                 <img class="logo-link" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="Sportzone_Logo">
             </a>
             <div class="form-container">
-                <h2 class="centrer" style="margin-top: 10%; margin-bottom: 10%;">INSCRIPTION</h2>
+                <h2 class="centrer" style="margin-top: 5%; margin-bottom: 5%;">INSCRIPTION</h2>
 
                 <form id="inscriptionForm" action="/inscription" method="POST">
                     <label for="nom">Nom</label>
@@ -60,18 +60,24 @@
                     
                     <div id="passwordError" class="error-message">Les mots de passe ne correspondent pas.</div>
                     <br>
-                    <input type="submit" value="S'INSCRIRE">
+                    <input type="submit" value="S'INSCRIRE"> 
+                    <div class="link">
+                    
+                </div>
+                <p class="centrer" ><a href="Mot_de_passe_oublie.html" style="color: rgb(0, 89, 255)">Mot de passe oublié ?</a></p>
+                    <p class="centrer"> Déjà un compte ? <a href="/connexion" style="color: rgb(0, 89, 255)">Connexion</a></p>
                 </form>
 
-                <div class="link">
-                    <p class="centrer"><a href="Mot_de_passe_oublie.html">Mot de passe oublié ?</a></p>
-                    <p class="centrer">Déjà un compte ? <a href="/connexion">Connexion</a></p>
-                </div>
+               
             </div>
-        </div>
 
+
+        </div>
        
+
     </div>
+    <%- include ("../partials/footer.ejs") %>
+
 
     <script src="/Javascript/Inscription.js"></script>
 

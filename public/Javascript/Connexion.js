@@ -1,5 +1,4 @@
 const images = [
-   "/images/images-connexion/Equipe_Soccer.jpg",
     "/images/images-connexion/Badminton.jpg"
     , "/images/images-connexion/Hockey.jpg"
     , "/images/images-connexion/salle-musculation.png"
