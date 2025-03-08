@@ -1,0 +1,198 @@
+CREATE TABLE reservations (
+    id_reservation INT AUTO_INCREMENT PRIMARY KEY,
+    date_time DATETIME NOT NULL,
+    prix DECIMAL(10,2) NOT NULL,
+    statut VARCHAR(50) NOT NULL DEFAULT 'Disponible',
+    categorie_sport VARCHAR(100) NOT NULL
+);
+
+INSERT INTO reservations (date_time, prix, statut, categorie_sport) 
+VALUES 
+-- 1er mars
+('2025-03-01 10:00:00', 20.00, 'Disponible', 'Football'),
+('2025-03-01 14:00:00', 25.00, 'Disponible', 'Basketball'),
+('2025-03-01 18:00:00', 30.00, 'Disponible', 'Tennis'),
+
+-- 2 mars
+('2025-03-02 09:00:00', 15.00, 'Disponible', 'Football'),
+('2025-03-02 12:00:00', 20.00, 'Disponible', 'Basketball'),
+
+-- 3 mars
+('2025-03-03 16:00:00', 35.00, 'Disponible', 'Tennis'),
+('2025-03-03 19:00:00', 40.00, 'Disponible', 'Football'),
+
+-- 4 mars
+('2025-03-04 11:00:00', 22.00, 'Disponible', 'Basketball'),
+('2025-03-04 15:00:00', 28.00, 'Disponible', 'Tennis'),
+
+-- 5 mars
+('2025-03-05 13:00:00', 18.00, 'Disponible', 'Football'),
+('2025-03-05 17:00:00', 24.00, 'Disponible', 'Basketball'),
+
+-- 6 mars
+('2025-03-06 10:30:00', 32.00, 'Disponible', 'Tennis'),
+('2025-03-06 20:00:00', 45.00, 'Disponible', 'Football'),
+
+-- 7 mars
+('2025-03-07 09:30:00', 19.00, 'Disponible', 'Basketball'),
+('2025-03-07 14:30:00', 26.00, 'Disponible', 'Tennis'),
+
+-- 8 mars
+('2025-03-08 12:00:00', 21.00, 'Disponible', 'Football'),
+('2025-03-08 16:00:00', 29.00, 'Disponible', 'Basketball'),
+
+-- 9 mars
+('2025-03-09 18:00:00', 34.00, 'Disponible', 'Tennis'),
+('2025-03-09 21:00:00', 50.00, 'Disponible', 'Football'),
+
+-- 10 mars
+('2025-03-10 08:00:00', 17.00, 'Disponible', 'Basketball'),
+('2025-03-10 13:00:00', 23.00, 'Disponible', 'Tennis'),
+
+-- 11 mars
+('2025-03-11 10:00:00', 20.00, 'Disponible', 'Football'),
+('2025-03-11 15:00:00', 27.00, 'Disponible', 'Basketball'),
+
+-- 12 mars
+('2025-03-12 19:00:00', 36.00, 'Disponible', 'Tennis'),
+('2025-03-12 22:00:00', 55.00, 'Disponible', 'Football'),
+
+-- 13 mars
+('2025-03-13 11:30:00', 24.00, 'Disponible', 'Basketball'),
+('2025-03-13 16:30:00', 31.00, 'Disponible', 'Tennis'),
+
+-- 14 mars
+('2025-03-14 09:00:00', 18.00, 'Disponible', 'Football'),
+('2025-03-14 14:00:00', 25.00, 'Disponible', 'Basketball'),
+
+-- 15 mars
+('2025-03-15 17:00:00', 33.00, 'Disponible', 'Tennis'),
+('2025-03-15 20:00:00', 48.00, 'Disponible', 'Football'),
+
+-- 16 mars
+('2025-03-16 10:00:00', 19.00, 'Disponible', 'Basketball'),
+('2025-03-16 15:00:00', 26.00, 'Disponible', 'Tennis'),
+
+-- 17 mars
+('2025-03-17 12:00:00', 22.00, 'Disponible', 'Football'),
+('2025-03-17 18:00:00', 30.00, 'Disponible', 'Basketball'),
+
+-- 18 mars
+('2025-03-18 21:00:00', 37.00, 'Disponible', 'Tennis'),
+('2025-03-18 23:00:00', 60.00, 'Disponible', 'Football'),
+
+-- 19 mars
+('2025-03-19 08:30:00', 20.00, 'Disponible', 'Basketball'),
+('2025-03-19 13:30:00', 28.00, 'Disponible', 'Tennis'),
+
+-- 20 mars
+('2025-03-20 10:00:00', 23.00, 'Disponible', 'Football'),
+('2025-03-20 16:00:00', 32.00, 'Disponible', 'Basketball'),
+
+-- 21 mars
+('2025-03-21 19:00:00', 38.00, 'Disponible', 'Tennis'),
+('2025-03-21 22:00:00', 65.00, 'Disponible', 'Football'),
+
+-- 22 mars
+('2025-03-22 11:00:00', 21.00, 'Disponible', 'Basketball'),
+('2025-03-22 14:00:00', 29.00, 'Disponible', 'Tennis'),
+
+-- 23 mars
+('2025-03-23 09:00:00', 24.00, 'Disponible', 'Football'),
+('2025-03-23 17:00:00', 34.00, 'Disponible', 'Basketball'),
+
+-- 24 mars
+('2025-03-24 20:00:00', 40.00, 'Disponible', 'Tennis'),
+('2025-03-24 23:00:00', 70.00, 'Disponible', 'Football'),
+
+-- 25 mars
+('2025-03-25 08:00:00', 22.00, 'Disponible', 'Basketball'),
+('2025-03-25 12:00:00', 30.00, 'Disponible', 'Tennis'),
+
+-- 26 mars
+('2025-03-26 15:00:00', 25.00, 'Disponible', 'Football'),
+('2025-03-26 18:00:00', 35.00, 'Disponible', 'Basketball'),
+
+-- 27 mars
+('2025-03-27 21:00:00', 42.00, 'Disponible', 'Tennis'),
+('2025-03-27 23:30:00', 75.00, 'Disponible', 'Football'),
+
+-- 28 mars
+('2025-03-28 10:30:00', 23.00, 'Disponible', 'Basketball'),
+('2025-03-28 14:30:00', 31.00, 'Disponible', 'Tennis'),
+
+-- 29 mars
+('2025-03-29 09:00:00', 26.00, 'Disponible', 'Football'),
+('2025-03-29 16:00:00', 36.00, 'Disponible', 'Basketball'),
+
+-- 30 mars
+('2025-03-30 19:00:00', 44.00, 'Disponible', 'Tennis'),
+('2025-03-30 22:00:00', 80.00, 'Disponible', 'Football'),
+
+-- 31 mars
+('2025-03-31 11:00:00', 24.00, 'Disponible', 'Basketball'),
+('2025-03-31 15:00:00', 33.00, 'Disponible', 'Tennis');
+
+CREATE TABLE utilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,    -- ID unique pour chaque utilisateur
+    nom VARCHAR(100) NOT NULL,            -- Nom de l'utilisateur
+    prenom VARCHAR(100) NOT NULL,         -- Prénom de l'utilisateur
+    mot_de_passe VARCHAR(255) NOT NULL,   -- Mot de passe de l'utilisateur
+    date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date d'inscription
+    date_naissance DATE,                  -- Date de naissance de l'utilisateur
+    telephone VARCHAR(20),                -- Numéro de téléphone
+    langue VARCHAR(50),                   -- Langue de l'utilisateur
+    email VARCHAR(255) UNIQUE NOT NULL,   -- Adresse e-mail (unique)
+    adresse VARCHAR(255)                  -- Adresse de l'utilisateur
+);
+
+CREATE TABLE avis_desUtilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identifiant unique
+    nom VARCHAR(100) NOT NULL,         -- Nom de l'utilisateur
+    note TINYINT NOT NULL,             -- Note donnée (1-5)
+    commentaire TEXT NOT NULL,         -- Commentaire de l'utilisateur
+    date DATE NOT NULL,                -- Date de l'avis
+    image VARCHAR(255)                 -- Chemin ou URL de la photo de profil
+);
+INSERT INTO avis_desUtilisateurs (nom, note, commentaire, date, image)
+VALUES
+('Alex Dubois', 5, "J'ai réservé un terrain de tennis facilement. L'expérience était géniale !", '2023-11-15', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=faces&fit=crop&w=80&h=80'),
+('Marie Leclerc', 4, "Le terrain de football était en excellent état. Je reviendrai sûrement !", '2023-11-20', 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?crop=faces&fit=crop&w=80&h=80'),
+('Thomas Martin', 5, "Réservation rapide et service client très réactif. Parfait !", '2023-11-25', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=80&h=80'),
+('Sophie Tremblay', 3, "Bonne expérience, mais quelques problèmes techniques à la réservation.", '2023-11-10', 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?crop=faces&fit=crop&w=80&h=80'),
+('Marc Bélanger', 4, "Terrain de basket accessible et en bon état. J'ai passé un bon moment.", '2023-11-12', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?crop=faces&fit=crop&w=80&h=80'),
+('Camille Dupont', 5, "Super service, très facile à utiliser. Je recommande !", '2023-11-13', 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?crop=faces&fit=crop&w=80&h=80'),
+('Julien Roy', 4, "Service rapide, mais le terrain aurait pu être mieux entretenu.", '2023-11-14', 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?crop=faces&fit=crop&w=80&h=80'),
+('Claire Fournier', 5, "Application très pratique et bien pensée.", '2023-11-16', 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?crop=faces&fit=crop&w=80&h=80'),
+('Émile Gagnon', 3, "J'ai eu du mal à trouver un créneau disponible.", '2023-11-17', 'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?crop=faces&fit=crop&w=80&h=80'),
+('Chloé Berger', 5, "Service impeccable. Très satisfaite !", '2023-11-18', 'https://images.unsplash.com/photo-1531251445707-1f000e1e9f1c?crop=faces&fit=crop&w=80&h=80'),
+('Antoine Lavoie', 4, "La réservation a été facile, mais il manquait un peu d’éclairage sur le terrain.", '2023-11-19', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=faces&fit=crop&w=80&h=80'),
+('Isabelle Richard', 5, "J'adore cette plateforme, tout est bien organisé.", '2023-11-21', 'https://images.unsplash.com/photo-1502767089025-6572583495b2?crop=faces&fit=crop&w=80&h=80'),
+('Nicolas Côté', 4, "Bon service, mais l'interface utilisateur pourrait être améliorée.", '2023-11-22', 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?crop=faces&fit=crop&w=80&h=80'),
+('Charlotte Brunet', 5, "Expérience incroyable, je recommande à tout le monde.", '2023-11-23', 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?crop=faces&fit=crop&w=80&h=80');
+
+CREATE TABLE Liste_Evenements (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(255),
+    date_evenement DATE,
+    lieu VARCHAR(255),
+    description TEXT,
+    participants VARCHAR(255),
+    image_url  VARCHAR(255)
+); 
+INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url)
+VALUES
+    ("Tournoi de Basketball Inter-entreprises", "2025-03-15", "Gymnase SportZone", "Tournoi amical de basketball pour les entreprises locales, avec des équipes mixtes.", "8 équipes", "https://images.unsplash.com/photo-1518989229647-6377f907a0b2?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Match de Football Amical", "2025-04-05", "Terrain de Football SportZone", "Rencontre amicale entre clubs locaux de football, avec des matchs de 30 minutes.", "12 équipes", "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Tournoi de Tennis en Double", "2025-05-10", "Courts de Tennis SportZone", "Compétition de tennis en double pour les joueurs de tous niveaux.", "16 équipes", "https://images.unsplash.com/photo-1526888935184-a82d2a4b7e67?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Compétition de Volley-ball", "2025-06-20", "Plage SportZone", "Tournoi de volley-ball sur sable, avec des équipes mixtes.", "8 équipes", "https://images.unsplash.com/photo-1547347298-4074fc3086f0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Tournoi de Badminton Inter-entreprises", "2025-08-15", "Gymnase SportZone", "Compétition de badminton entre entreprises locales.", "16 équipes", "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Compétition de Natation", "2025-10-22", "Piscine SportZone", "Événement de natation avec différentes catégories selon les niveaux.", "50 participants", "https://images.unsplash.com/photo-1560090995-01632a28895b?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Défi de Fitness en Groupe", "2025-12-03", "Centre Fitness SportZone", "Séance de fitness en groupe pour améliorer la forme physique et l'endurance.", "30 participants", "https://images.unsplash.com/photo-1527933053326-89d1746b76b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Match de Handball Amical", "2025-01-25", "Gymnase SportZone", "Rencontre amicale de handball entre équipes locales.", "8 équipes", "https://images.unsplash.com/photo-1513028738826-f000cded30a4?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Match de Cricket Amical", "2025-04-25", "Terrain de Cricket SportZone", "Compétition amicale de cricket entre équipes locales.", "10 équipes", "https://images.unsplash.com/photo-1562077772-3bd90403f7f0?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Tournoi de Ping-Pong", "2025-05-20", "Salle de Ping-Pong SportZone", "Compétition de ping-pong ouverte à tous les niveaux.", "20 participants", "https://images.unsplash.com/photo-1518928286447-dc161b7cd6fb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Tournoi de Baseball", "2025-07-12", "Stade SportZone", "Rencontre de baseball entre clubs locaux.", "8 équipes", "https://images.unsplash.com/photo-1624375664562-fff61869fe8f?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Compétition de Skateboard", "2025-08-09", "Parc SportZone", "Compétition de skateboard avec des figures spectaculaires et des catégories d'âge.", "30 participants", "https://images.unsplash.com/photo-1503416829621-2a647b6c386a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Tournoi de Golf", "2025-09-22", "Golf SportZone", "Compétition de golf entre entreprises locales, avec des parties de 18 trous.", "16 équipes", "https://images.unsplash.com/photo-1576555928619-03d62a29e4a1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ("Match de Hockey sur Glace", "2025-11-12", "Patinoire SportZone", "Compétition de hockey sur glace entre les meilleures équipes locales.", "8 équipes", "https://images.unsplash.com/photo-1616041042832-24ee0dff18d4?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
