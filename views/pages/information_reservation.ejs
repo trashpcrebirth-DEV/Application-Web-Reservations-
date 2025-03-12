@@ -83,35 +83,37 @@
                         </div>
 
                         <div class="section">
-                            <h2>Informations du client PROTOTYPE 2!</h2>
+                            <h2>Informations du client</h2>
 
                             <div class="bloc-info">
                                 <p class="etiquette">Nom</p>
                                 <p class="valeur">
-                                    <%= reservation.nomClient %>
+                                    <%= user.nom %>
                                 </p>
                             </div>
 
                             <div class="bloc-info">
                                 <p class="etiquette">Email</p>
                                 <p class="valeur">
-                                    <%= reservation.email %>
+                                    <%= user.email %>
                                 </p>
                             </div>
 
                             <div class="bloc-info">
                                 <p class="etiquette">Téléphone</p>
                                 <p class="valeur">
-                                    <%= reservation.telephone %>
+                                    <%= user.telephone %>
                                 </p>
                             </div>
 
+                            <!--
                             <div class="bloc-info">
                                 <p class="etiquette">Nombre de joueurs</p>
                                 <p class="valeur">
                                     <%= reservation.nombreJoueurs %>
                                 </p>
                             </div>
+                            -->
 
                             <% if (reservation.notes) { %>
                                 <div class="bloc-info">

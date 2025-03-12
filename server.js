@@ -129,7 +129,7 @@ app.get("/api/reservation", (req, res) => {
 //route pour réserver
 app.post('/reserver/:id', (req, res) => {
     const reservationId = req.params.id;
-    
+
     const query = `UPDATE reservations SET statut = ? WHERE id_reservation = ?`;
 
     con.query(query, ["Réservé", reservationId], (err, result) => {
@@ -162,26 +162,31 @@ app.post('/api/annuler', async (req, res) => {
 
 
 app.get("/reservation-information/:id", function (req, res) {
-    const reservationId = req.params.id;
+    if (req.session.user) {
+        const reservationId = req.params.id;
 
-    con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Erreur serveur");
-        }
+        con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send("Erreur serveur");
+            }
 
-        if (results.length === 0) {
-            return res.status(404).send("Réservation non trouvée");
-        }
+            if (results.length === 0) {
+                return res.status(404).send("Réservation non trouvée");
+            }
 
-        res.render("pages/information_reservation", {
-            siteTitle: "SportZone",
-            pageTitle: "Détails de la réservation",
-            activePage: "reservation",
-            user: req.session.user,
-            reservation: results[0] 
+            res.render("pages/information_reservation", {
+                siteTitle: "SportZone",
+                pageTitle: "Détails de la réservation",
+                activePage: "reservation",
+                user: req.session.user,
+                reservation: results[0]
+            });
         });
-    });
+    }
+    else {
+        res.redirect("/connexion");
+    }
 });
 
 
@@ -251,7 +256,7 @@ const upload = multer({ dest: "./public/images/images-evenement" });
 // Route pour l'ajout d'événement
 app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
     const { nom, date_evenement, lieu, type, description, participants } = req.body;
-    const image_url = `/images/images-evenement/${req.file.filename}`;
+    const image_url = `./public/images/images-evenement/${req.file.filename}`;
 
     console.log("Body:", req.body);
     console.log("Fichier:", req.file);

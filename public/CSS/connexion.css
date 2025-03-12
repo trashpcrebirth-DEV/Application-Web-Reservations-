@@ -1,51 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #121212;
+    background-color: #031602;
     color: #e0e0e0;
-}
-
-.container {
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
     display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
 }
 
-.form-logo-container {
+.page-connexion {
+    display: flex;
+    min-height: calc(100vh - 100px);
+    width: 100%;
+}
+
+.section-formulaire {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 47%;
+    justify-content: center;
+    padding: 2rem;
+    border-right: 3.5px solid #ffffff;
 }
 
-.form-container {
-    width: 100%;
-    padding: 20px;
-    background-color: #2c2c2c;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    min-height: 500px;
+.logo-conteneur {
+    text-align: center;
 }
 
-.logo-link {
-    display: block;
-    margin: 0 auto 10px auto;
-    max-width: 300px;
+.logo {
+    max-width: 200px;
     height: auto;
+    transition: all 0.3s ease;
 }
 
-.image-container {
-    width: 50%;
+.logo:hover {
+    transform: scale(1.05);
 }
 
-.image-container img {
+.carte-formulaire {
+    width: 100%;
+    max-width: 450px;
+    background-color: #2c2c2c;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.carte-formulaire:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+.entete-carte {
+    background-color: #1e1e1e;
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid #555;
+}
+
+.titre-connexion {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.corps-carte {
+    padding: 2rem;
+}
+
+.formulaire-connexion {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.groupe-champ {
+    position: relative;
+}
+
+.etiquette {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.champ {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background-color: #3c3c3c;
+    border: 1px solid #555;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.champ:focus {
+    outline: none;
+    border-color: #175bed;
+    box-shadow: 0 0 0 2px rgba(23, 91, 237, 0.3);
+}
+
+.conteneur-mot-de-passe {
+    position: relative;
+}
+
+.icone-oeil {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #e0e0e0;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.icone-oeil:hover {
+    opacity: 1;
+}
+
+.message-erreur {
+    display: none;
+    color: #ff5252;
+    background-color: rgba(255, 82, 82, 0.1);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.bouton-connexion {
+    background-color: #175bed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bouton-connexion:hover {
+    background-color: #0d3bbd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.bouton-connexion:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.liens-supplementaires {
+    margin-top: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.lien {
+    color: #175bed;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.lien:hover {
+    color: #0d3bbd;
+    text-decoration: underline;
+}
+
+/* Section image */
+.section-image {
+    flex: 2;
+    position: relative;
+    overflow: hidden;
+    display: none;
+}
+
+.diaporama-conteneur {
+    position: relative;
     width: 100%;
     height: 100%;
-    border-radius: 10px;
-    
 }
 
+.diaporama-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.diaporama-image.active {
+    opacity: 1;
+}
+
+.diaporama-image.show {
+    opacity: 1;
+}
+
+.overlay-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(23, 91, 237, 0.3), rgba(0, 0, 0, 0.7));
+    z-index: 1;
+}
+
+.texte-image {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    color: white;
+    z-index: 2;
+    max-width: 80%;
+}
+
+.titre-image {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.sous-titre-image {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Garder la compatibilité avec les anciennes classes */
 .slideshow-image {
     transition: opacity 1s ease-in-out;
     opacity: 0;
@@ -55,88 +264,91 @@ body {
     opacity: 1;
 }
 
-label[for="email"],
-label[for="password"] {
-    font-weight: bolder;
-    margin-left: 10%;
-    color: #e0e0e0;
+.error-message {
+    text-align: center;
+    color: #ff5252;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: none;
 }
 
-input[type="email"],
-input[type="password"] {
-    width: 70%;
-    padding: 10px 20px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    margin-left: 10%;
-    border: 1px solid #555;
-    background-color: #3c3c3c;
-    color: #e0e0e0;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+.password-container {
+    margin-top: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .password-container input {
-    width: 70%;
-    padding: 10px 20px;
-    margin-bottom: 15px;
-    margin-left: 10%;
+    width: 100%;
+    padding: 0.875rem 1rem;
     background-color: #3c3c3c;
-    color: #e0e0e0;
     border: 1px solid #555;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .password-container .fa-eye {
     position: absolute;
-    right: 60.5vw;
-    top: 31vw;
+    right: 1rem;
+    top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #e0e0e0;
+    opacity: 0.7;
 }
 
-
-input[type="submit"] {
-    background-color: #175bed;
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
-    width: 75%;
-    margin-left: 10%;
-    font-weight: bolder;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-input[type="submit"]:hover {
-    background-color: #0d3bbd;
-}
-
-.link {
-    margin-top: 10px;
+.politique-paragraphe{
+    margin-top: 1.5rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-family: Poppins;
 }
 
-.link a {
-    color: #175bed;
-    text-decoration: none;
-    transition: color 0.3s ease;
+/* Responsive */
+@media (min-width: 768px) {
+    .section-image {
+        display: block;
+    }
+
+    .carte-formulaire {
+        max-width: 400px;
+    }
 }
 
-.link a:hover {
-    color: #0d3bbd;
+@media (max-width: 767px) {
+    .page-connexion {
+        padding: 1rem;
+    }
+
+    .section-formulaire {
+        padding: 1rem;
+    }
+
+    .corps-carte {
+        padding: 1.5rem;
+    }
 }
 
-.centrer {
-    text-align: center;
-    color: #e0e0e0;
-}
+@media (max-width: 480px) {
+    .titre-connexion {
+        font-size: 1.5rem;
+    }
 
-.error-message {
-    text-align: center;
-    color: red;
-    font-size: 0.8em;
-    display: none;
+    .entete-carte {
+        padding: 1.25rem;
+    }
+
+    .corps-carte {
+        padding: 1.25rem;
+    }
+
+    .champ {
+        padding: 0.75rem;
+    }
 }

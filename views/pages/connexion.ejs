@@ -1,57 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Connexion - SportZone</title>
     <link rel="stylesheet" href="/CSS/Connexion.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<body>
+    <main class="page-connexion">
+        <section class="section-formulaire">
+            <div class="logo-conteneur">
+                <a href="/">
+                    <img class="logo" src="/Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="SportZone Logo">
+                </a>
+            </div>
+            
+            <div class="carte-formulaire">
+                <div class="entete-carte">
+                    <h1 class="titre-connexion">Connexion</h1>
+                </div>
+                
+                <div class="corps-carte">
+                    <form id="connexionForm" class="formulaire-connexion" action="/connexion" method="POST">
+                        <div class="groupe-champ">
+                            <label class="etiquette" for="email">Adresse courriel</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="champ" 
+                                placeholder="Entrez votre adresse courriel" 
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <div class="groupe-champ">
+                            <label class="etiquette" for="mot_de_passe">Mot de passe</label>
+                            <div class="password-container conteneur-mot-de-passe">
+                                <input 
+                                    type="password" 
+                                    id="mot_de_passe" 
+                                    name="mot_de_passe" 
+                                    class="champ" 
+                                    placeholder="Entrez votre mot de passe" 
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <i class="fa fa-eye" id="togglePassword" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        
+                        <div id="loginError" class="error-message message-erreur" role="alert">
+                            Adresse courriel ou mot de passe invalide
+                        </div>
+                        
+                        <button type="submit" class="bouton-connexion">
+                            Se connecter
+                        </button>
+                        
+                        <div class="liens-supplementaires">
+                            <a href="/mot-de-passe-oublie" class="lien">Mot de passe oublié ?</a>
+                            <p>Pas de compte ? <a href="/inscription" class="lien">Inscrivez-vous</a></p>
+                        </div>
 
-<body style="font-family:Arial, Helvetica, sans-serif;">
-
-    <div class="container">
-        <div class="form-logo-container">
-            <a href="/">
-                <img class="logo-link" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="Sportzone_Logo">
-            </a>
-            <div class="form-container">
-                <h2 class="centrer" style="margin-top: 10%; margin-bottom: 10%;">CONNEXION</h2>
-
-                <form id="connexionForm" action="/connexion" method="POST">
-                    <label for="email">Adresse courriel</label>
-                    <br>
-                    <input type="email" id="email" name="email">
-                    <br>
-                    <label for="password">Mot de passe</label>
-                    <br>
-                    <div class="password-container">
-                        <input type="password" id="mot_de_passe" name="mot_de_passe">
-                        <i class="fa fa-eye" id="togglePassword"></i>
-                    </div>
-                    <br>
-                    <div id="loginError" class="error-message" style="display: none;">Adresse courriel/mot de passe
-                        invalide</div>
-                    <br>
-                    <input type="submit" value="SE CONNECTER">
-                </form>
-
-                <div class="link" style="margin-left: 16vw; margin-top: 1px;">
-                    <p class="centrer"><a href="Mot_de_passe_oublie.html">Mot de passe oublié ?</a></p>
-                    <p class="centrer">Pas de compte ? <a href="/inscription">Inscrivez-vous</a></p>
+                        <div class="politique-paragraphe">
+                            <p>En vous inscrivant ou en vous connectant à notre site, vous acceptez la politique de l'utilisateur.</p>
+                            <p><b>Copyrights @ SportZone, LLC.</b></p>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-
-        <div class="image-container">
-            <img class="slideshow-image" src="public/images/images-connexion/Equipe_Soccer.jpg" alt="Image non trouvée">
-        </div>
-    </div>
+        </section>
+        
+        <section class="section-image">
+            <div class="overlay-image"></div>
+            
+            <div class="texte-image">
+                <h2 class="titre-image">Bienvenue sur SportZone</h2>
+                <p class="sous-titre-image">Votre destination pour tous vos besoins sportifs</p>
+            </div>
+            
+            <div class="diaporama-conteneur image-container">
+                <img class="diaporama-image slideshow-image show" src="/images/images-connexion/Equipe_Soccer.jpg" alt="Équipe de soccer">
+                <img class="slideshow-image" src="public/images/images-connexion/Equipe_Soccer.jpg" alt="Image non trouvée">
+            </div>
+        </section>
+    </main>
+    
     <%- include('../partials/footer') %>
 
     <script src="/Javascript/connexion.js"></script>
-
 </body>
-
 </html>
+
