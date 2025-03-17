@@ -28,7 +28,8 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    border-right: 3.5px solid #ffffff;
+    border-right: 2px solid #acaaaa;
+
 }
 
 .logo-conteneur {
@@ -60,10 +61,11 @@ body {
 }
 
 .entete-carte {
-    background-color: #1e1e1e;
+    background-color: #1f1d1d48;
     padding: 1.5rem;
     text-align: center;
-    border-bottom: 1px solid #555;
+    border-bottom: 1px solid #807f7f;
+
 }
 
 .titre-connexion {
@@ -301,7 +303,7 @@ body {
     opacity: 0.7;
 }
 
-.politique-paragraphe{
+.politique-paragraphe {
     margin-top: 1.5rem;
     text-align: center;
     display: flex;
