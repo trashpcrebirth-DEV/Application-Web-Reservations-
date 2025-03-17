@@ -215,11 +215,25 @@ app.get("/profile", (req, res) => {
     });
 });
 
-
+// Update user
 app.post('/modifier', (req, res) => {
-    const { id, nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
-    console.log(req.body);
-    // Assuming you are updating the user in the database using an SQL query
+    const { nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
+    console.log("Request body:", req.body);
+
+    const userId = req.session.user.id;
+
+    // Prepare values for the query
+    const valuesToUpdate = [
+        nom || null,
+        prenom || null,
+        mot_de_passe || null,
+        date_naissance || null,
+        telephone || null,
+        langue || null,
+        email || null,
+        adresse || null
+    ];
+
     const query = `
         UPDATE utilisateurs 
         SET nom = ?, prenom = ?, mot_de_passe = ?, date_naissance = ?, 
@@ -227,20 +241,29 @@ app.post('/modifier', (req, res) => {
         WHERE id = ?
     `;
 
-    con.query(query, [nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse, id], (err, result) => {
+    console.log("Executing query:", query);
+    console.log("With values:", [...valuesToUpdate, userId]);
+
+    // Execute the query
+    con.query(query, [...valuesToUpdate, userId], (err, result) => {
         if (err) {
             console.error("Error updating user:", err);
             return res.status(500).send("Error updating user information");
         }
 
         if (result.affectedRows > 0) {
-            // If update is successful, redirect to the profile page of the updated user
-            res.redirect(`/profile?id=${id}`);
+            res.redirect(`/profile?id=${userId}`); // Redirect to profile page
         } else {
             res.status(404).send("User not found or no changes made");
         }
     });
 });
+
+
+
+
+
+
 
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
