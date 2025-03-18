@@ -128,37 +128,49 @@ app.get("/api/reservation", (req, res) => {
     });
 });
 
-//route pour réserver
+// Route pour réserver un sport
 app.post('/reserver/:id', (req, res) => {
-    const reservationId = req.params.id;
+    if (!req.session.user) {
+        return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
+    }
 
-    const query = `UPDATE reservations SET statut = ? WHERE id_reservation = ?`;
+    const reservationId = req.params.id; // ID de la réservation passée dans l'URL
+    const userId = req.session.user.id; // ID de l'utilisateur connecté
 
-    con.query(query, ["Réservé", reservationId], (err, result) => {
-        if (err) {
-            console.error("Erreur lors de la mise à jour :", err);
-            return res.status(500).send("Erreur lors de la mise à jour de la réservation");
-        }
+    console.log("ID de l'utilisateur connecté :", userId); // Vérifiez si l'ID est défini
+    console.log("ID de la réservation :", reservationId); // Vérifiez l'ID de la réservation
 
-        if (result.affectedRows > 0) {
-            res.redirect(`/reservation-information/${reservationId}`);
-        } else {
-            res.status(404).send("Réservation non trouvée ou déjà mise à jour");
-        }
-    });
+    // Requête SQL pour mettre à jour la réservation
+    const query = `UPDATE reservations SET statut = ?, user_id = ? WHERE id_reservation = ?`;
+con.query(query, ["Réservé", req.session.user.id, reservationId], (err, result) => {
+    if (err) {
+        console.error("Erreur lors de la mise à jour de la réservation :", err);
+        return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
+    }
+
+    if (result.affectedRows > 0) {
+        res.redirect(`/reservation-information/${reservationId}`);
+    } else {
+        res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
+    }
 });
-
+});
 app.post('/api/annuler', async (req, res) => {
     const { id } = req.body;
 
     try {
-        // Utiliser con.promise() pour gérer correctement await
-        await con.promise().query("UPDATE reservations SET statut = 'Disponible' WHERE id_reservation = ?", [id]);
+        // Requête SQL pour annuler la réservation
+        const query = "UPDATE reservations SET statut = 'Disponible', user_id = NULL WHERE id_reservation = ?";
+        const [result] = await con.promise().query(query, [id]);
 
-        res.json({ success: true });
+        if (result.affectedRows > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: "Réservation non trouvée." });
+        }
     } catch (error) {
-        console.error("Erreur lors de la mise à jour de la réservation :", error);
-        res.json({ success: false });
+        console.error("Erreur lors de l'annulation de la réservation :", error);
+        res.json({ success: false, message: "Erreur serveur." });
     }
 });
 
@@ -478,18 +490,26 @@ app.get('/deconnexion', function (req, res) {
 
 
 app.get("/payement", (req, res) => {
-    // Mock user and reservations data for testing
-    const mockUser = { nom: "John Doe" };
-    const mockReservations = [
-        { nom: "Reservation 1", price: 50 },
-        { nom: "Reservation 2", price: 75 },
-    ];
+    if (!req.session.user) {
+        return res.redirect("/connexion"); // Redirigez si l'utilisateur n'est pas connecté
+    }
 
-    // Render the payement.ejs page with mock data and activePage
-    res.render("pages/payement", {
-        user: mockUser,
-        reservations: mockReservations,
-        activePage: "payement", // Set the active page
+    const userId = req.session.user.id; // ID de l'utilisateur connecté
+
+    // Requête SQL pour récupérer les réservations de l'utilisateur
+    const query = "SELECT * FROM reservations WHERE user_id = ?";
+    con.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des réservations :", err);
+            return res.status(500).send("Erreur serveur");
+        }
+
+        // Rendre la vue avec les réservations de l'utilisateur
+        res.render("pages/payement", {
+            user: req.session.user, // Informations de l'utilisateur
+            reservations: results, // Liste des réservations
+            activePage: "payement", // Page active
+        });
     });
 });
 

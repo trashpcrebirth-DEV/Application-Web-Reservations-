@@ -20,7 +20,7 @@ body {
 }
 
 .col-50 {
-    flex: 50%;
+    flex: 5%;
 }
 
 .col-75 {
@@ -49,14 +49,14 @@ body {
 
 .container {
     background-color: #ffffff;
-    padding:  20px; 
-    border: 1px solid lightgrey;
-    border-radius: 8px;
-    max-width: 700px; 
-    margin: 20px auto; 
-    margin-left: auto; 
-    margin-right: 50px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 700px;
+    margin: 20px 20%; 
+    font-family: 'Arial', sans-serif;
+    color: #333;
 }
 
 input[type=text] {
@@ -121,6 +121,66 @@ hr {
 span.price {
     float: right;
     color: grey;
+}
+
+.containerListe {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 20px 10%; 
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+/* Titre du conteneur */
+.containerListe h3 {
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    margin-bottom: 10px; 
+    color: #000000; 
+}
+
+/* Texte dans le conteneur */
+.containerListe p {
+    font-size: 1rem; 
+    line-height: 1.6; 
+    color: #000000; 
+    margin-bottom: 0; 
+}
+
+.user-reservations {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-reservations ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-reservations li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-reservations li:last-child {
+    border-bottom: none;
+}
+
+.user-reservations .price {
+    font-weight: bold;
+    color: #175bed;
 }
 
 @media (max-width: 800px) {
