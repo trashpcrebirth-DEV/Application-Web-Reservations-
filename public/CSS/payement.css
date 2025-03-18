@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    padding: 8px;
+    background-color: #f4f4f9; 
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -8px;
+}
+
+.col-25 {
+    flex: 25%;
+}
+
+.col-50 {
+    flex: 50%;
+}
+
+.col-75 {
+    flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+    padding: 0 8px;
+}
+.payment-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #000000; 
+}
+
+.payment-description {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #000000; 
+}
+
+.container {
+    background-color: #ffffff;
+    padding:  20px; 
+    border: 1px solid lightgrey;
+    border-radius: 8px;
+    max-width: 700px; 
+    margin: 20px auto; 
+    margin-left: auto; 
+    margin-right: 50px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type=text] {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px; 
+}
+
+label {
+    margin-bottom: 8px;
+    display: block;
+    font-size: 14px; 
+}
+
+.icon-container {
+    margin-bottom: 15px;
+    padding: 7px 0;
+    font-size: 20px; 
+    text-align: center;
+}
+
+    .btn {
+        background-color: #175bed;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 1rem;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        display: block; 
+        margin: 0 auto; 
+        text-align: center;
+    }
+
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+a {
+    color: #2196F3;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+hr {
+    border: 1px solid lightgrey;
+    margin: 20px 0;
+}
+
+span.price {
+    float: right;
+    color: grey;
+}
+
+@media (max-width: 800px) {
+    .row {
+        flex-direction: column;
+    }
+    .col-25 {
+        margin-bottom: 20px;
+    }
+}

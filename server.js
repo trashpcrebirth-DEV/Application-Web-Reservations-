@@ -10,6 +10,8 @@ import mysql from "mysql2";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import multer from "multer";
+import Stripe from "stripe";
+
 
 
 const app = express();
@@ -474,6 +476,22 @@ app.get('/deconnexion', function (req, res) {
     });
 });
 
+
+app.get("/payement", (req, res) => {
+    // Mock user and reservations data for testing
+    const mockUser = { nom: "John Doe" };
+    const mockReservations = [
+        { nom: "Reservation 1", price: 50 },
+        { nom: "Reservation 2", price: 75 },
+    ];
+
+    // Render the payement.ejs page with mock data and activePage
+    res.render("pages/payement", {
+        user: mockUser,
+        reservations: mockReservations,
+        activePage: "payement", // Set the active page
+    });
+});
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
