@@ -38,11 +38,12 @@
                       <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", { hour: "2-digit" ,
                         minute: "2-digit" }) %>
                         <span>À
-                      <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) %>
+                          <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", { hour: "2-digit" ,
+                            minute: "2-digit" }) %>
+                        </span>
                     </span>
-                    </span>
-                    
-                    
+
+
                   </li>
                   <% }); %>
               </ul>
@@ -50,123 +51,12 @@
                 <p>Aucune réservation trouvée.</p>
                 <% } %>
           </div>
+          <br>
+          <button class="btn-checkout" onclick="window.location.href='/checkout'">Proceed to Checkout</button>
         </div>
       </div>
 
-      <!-- Conteneur de paiement -->
-      <div class="col-50">
-        <div class="container">
-          <h1 class="payment-title">Paiement</h1>
-          <p class="payment-description">Veuillez remplir les informations ci-dessous pour compléter votre paiement.</p>
-          <form>
-            <div class="row">
-              <div class="col-50">
-                <h3>Billing Address</h3>
-                <label for="fname"><i class="fa fa-user"></i> Nom au Complet</label>
-                <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
-                <label for="email"><i class="fa fa-envelope"></i> Adresse Courriel</label>
-                <input type="text" id="email" name="email" placeholder="john@example.com">
-                <label for="adr"><i class="fa fa-address-card-o"></i> Addresse</label>
-                <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
-                <label for="city"><i class="fa fa-institution"></i> Ville</label>
-                <input type="text" id="city" name="city" placeholder="New York">
 
-                <div class="row">
-                  <div class="col-50">
-                    <label for="state">State</label>
-                    <input type="text" id="state" name="state" placeholder="NY">
-                  </div>
-                  <div class="col-50">
-                    <label for="zip">Zip</label>
-                    <input type="text" id="zip" name="zip" placeholder="10001">
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-50">
-                <h3>Payment</h3>
-                <label for="fname">Cartes Acceptées</label>
-                <div class="icon-container">
-                  <i class="fab fa-cc-visa" style="color:navy;"></i>
-                  <i class="fab fa-cc-amex" style="color:blue;"></i>
-                  <i class="fab fa-cc-mastercard" style="color:red;"></i>
-                  <i class="fab fa-cc-discover" style="color:orange;"></i>
-                </div>
-                <label for="cname">Nom sur la carte</label>
-                <input type="text" id="cname" name="cardname" placeholder="Jean Dupont">
-                <label for="ccnum">Numéro de carte</label>
-                <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
-                <label for="expmonth">Mois d'expiration</label>
-                <input type="text" id="expmonth" name="expmonth" placeholder="Septembre">
-
-                <div class="row">
-                  <div class="col-50">
-                    <label for="expyear">Année d'expiration</label>
-                    <input type="text" id="expyear" name="expyear" placeholder="2018">
-                  </div>
-                  <div class="col-50">
-                    <label for="cvv">CVV</label>
-                    <input type="text" id="cvv" name="cvv" placeholder="352">
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <label>
-              <input type="checkbox" checked="checked" name="sameadr"> Adresse de livraison identique à l'adresse de
-              facturation </label>
-            <input type="submit" value="Continue to checkout" class="btn">
-          </form>
-        </div>
-      </div>
-    </div>
-    <script src="https://js.stripe.com/v3/"></script>
-<script>
-  const stripe = Stripe("pk_test_51R4MLIFZkxHTL2uB5ud4WnmIMsKrLn3Hcd6pdXzRRKGWFdcZyoj7qr6J20LIEny0HUxuQq92ry7B9ysXLZJXz9M600RbIbAnTc"); // Remplacez par votre clé publique
-  const form = document.querySelector("form");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    // Récupérer les informations de la carte
-    const cardDetails = {
-      card: {
-        number: document.getElementById("ccnum").value,
-        exp_month: document.getElementById("expmonth").value,
-        exp_year: document.getElementById("expyear").value,
-        cvc: document.getElementById("cvv").value,
-      },
-    };
-
-    // Créer un PaymentMethod avec Stripe
-    const { paymentMethod, error } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardDetails.card,
-    });
-
-    if (error) {
-      alert("Erreur : " + error.message);
-      return;
-    }
-
-    // Envoyer les informations au serveur
-    const response = await fetch("/paiement", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: 1000, // Montant en centimes (ex : 10€ = 1000)
-        currency: "eur", // Devise
-        paymentMethodId: paymentMethod.id,
-      }),
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      alert("Paiement réussi !");
-    } else {
-      alert("Erreur lors du paiement : " + result.error);
-    }
-  });
-</script>
 </body>
+
 </html>

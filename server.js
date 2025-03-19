@@ -499,25 +499,48 @@ app.get('/deconnexion', function (req, res) {
 });
 
 app.get("/checkout", async (req, res) => {
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-            {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                        name: "T-shirt",
-                    },
-                    unit_amount: 2000,
+    if (!req.session.user) {
+        return res.redirect("/connexion"); // Redirigez si l'utilisateur n'est pas connecté
+    }
+
+    try {
+        // Récupérer les réservations de l'utilisateur depuis MySQL
+        const [reservations] = await con.promise().query(
+            "SELECT * FROM reservations WHERE user_id = ? AND statut = 'Réservé'",
+            [req.session.user.id]
+        );
+
+        if (reservations.length === 0) {
+            return res.status(400).send("Aucune réservation trouvée pour le paiement.");
+        }
+
+        // Transformer les réservations en `line_items` pour Stripe
+        const line_items = reservations.map((reservation) => ({
+            price_data: {
+                currency: "usd", // Remplacez par la devise souhaitée
+                product_data: {
+                    name: reservation.categorie_sport, // Nom du sport
                 },
-                quantity: 1,
+                unit_amount: Math.round(reservation.prix * 100), // Stripe attend un montant en centimes
             },
-        ],
-        mode: "payment",
-        success_url: "http://localhost:4000/success",
-        cancel_url: "http://localhost:4000/cancel",
-    });
-    console.log(session);
+            quantity: 1, // Chaque réservation est comptée comme une unité
+        }));
+
+        // Créer une session de paiement Stripe
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            line_items: line_items,
+            mode: "payment",
+            success_url: "http://localhost:4000/success",
+            cancel_url: "http://localhost:4000/cancel",
+        });
+
+        // Rediriger l'utilisateur vers la page de paiement Stripe
+        res.redirect(session.url);
+    } catch (error) {
+        console.error("Erreur lors de la création de la session Stripe :", error);
+        res.status(500).send("Erreur serveur");
+    }
 });
 
 // Remplacer toute la route /paiement existante par :

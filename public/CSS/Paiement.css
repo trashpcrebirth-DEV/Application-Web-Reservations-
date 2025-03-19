@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     font-size: 16px;
     padding: 8px;
-    background-color: #f4f4f9; 
+    background-color: #f4f4f9;
 }
 
 * {
@@ -32,19 +32,20 @@ body {
 .col-75 {
     padding: 0 8px;
 }
+
 .payment-title {
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
     margin-bottom: 10px;
-    color: #000000; 
+    color: #000000;
 }
 
 .payment-description {
     font-size: 1rem;
     text-align: center;
     margin-bottom: 20px;
-    color: #000000; 
+    color: #000000;
 }
 
 .container {
@@ -54,7 +55,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 700px;
-    margin: 20px 20%; 
+    margin: 20px 20%;
     font-family: 'Arial', sans-serif;
     color: #333;
 }
@@ -65,39 +66,39 @@ input[type=text] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 14px; 
+    font-size: 14px;
 }
 
 label {
     margin-bottom: 8px;
     display: block;
-    font-size: 14px; 
+    font-size: 14px;
 }
 
 .icon-container {
     margin-bottom: 15px;
     padding: 7px 0;
-    font-size: 20px; 
+    font-size: 20px;
     text-align: center;
 }
 
-    .btn {
-        background-color: #175bed;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 1rem;
-        font-size: 1rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        letter-spacing: 1px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        display: block; 
-        margin: 0 auto; 
-        text-align: center;
-    }
+.btn {
+    background-color: #175bed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
 
 
 .btn:hover {
@@ -132,25 +133,25 @@ span.price {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 900px;
-    margin: 20px 10%; 
+    margin: 20px 10%;
     font-family: 'Arial', sans-serif;
     color: #333;
 }
 
 /* Titre du conteneur */
 .containerListe h3 {
-    font-size: 1.5rem; 
-    font-weight: bold; 
-    margin-bottom: 10px; 
-    color: #000000; 
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000000;
 }
 
 /* Texte dans le conteneur */
 .containerListe p {
-    font-size: 1rem; 
-    line-height: 1.6; 
-    color: #000000; 
-    margin-bottom: 0; 
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #000000;
+    margin-bottom: 0;
 }
 
 .user-reservations {
@@ -185,6 +186,7 @@ span.price {
     color: #175bed;
 }
 
+
 .btn-checkout {
     background-color: #175bed;
     color: white;
@@ -198,15 +200,27 @@ span.price {
     transition: all 0.3s ease;
     letter-spacing: 1px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    display: block; 
-    margin: 0 auto; 
+    display: block;
+    margin: 0 auto;
     text-align: center;
+}
+
+.btn-checkout:hover {
+    background-color: #0d3bbd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-checkout:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 @media (max-width: 800px) {
     .row {
         flex-direction: column;
     }
+
     .col-25 {
         margin-bottom: 20px;
     }
