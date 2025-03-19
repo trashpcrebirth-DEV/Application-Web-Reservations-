@@ -514,6 +514,29 @@ app.get("/paiement", (req, res) => {
     });
 });
 
+const stripe = new Stripe("sk_test_51R4MLIFZkxHTL2uBltxLNi9y1KcLf4AX5O9wCZ3BbEOhyAJFh1TDsESZcHpdtizXfr0b7kQp6YZ6j7IiAgqXNrNg00r0gp3FDe"); // Remplacez par votre clé secrète
+
+app.post("/paiement", async (req, res) => {
+    const { amount, currency, paymentMethodId } = req.body;
+
+    try {
+        // Créer un paiement avec Stripe
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount, // Montant en centimes
+            currency: currency,
+            payment_method: paymentMethodId,
+            confirm: true, // Confirme automatiquement le paiement
+        });
+
+        // Réponse en cas de succès
+        res.json({ success: true, paymentIntent });
+    } catch (error) {
+        console.error("Erreur lors du paiement :", error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
         result) {
