@@ -520,6 +520,7 @@ app.get("/checkout", async (req, res) => {
                 currency: "usd", // Remplacez par la devise souhaitée
                 product_data: {
                     name: reservation.categorie_sport, // Nom du sport
+
                 },
                 unit_amount: Math.round(reservation.prix * 100), // Stripe attend un montant en centimes
             },
@@ -532,7 +533,7 @@ app.get("/checkout", async (req, res) => {
             line_items: line_items,
             mode: "payment",
             success_url: "http://localhost:4000/success",
-            cancel_url: "http://localhost:4000/cancel",
+            cancel_url: "http://localhost:4000/paiement",
         });
 
         // Rediriger l'utilisateur vers la page de paiement Stripe
