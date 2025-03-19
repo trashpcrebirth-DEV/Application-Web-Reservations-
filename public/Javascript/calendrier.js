@@ -34,41 +34,46 @@ function showReservationBox(day, month, year) {
         data.reservations.forEach(res => {
           const resItem = document.createElement("div");
           resItem.classList.add("reservation-item");
-
+      
+          // Formatage de l'heure de fin
+          const heureFin = formatTime(res.heure_fin); // Récupère l'heure de fin de la réservation
+      
           resItem.innerHTML = `
-            <div class="reservation-details">
-              <span><strong>ID:</strong> ${res.id_reservation}</span>
-              <span><strong>Heure:</strong> ${formatTime(res.date_time)}</span>
-              <span><strong>Prix:</strong> ${res.prix}€</span>
-              <span><strong>Statut:</strong> ${res.statut}</span>
-              <span><strong>Sport:</strong> ${res.categorie_sport}</span>
-            </div>
+              <div class="reservation-details">
+                  <span><strong>ID:</strong> ${res.id_reservation}</span>
+                  <span><strong>Heure de début:</strong> ${formatTime(res.date_time)}</span>
+                  <span><strong>Heure de fin:</strong> ${heureFin}</span> <!-- Affichage de l'heure de fin -->
+                  <span><strong>Prix:</strong> ${res.prix}€</span>
+                  <span><strong>Statut:</strong> ${res.statut}</span>
+                  <span><strong>Sport:</strong> ${res.categorie_sport}</span>
+              </div>
           `;
-
+      
           const reserveButton = document.createElement("button");
           reserveButton.textContent = res.statut === "Réservé" ? "Réservé" : "Réserver";
           reserveButton.classList.add("reserver");
           reserveButton.setAttribute("data-id", res.id_reservation);
-
+      
           if (res.statut === "Réservé") {
-            reserveButton.disabled = true;
-            reserveButton.style.backgroundColor = "grey";
-
-            const annulerButton = document.createElement("button");
-            annulerButton.textContent = "Annuler";
-            annulerButton.classList.add("annuler");
-            annulerButton.setAttribute("data-id", res.id_reservation);
-            annulerButton.onclick = () => annulerReservation(res.id_reservation);
-
-            resItem.appendChild(reserveButton);
-            resItem.appendChild(annulerButton);
+              reserveButton.disabled = true;
+              reserveButton.style.backgroundColor = "grey";
+      
+              const annulerButton = document.createElement("button");
+              annulerButton.textContent = "Annuler";
+              annulerButton.classList.add("annuler");
+              annulerButton.setAttribute("data-id", res.id_reservation);
+              annulerButton.onclick = () => annulerReservation(res.id_reservation);
+      
+              resItem.appendChild(reserveButton);
+              resItem.appendChild(annulerButton);
           } else {
-            reserveButton.onclick = () => reserver(res.id_reservation);
-            resItem.appendChild(reserveButton);
+              reserveButton.onclick = () => reserver(res.id_reservation);
+              resItem.appendChild(reserveButton);
           }
-
+      
           reservationList.appendChild(resItem);
-        });
+      });
+      
       }
     })
     .catch(() => {

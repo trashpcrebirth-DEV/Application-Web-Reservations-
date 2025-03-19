@@ -89,7 +89,6 @@
     padding: 20px;
     width: 400px;
     max-height: 600px;
-    overflow-y: auto;
     display: none;
   }
   
