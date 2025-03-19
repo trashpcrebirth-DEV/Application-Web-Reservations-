@@ -185,6 +185,24 @@ span.price {
     color: #175bed;
 }
 
+.btn-checkout {
+    background-color: #175bed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    display: block; 
+    margin: 0 auto; 
+    text-align: center;
+}
+
 @media (max-width: 800px) {
     .row {
         flex-direction: column;

@@ -13,7 +13,7 @@ import multer from "multer";
 import Stripe from "stripe";
 
 
-
+const stripe = new Stripe("sk_test_51R4MLIFZkxHTL2uBltxLNi9y1KcLf4AX5O9wCZ3BbEOhyAJFh1TDsESZcHpdtizXfr0b7kQp6YZ6j7IiAgqXNrNg00r0gp3FDe");
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -108,7 +108,7 @@ app.get("/reservation", (req, res) => {
 app.get("/api/reservation", (req, res) => {
     const { date, sport } = req.query;
 
-    let query = "SELECT *, DATE_ADD(date_time, INTERVAL 1 HOUR) AS heure_fin FROM reservations WHERE DATE(date_time) = ?";
+    let query = "SELECT * FROM reservations WHERE DATE(date_time) = ?";
     let params = [date];
 
     if (sport && sport.trim() !== "" && sport !== "Tous les sports") {
@@ -127,7 +127,6 @@ app.get("/api/reservation", (req, res) => {
         res.json({ reservations: results });
     });
 });
-
 
 // Route pour réserver un sport
 app.post('/reserver/:id', (req, res) => {
@@ -513,6 +512,29 @@ app.get("/paiement", (req, res) => {
         });
     });
 });
+
+app.get("/checkout", async (req, res) => {
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+            {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: "T-shirt",
+                    },
+                    unit_amount: 2000,
+                },
+                quantity: 1,
+            },
+        ],
+        mode: "payment",
+        success_url: "http://localhost:4000/success",
+        cancel_url: "http://localhost:4000/cancel",
+    });
+    console.log(session);
+});
+
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,

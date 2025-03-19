@@ -68,7 +68,10 @@ function showReservationBox(day, month, year) {
             annulerButton.textContent = "Annuler"
             annulerButton.classList.add("annuler")
             annulerButton.setAttribute("data-id", res.id_reservation)
-            annulerButton.onclick = () => annulerReservation(res.id_reservation)
+
+            // Passer la bonne date de réservation ici
+            const reservationDate = new Date(res.date_time)
+            annulerButton.onclick = () => annulerReservation(res.id_reservation, reservationDate)
 
             resItem.appendChild(reserveButton)
             resItem.appendChild(annulerButton)
@@ -86,7 +89,7 @@ function showReservationBox(day, month, year) {
     })
 }
 
-function annulerReservation(reservationId) {
+function annulerReservation(reservationId, reservationDate) {
   fetch("/api/annuler", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -106,6 +109,12 @@ function annulerReservation(reservationId) {
         reserveButton.disabled = false
         reserveButton.style.backgroundColor = "#007bff"
         reservationItem.querySelector(".annuler").remove()
+
+        // Rafraîchir la liste des réservations avec la date de la réservation originale
+        const selectedDate = reservationDate.getDate()
+        const selectedMonth = reservationDate.getMonth()
+        const selectedYear = reservationDate.getFullYear()
+        showReservationBox(selectedDate, selectedMonth, selectedYear)
       } else {
         alert("Erreur : l'annulation n'a pas pu être effectuée.")
       }
@@ -116,40 +125,6 @@ function annulerReservation(reservationId) {
 }
 
 function reserver(idReservation) {
-  /*
-  fetch('/api/reserver', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: idReservation })
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        const button = document.querySelector(`button[data-id="${idReservation}"]`);
-        const reservationItem = button.closest(".reservation-item");
-        const statusElement = reservationItem.querySelector(".reservation-details span:last-child");
-
-        statusElement.innerHTML = "<strong>Statut:</strong> Réservé";
-        button.textContent = "Réservé";
-        button.disabled = true;
-        button.style.backgroundColor = "grey";
-
-        const annulerButton = document.createElement("button");
-        annulerButton.textContent = "Annuler";
-        annulerButton.classList.add("annuler");
-        annulerButton.setAttribute("data-id", idReservation);
-        annulerButton.onclick = () => annulerReservation(idReservation);
-
-        reservationItem.appendChild(annulerButton);
-      } else {
-        alert("Erreur : la réservation n'a pas pu être effectuée.");
-      }
-    })
-    .catch(() => {
-      alert("Une erreur est survenue, veuillez réessayer.");
-    });
-    */
-
   window.location.href = `/reservation-information/${idReservation}`
 }
 
@@ -214,4 +189,3 @@ document.getElementById("sportFilter").addEventListener("change", () => {
 })
 
 updateCalendar()
-
