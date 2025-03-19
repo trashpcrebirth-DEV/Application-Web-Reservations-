@@ -142,18 +142,18 @@ app.post('/reserver/:id', (req, res) => {
 
     // Requête SQL pour mettre à jour la réservation
     const query = `UPDATE reservations SET statut = ?, user_id = ? WHERE id_reservation = ?`;
-con.query(query, ["Réservé", req.session.user.id, reservationId], (err, result) => {
-    if (err) {
-        console.error("Erreur lors de la mise à jour de la réservation :", err);
-        return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
-    }
+    con.query(query, ["Réservé", req.session.user.id, reservationId], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la mise à jour de la réservation :", err);
+            return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
+        }
 
-    if (result.affectedRows > 0) {
-        res.redirect(`/reservation-information/${reservationId}`);
-    } else {
-        res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
-    }
-});
+        if (result.affectedRows > 0) {
+            res.redirect(`/reservation-information/${reservationId}`);
+        } else {
+            res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
+        }
+    });
 });
 app.post('/api/annuler', async (req, res) => {
     const { id } = req.body;
@@ -489,7 +489,7 @@ app.get('/deconnexion', function (req, res) {
 });
 
 
-app.get("/payement", (req, res) => {
+app.get("/paiement", (req, res) => {
     if (!req.session.user) {
         return res.redirect("/connexion"); // Redirigez si l'utilisateur n'est pas connecté
     }
@@ -505,10 +505,10 @@ app.get("/payement", (req, res) => {
         }
 
         // Rendre la vue avec les réservations de l'utilisateur
-        res.render("pages/payement", {
+        res.render("pages/paiement", {
             user: req.session.user, // Informations de l'utilisateur
             reservations: results, // Liste des réservations
-            activePage: "payement", // Page active
+            activePage: "paiement", // Page active
         });
     });
 });
