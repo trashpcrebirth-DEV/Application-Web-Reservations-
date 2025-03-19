@@ -108,7 +108,7 @@ app.get("/reservation", (req, res) => {
 app.get("/api/reservation", (req, res) => {
     const { date, sport } = req.query;
 
-    let query = "SELECT * FROM reservations WHERE DATE(date_time) = ?";
+    let query = "SELECT *, DATE_ADD(date_time, INTERVAL 1 HOUR) AS heure_fin FROM reservations WHERE DATE(date_time) = ?";
     let params = [date];
 
     if (sport && sport.trim() !== "" && sport !== "Tous les sports") {
@@ -127,6 +127,7 @@ app.get("/api/reservation", (req, res) => {
         res.json({ reservations: results });
     });
 });
+
 
 // Route pour réserver un sport
 app.post('/reserver/:id', (req, res) => {
