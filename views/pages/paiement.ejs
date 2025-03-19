@@ -40,7 +40,12 @@
                     <span><strong>Heure :</strong>
                       <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", { hour: "2-digit" ,
                         minute: "2-digit" }) %>
+                        <span>À
+                      <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) %>
                     </span>
+                    </span>
+                    
+                    
                   </li>
                   <% }); %>
               </ul>
@@ -118,6 +123,54 @@
         </div>
       </div>
     </div>
+    <script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe("pk_test_51R4MLIFZkxHTL2uB5ud4WnmIMsKrLn3Hcd6pdXzRRKGWFdcZyoj7qr6J20LIEny0HUxuQq92ry7B9ysXLZJXz9M600RbIbAnTc"); // Remplacez par votre clé publique
+  const form = document.querySelector("form");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Récupérer les informations de la carte
+    const cardDetails = {
+      card: {
+        number: document.getElementById("ccnum").value,
+        exp_month: document.getElementById("expmonth").value,
+        exp_year: document.getElementById("expyear").value,
+        cvc: document.getElementById("cvv").value,
+      },
+    };
+
+    // Créer un PaymentMethod avec Stripe
+    const { paymentMethod, error } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardDetails.card,
+    });
+
+    if (error) {
+      alert("Erreur : " + error.message);
+      return;
+    }
+
+    // Envoyer les informations au serveur
+    const response = await fetch("/paiement", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: 1000, // Montant en centimes (ex : 10€ = 1000)
+        currency: "eur", // Devise
+        paymentMethodId: paymentMethod.id,
+      }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      alert("Paiement réussi !");
+    } else {
+      alert("Erreur lors du paiement : " + result.error);
+    }
+  });
+</script>
 </body>
 
 </html>
