@@ -101,7 +101,9 @@ label {
 
 
 .btn:hover {
-    background-color: #45a049;
+    background-color: #0d3bbd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 a {
