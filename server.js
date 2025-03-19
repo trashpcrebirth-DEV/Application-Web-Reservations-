@@ -11,7 +11,17 @@ import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import multer from "multer";
 import Stripe from "stripe";
+import mongoose from 'mongoose';
 
+// Connexion à MongoDB
+mongoose.connect('mongodb://localhost:27017/mongodb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("Connexion à MongoDB réussie");
+}).catch((err) => {
+    console.error("Erreur de connexion MongoDB:", err);
+});
 
 const stripe = new Stripe("sk_test_51R4MLIFZkxHTL2uBltxLNi9y1KcLf4AX5O9wCZ3BbEOhyAJFh1TDsESZcHpdtizXfr0b7kQp6YZ6j7IiAgqXNrNg00r0gp3FDe");
 const app = express();
@@ -488,31 +498,6 @@ app.get('/deconnexion', function (req, res) {
     });
 });
 
-
-app.get("/paiement", (req, res) => {
-    if (!req.session.user) {
-        return res.redirect("/connexion"); // Redirigez si l'utilisateur n'est pas connecté
-    }
-
-    const userId = req.session.user.id; // ID de l'utilisateur connecté
-
-    // Requête SQL pour récupérer les réservations de l'utilisateur
-    const query = "SELECT * FROM reservations WHERE user_id = ?";
-    con.query(query, [userId], (err, results) => {
-        if (err) {
-            console.error("Erreur lors de la récupération des réservations :", err);
-            return res.status(500).send("Erreur serveur");
-        }
-
-        // Rendre la vue avec les réservations de l'utilisateur
-        res.render("pages/paiement", {
-            user: req.session.user, // Informations de l'utilisateur
-            reservations: results, // Liste des réservations
-            activePage: "paiement", // Page active
-        });
-    });
-});
-
 app.get("/checkout", async (req, res) => {
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -533,6 +518,55 @@ app.get("/checkout", async (req, res) => {
         cancel_url: "http://localhost:4000/cancel",
     });
     console.log(session);
+});
+
+// Remplacer toute la route /paiement existante par :
+app.get("/paiement", async (req, res) => {
+    if (!req.session.user) return res.redirect("/connexion");
+
+    try {
+        // Récupérer les données de MySQL
+        const [reservations] = await con.promise().query(
+            "SELECT * FROM reservations WHERE user_id = ?",
+            [req.session.user.id]
+        );
+
+        // Récupérer les paiements depuis MongoDB
+        const paiements = await mongoose.connection.db.collection('paiements')
+            .find({ userId: req.session.user.id.toString() })
+            .toArray();
+
+        res.render("pages/paiement", {
+            user: req.session.user,
+            reservations: reservations,
+            paiements: paiements,
+            activePage: "paiement"
+        });
+
+    } catch (err) {
+        console.error("Erreur :", err);
+        res.status(500).send("Erreur serveur");
+    }
+});
+
+app.post("/paiement", async (req, res) => {
+    const { amount, currency, paymentMethodId } = req.body;
+
+    try {
+        // Créer un paiement avec Stripe
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount, // Montant en centimes
+            currency: currency,
+            payment_method: paymentMethodId,
+            confirm: true, // Confirme automatiquement le paiement
+        });
+
+        // Réponse en cas de succès
+        res.json({ success: true, paymentIntent });
+    } catch (error) {
+        console.error("Erreur lors du paiement :", error);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 
