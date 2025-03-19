@@ -1,153 +1,457 @@
+/* Styles de base et réinitialisation */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f5f7fa;
+  color: #333333;
+  line-height: 1.6;
+}
+
 .bar {
-    position: relative;
-    margin-left: 140px;
-    color: white;
-    padding: 5px;
-    display: flex;
+  position: relative;
+  margin: -20px auto;
+  max-width: 1200px;
+  width: 90%;
+  color: #ffffff;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #333333;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.bar label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.bar select {
+  padding: 10px 15px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.69);
+  color: #0d0606;
+  width: 200px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
+}
+
+.bar select:hover,
+.bar select:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+  border-color: #175bed;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 20px;
+  margin-bottom: 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Calendrier */
+.calendrier-container {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+  max-height: 700px;
+  text-align: center;
+  margin-top: 2.5%;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.calendrier-container:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.calendrier-container h1 {
+  color: #175bed;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  position: relative;
+  display: inline-block;
+}
+
+.calendrier-container h1::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: #175bed;
+  border-radius: 3px;
+}
+
+.calendrier {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.calendrier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #dddddd;
+}
+
+.calendrier-header .month-year {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.calendrier-header button {
+  background-color: transparent;
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+  color: #333333;
+}
+
+.calendrier-header button:hover {
+  background-color: #175bed;
+  color: #ffffff;
+  border-color: #175bed;
+}
+
+.calendrier-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.day-header {
+  font-weight: bold;
+  padding: 10px;
+  color: #175bed;
+  border-bottom: 1px solid #dddddd;
+}
+
+.day {
+  padding: 7px 2px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.day:hover {
+  background-color: #e9ecef;
+  border-color: #175bed;
+}
+
+.day.selected {
+  background-color: #175bed;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.day.today {
+  border: 2px solid #175bed;
+  font-weight: bold;
+}
+
+.day.has-events::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background-color: #ff6b6b;
+  border-radius: 50%;
+}
+
+.empty {
+  background-color: #f9f9f9;
+  cursor: default;
+}
+
+.empty:hover {
+  background-color: #f9f9f9;
+  border-color: transparent;
+}
+
+.liste-reservations {
+  background-color: rgba(51, 51, 51, 0.85);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 1000px;
+  height: fit-content;
+  flex: 1;
+  display: block;
+  animation: fadeIn 0.3s ease;
+  color: white;
+  backdrop-filter: blur(5px);
+  margin-top: 2.5%;
+}
+
+.liste-reservations h2 {
+  color: white;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.5rem;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.liste-reservations h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: #175bed;
+  border-radius: 3px;
+}
+
+.liste-reservations p.date-selectionnee {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  color: white;
+}
+
+.liste-reservations p.aucune-reservation {
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+/* Éléments de réservation */
+.reservation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 0;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.reservation-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.reservation-item .reservation-details {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.reservation-item .reservation-details span {
+  flex: 1;
+  text-align: left;
+  white-space: normal;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.reservation-item button.annuler {
+  background-color: orange;
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reservation-item button.annuler:hover {
+  background-color: darkorange;
+}
+
+.reservation-item button.reserver {
+  background-color: #007bff;
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reservation-item button.reserver:hover {
+  background-color: #0056b3;
+}
+
+/* Footer */
+.footer {
+  margin-top: 4.5%;
+}
+
+/* Styles responsifs */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
   }
-  
+
+  .calendrier-container,
+  .liste-reservations {
+    max-width: 100%;
+  }
+
+  .liste-reservations {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .bar select {
-    padding: 5px;
-    border: 1px solid white;
-    border-radius: 5px;
-    background-color: gray;
-    color: white;
-    width: 200px;
-  }
-  
-  .calendrier-container {
-    position: relative;
-    margin-left: 145px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 600px;
-    text-align: center;
-    margin-bottom: 50px;
-  }
-  
-  .calendrier {
     width: 100%;
-    font-size: 14px;
   }
-  
-  .calendrier-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
+
   .calendrier-header button {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-    cursor: pointer;
+    width: 35px;
+    height: 35px;
   }
-  
-  .calendrier-header button:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .calendrier-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-  }
-  
-  .day-header {
-    font-weight: bold;
-    padding: 10px;
-  }
-  
+
   .day {
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 5px;
+    padding: 8px 2px;
+    font-size: 0.9rem;
   }
-  
-  .day:hover {
-    background-color: #e0e0e0;
+
+  .day-header {
+    padding: 8px 2px;
+    font-size: 0.9rem;
   }
-  
-  .empty {
-    background-color: #f5f5f5;
-  }
-  
-  .reservation-box {
-    position: absolute;
-    left: 800px;
-    top: 190px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 400px;
-    max-height: 600px;
-    display: none;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .reservation-box button {
-    margin: 5px;
-    padding: 8px 15px;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .reservation-box button.fermer {
-    background-color: red;
-  }
-  
-  .reservation-box button.fermer:hover {
-    background-color: darkred;
-  }
-  
-  .reservation-box button.reserver {
-    background-color: #007bff;
-  }
-  
-  .reservation-box button.reserver:hover {
-    background-color: #0056b3;
-  }
-  
-  .reservation-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #ddd;
-    padding: 5px 0;
-  }
-  
+
   .reservation-item .reservation-details {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
   }
-  
-  .reservation-item .reservation-details span {
-    flex: 1;
-    text-align: left;
-    white-space: normal;
+
+  .reservation-item {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .reservation-item button.annuler {
-    background-color: orange;
-    margin-left: 10px;
+
+  .reservation-item button.annuler,
+  .reservation-item button.reserver {
+    margin-left: 0;
+    margin-top: 10px;
+    align-self: flex-end;
   }
-  
-  .reservation-item button.annuler:hover {
-    background-color: darkorange;
+}
+
+/* Animation pour les jours du calendrier */
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendrier-grid .day:not(.empty) {
+  animation: apparition 0.3s ease forwards;
+}
+
+/* Délai d'animation pour chaque jour */
+.calendrier-grid .day:nth-child(7n + 1) {
+  animation-delay: 0.05s;
+}
+
+.calendrier-grid .day:nth-child(7n + 2) {
+  animation-delay: 0.1s;
+}
+
+.calendrier-grid .day:nth-child(7n + 3) {
+  animation-delay: 0.15s;
+}
+
+.calendrier-grid .day:nth-child(7n + 4) {
+  animation-delay: 0.2s;
+}
+
+.calendrier-grid .day:nth-child(7n + 5) {
+  animation-delay: 0.25s;
+}
+
+.calendrier-grid .day:nth-child(7n + 6) {
+  animation-delay: 0.3s;
+}
+
+.calendrier-grid .day:nth-child(7n + 7) {
+  animation-delay: 0.35s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

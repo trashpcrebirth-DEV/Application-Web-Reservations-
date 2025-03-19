@@ -39,14 +39,13 @@
         <div id="daysGrid" class="calendrier-grid"></div>
       </div>
     </div>
-  </div>
-
-  <div id="reservationBox" class="reservation-box hidden">
-    <h2>Réservation</h2>
-    <p id="selectedDate"></p>
-    <div id="reservationList"></div>
-    <div id="reservationButtons">
-      <button class="fermer" onclick="closeReservationBox()">Fermer</button>
+    
+    <div id="listeReservations" class="liste-reservations">
+      <h2>Réservations</h2>
+      <p id="dateSelectionnee" class="date-selectionnee">Sélectionnez une date</p>
+      <div id="reservationList">
+        <p class="aucune-reservation">Aucune réservation sélectionnée</p>
+      </div>
     </div>
   </div>
 
@@ -54,3 +53,4 @@
   <%- include ("../partials/footer.ejs") %>
 </body>
 </html>
+
