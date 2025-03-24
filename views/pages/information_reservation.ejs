@@ -34,7 +34,7 @@
                             <div class="element-info">
                                 <i class="fas fa-calendar icone"></i>
                                 <div>
-                                    <p class="etiquette">Date</p>
+                                    <p class="etiquette"><u>Date</u></p>
                                     <p class="valeur">
                                         <%= new Date(reservation.date_time).toLocaleDateString() %>
                                     </p>
@@ -44,9 +44,10 @@
                             <div class="element-info">
                                 <i class="fas fa-clock icone"></i>
                                 <div>
-                                    <p class="etiquette">Heure</p>
+                                    <p class="etiquette"><u>Heure</u></p>
                                     <p class="valeur">
-                                        <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) %>
+                                        <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", {
+                                            hour: "2-digit" , minute: "2-digit" }) %>
                                     </p>
                                 </div>
                             </div>
@@ -54,7 +55,7 @@
                             <div class="element-info">
                                 <i class="fas fa-basketball-ball icone"></i>
                                 <div>
-                                    <p class="etiquette">Sport</p>
+                                    <p class="etiquette"><u>Sport</u></p>
                                     <p class="valeur">
                                         <%= reservation.categorie_sport %>
                                     </p>
@@ -64,9 +65,9 @@
                             <div class="element-info">
                                 <i class="fas fa-map-marker-alt icone"></i>
                                 <div>
-                                    <p class="etiquette">Terrain</p>
+                                    <p class="etiquette"><u>Terrain</u></p>
                                     <p class="valeur">
-                                        <%=  nom_installation %>
+                                        <%= nom_installation %>
                                     </p>
                                 </div>
                             </div>
@@ -74,8 +75,9 @@
                             <div class="element-info">
                                 <i class="fa-solid fa-dollar-sign icone"></i>
                                 <div>
-                                    <p class="etiquette">Prix total</p>
-                                    <p class="valeur prix">
+                                    <p class="etiquette"><u>Prix total</u> - <%= reservation.prix %>$ par personne %>
+                                    </p>
+                                    <p class="valeur prix" id="prix">
                                         <%= reservation.prix %> $
                                     </p>
                                 </div>
@@ -86,74 +88,74 @@
                             <h2>Informations du client</h2>
 
                             <div class="bloc-info">
-                                <p class="etiquette">Nom</p>
+                                <p class="etiquette"><u>Nom</u></p>
                                 <p class="valeur">
                                     <%= user.nom %>
                                 </p>
                             </div>
 
                             <div class="bloc-info">
-                                <p class="etiquette">Email</p>
+                                <p class="etiquette"><u>Email</u></p>
                                 <p class="valeur">
                                     <%= user.email %>
                                 </p>
                             </div>
 
                             <div class="bloc-info">
-                                <p class="etiquette">Téléphone</p>
+                                <p class="etiquette"><u>Téléphone</u></p>
                                 <p class="valeur">
                                     <%= user.telephone %>
                                 </p>
                             </div>
 
-                            <!--
-                            <div class="bloc-info">
-                                <p class="etiquette">Nombre de joueurs</p>
-                                <p class="valeur">
-                                    <%= reservation.nombreJoueurs %>
-                                </p>
+                            <div class="info-paiement">
+                                <h3>Nombre de participants</h3>
+                                <input type="number" name="nombreJoueurs" value="1" id="nombreJoueurs" min="1" required>
                             </div>
-                            -->
-
-                            <% if (reservation.notes) { %>
-                                <div class="bloc-info">
-                                    <p class="etiquette">Notes</p>
-                                    <p class="valeur notes">
-                                        <%= reservation.notes %>
-                                    </p>
-                                </div>
-                                <% } %>
-
-                                    <div class="info-paiement">
-                                        <h3>Informations de paiement</h3>
-                                        <div
-                                            class="statut-paiement <%= reservation.statutPaiement === 'Payé' ? 'paye' : 'en-attente' %>">
-                                            <span class="point"></span>
-                                            <%= reservation.statutPaiement %>
-                                        </div>
-                                        <p class="methode-paiement">
-                                            <span class="etiquette">Méthode:</span>
-                                            <span class="valeur">
-                                                <%= reservation.methodePaiement %>
-                                            </span>
-                                        </p>
-                                    </div>
                         </div>
                     </div>
 
                     <div class="actions">
                         <form action="/reserver/<%= reservation.id_reservation %>" method="POST">
-                            <% if (reservation.statut === 'Réservé') { %>
+                            <% if (reservation.statut==='Réservé' ) { %>
                                 <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
-                            <% } else { %>
-                                <button type="submit" class="bouton primaire">Réserver</button>
-                            <% } %>                       
+                                <% } else { %>
+                                    <button type="submit" class="bouton primaire">Réserver</button>
+                                    <% } %>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
         <%- include ("../partials/footer.ejs") %>
+
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const nombreJoueursInput = document.getElementById("nombreJoueurs");
+                    const prixElement = document.getElementById("prix");
+                    const basePrice = parseInt(prixElement.textContent)
+
+                    function updatePrice() {
+                        let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  // Convertir la valeur saisie en nombre
+
+                        if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
+                            numberOfPlayers = 1;
+                        }
+
+                        const updatedPrice = basePrice * numberOfPlayers;
+
+                        prixElement.textContent = `${updatedPrice} $`;
+                    }
+
+                    nombreJoueursInput.addEventListener("input", updatePrice);
+
+                    updatePrice();
+                });
+            </script>
+
+
+
 </body>
 
 </html>
