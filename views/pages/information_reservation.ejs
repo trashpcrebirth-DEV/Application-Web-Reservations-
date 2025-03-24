@@ -116,7 +116,7 @@
                     </div>
 
                     <div class="actions">
-                        <form action="/reserver/<%= reservation.id_reservation %>" method="POST">
+                        <form action="/reserver/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
                             <% if (reservation.statut==='Réservé' ) { %>
                                 <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
                                 <% } else { %>
@@ -151,6 +151,16 @@
                     nombreJoueursInput.addEventListener("input", updatePrice);
 
                     updatePrice();
+                });
+
+                document.addEventListener("DOMContentLoaded", function () { //modifier le nombre dans l'url
+                    const form = document.querySelector('form');
+                    const nombreJoueursInput = document.getElementById('nombreJoueurs');
+
+                    form.addEventListener('submit', function (event) {
+                        const nombreJoueurs = nombreJoueursInput.value;
+                        form.action = `/reserver/<%= reservation.id_reservation %>/${nombreJoueurs}`;
+                    });
                 });
             </script>
 
