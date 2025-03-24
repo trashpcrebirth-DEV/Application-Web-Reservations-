@@ -115,27 +115,33 @@ app.get("/reservation", (req, res) => {
 
 // Route API pour récupérer les réservations au format JSON
 app.get("/api/reservation", (req, res) => {
-    const { date, sport } = req.query;
+    const { date, month, year, sport } = req.query;
+    
+    let query = "SELECT * FROM reservations WHERE 1=1";
+    let params = [];
 
-    let query = "SELECT * FROM reservations WHERE DATE(date_time) = ?";
-    let params = [date];
+    if (date) {
+        query += " AND DATE(date_time) = ?";
+        params.push(date);
+    } else if (month && year) {
+        query += " AND MONTH(date_time) = ? AND YEAR(date_time) = ?";
+        params.push(month, year);
+    }
 
     if (sport && sport.trim() !== "" && sport !== "Tous les sports") {
         query += " AND categorie_sport = ?";
         params.push(sport);
     }
 
-    console.log("Requête SQL exécutée :", query, params); // Debug
-
     con.query(query, params, (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: "Erreur serveur" });
         }
-        console.log("Résultats de la requête :", results); // Debug
         res.json({ reservations: results });
     });
 });
+
 
 // Route pour réserver un sport
 app.post('/reserver/:id', (req, res) => {

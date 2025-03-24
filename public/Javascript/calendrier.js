@@ -159,6 +159,30 @@ function reserver(idReservation) {
 
 }
 
+function highlightReservedDays() {
+  const month = currentDate.getMonth();
+  const year = currentDate.getFullYear();
+  const formattedMonth = String(month + 1).padStart(2, "0");
+  
+  fetch(`/api/reservation?month=${formattedMonth}&year=${year}`)
+    .then(response => response.json())
+    .then(data => {
+      const reservedDays = new Set(data.reservations.map(res => new Date(res.date_time).getDate()));
+
+      document.querySelectorAll(".day").forEach(dayElement => {
+        const day = parseInt(dayElement.textContent);
+        if (reservedDays.has(day)) {
+          dayElement.style.backgroundColor = "blue";
+          dayElement.style.color = "white";
+        } else {
+          dayElement.style.backgroundColor = "";
+          dayElement.style.color = "";
+        }
+      });
+    })
+    .catch(() => console.error("Erreur lors de la récupération des réservations."));
+}
+
 function updateCalendar() {
   const monthYearText = document.getElementById("monthYear")
   const daysGrid = document.getElementById("daysGrid")
@@ -198,6 +222,7 @@ function updateCalendar() {
     dayElement.addEventListener("click", () => showReservationBox(day, month, year))
     daysGrid.appendChild(dayElement)
   }
+  highlightReservedDays(); // Ajout pour colorer les jours réservés
 }
 
 function nextMonth() {
