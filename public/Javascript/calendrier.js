@@ -132,7 +132,8 @@ function annulerReservation(reservationId, reservationDate) {
 }
 
 function reserver(idReservation) {
-  fetch(`/reserver/${idReservation}`, {
+  /*
+  fetch(`/reservation-information/${idReservation}`, {
     method: "POST",
   })
     .then((response) => {
@@ -145,7 +146,6 @@ function reserver(idReservation) {
         }
 
         // Rediriger vers la page de confirmation ou actualiser la liste
-        window.location.href = `/reservation-information/${idReservation}`;
       } else {
         alert("Erreur : la réservation n'a pas pu être effectuée.");
       }
@@ -153,6 +153,10 @@ function reserver(idReservation) {
     .catch(() => {
       alert("Une erreur est survenue, veuillez réessayer.");
     });
+    */
+
+    window.location.href = `/reservation-information/${idReservation}`;
+
 }
 
 function updateCalendar() {
