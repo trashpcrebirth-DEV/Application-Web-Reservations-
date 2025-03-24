@@ -23,6 +23,8 @@ mongoose.connect('mongodb://localhost:27017/mongodb', {
     console.error("Erreur de connexion MongoDB:", err);
 });
 
+
+
 const stripe = new Stripe("sk_test_51R4MLIFZkxHTL2uBltxLNi9y1KcLf4AX5O9wCZ3BbEOhyAJFh1TDsESZcHpdtizXfr0b7kQp6YZ6j7IiAgqXNrNg00r0gp3FDe");
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -725,5 +727,48 @@ app.get("/event/delete/:id", function (req, res) {
         res.redirect("/");
     });
 });
+
+
+app.get('/historique', async (req, res) => {
+    try {
+        // 1. Vérification de connexion
+        if (!req.session.user) {
+            return res.redirect('/connexion');
+        }
+
+        console.log("Tentative d'accès à l'historique pour user:", req.session.user.id);
+
+        // 2. Récupération depuis MongoDB
+        const paiements = await mongoose.connection.db.collection('paiements')
+            .find({ 
+                userId: req.session.user.id.toString() 
+            })
+            .sort({ date: -1 })
+            .toArray();
+
+        console.log(`${paiements.length} paiements trouvés`);
+
+        // 3. Rendu de la vue
+        res.render('pages/historique', {
+            siteTitle: "SportZone",
+            pageTitle: "Historique des paiements",
+            user: req.session.user,
+            paiements: paiements,
+            activePage: 'historique'
+        });
+
+    } catch (error) {
+        console.error("Erreur dans /historique:", error);
+        res.status(500).render('pages/erreur', {
+            message: "Erreur lors du chargement de l'historique",
+            error: error.message
+        });
+    }
+});
+
+
+
+
+
 
 
