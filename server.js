@@ -206,19 +206,31 @@ app.get("/reservation-information/:id", function (req, res) {
                 return res.status(404).send("Réservation non trouvée");
             }
 
-            res.render("pages/information_reservation", {
-                siteTitle: "SportZone",
-                pageTitle: "Détails de la réservation",
-                activePage: "reservation",
-                user: req.session.user,
-                reservation: results[0]
+            const reservation = results[0];
+
+            con.query("SELECT nom FROM installations WHERE id_installation = ?", [reservation.id_installation], (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send("Erreur serveur");
+                }
+
+                const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
+
+                res.render("pages/information_reservation", {
+                    siteTitle: "SportZone",
+                    pageTitle: "Détails de la réservation",
+                    activePage: "reservation",
+                    user: req.session.user,
+                    reservation: reservation,
+                    nom_installation: nom_insta
+                });
             });
         });
-    }
-    else {
+    } else {
         res.redirect("/connexion");
     }
 });
+
 
 
 
