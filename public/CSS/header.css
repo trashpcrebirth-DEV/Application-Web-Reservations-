@@ -97,5 +97,28 @@
 i{
     color: white;
 }
+.cart-icon {
+    position: relative;
+    margin-left: 20px;
+}
 
+.cart-icon a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    position: relative;
+}
+
+.cart-icon .cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #ff0000;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+    display: inline-block;
+}
 /* FIN DU HEADER */

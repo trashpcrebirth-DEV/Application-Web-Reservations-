@@ -100,32 +100,59 @@ function annulerReservation(reservationId, reservationDate) {
       if (data.success) {
         const reservationItem = document
           .querySelector(`.reservation-item button[data-id="${reservationId}"]`)
-          .closest(".reservation-item")
-        const statusElement = reservationItem.querySelector(".reservation-details span:nth-child(4)")
-        const reserveButton = reservationItem.querySelector(".reserver")
+          .closest(".reservation-item");
+        const statusElement = reservationItem.querySelector(".reservation-details span:nth-child(4)");
+        const reserveButton = reservationItem.querySelector(".reserver");
 
-        statusElement.innerHTML = "<strong>Statut:</strong> Disponible"
-        reserveButton.textContent = "Réserver"
-        reserveButton.disabled = false
-        reserveButton.style.backgroundColor = "#007bff"
-        reservationItem.querySelector(".annuler").remove()
+        statusElement.innerHTML = "<strong>Statut:</strong> Disponible";
+        reserveButton.textContent = "Réserver";
+        reserveButton.disabled = false;
+        reserveButton.style.backgroundColor = "#007bff";
+        reservationItem.querySelector(".annuler").remove();
+
+        // Décrémenter dynamiquement le compteur du panier
+        const cartCountElement = document.querySelector(".cart-count");
+        if (cartCountElement) {
+          let currentCount = parseInt(cartCountElement.textContent, 10) || 0;
+          cartCountElement.textContent = Math.max(0, currentCount - 1); // Assurez-vous que le compteur ne descend pas en dessous de 0
+        }
 
         // Rafraîchir la liste des réservations avec la date de la réservation originale
-        const selectedDate = reservationDate.getDate()
-        const selectedMonth = reservationDate.getMonth()
-        const selectedYear = reservationDate.getFullYear()
-        showReservationBox(selectedDate, selectedMonth, selectedYear)
+        const selectedDate = reservationDate.getDate();
+        const selectedMonth = reservationDate.getMonth();
+        const selectedYear = reservationDate.getFullYear();
+        showReservationBox(selectedDate, selectedMonth, selectedYear);
       } else {
-        alert("Erreur : l'annulation n'a pas pu être effectuée.")
+        alert("Erreur : l'annulation n'a pas pu être effectuée.");
       }
     })
     .catch(() => {
-      alert("Une erreur est survenue, veuillez réessayer.")
-    })
+      alert("Une erreur est survenue, veuillez réessayer.");
+    });
 }
 
 function reserver(idReservation) {
-  window.location.href = `/reservation-information/${idReservation}`
+  fetch(`/reserver/${idReservation}`, {
+    method: "POST",
+  })
+    .then((response) => {
+      if (response.ok) {
+        // Incrémenter dynamiquement le compteur du panier
+        const cartCountElement = document.querySelector(".cart-count");
+        if (cartCountElement) {
+          let currentCount = parseInt(cartCountElement.textContent, 10) || 0;
+          cartCountElement.textContent = currentCount + 1;
+        }
+
+        // Rediriger vers la page de confirmation ou actualiser la liste
+        window.location.href = `/reservation-information/${idReservation}`;
+      } else {
+        alert("Erreur : la réservation n'a pas pu être effectuée.");
+      }
+    })
+    .catch(() => {
+      alert("Une erreur est survenue, veuillez réessayer.");
+    });
 }
 
 function updateCalendar() {

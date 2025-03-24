@@ -109,7 +109,6 @@ app.get("/reservation", (req, res) => {
             activePage: 'reservation',
             reservations: results,
             user: req.session.user // Pass user session to the view
-
         });
     });
 });
@@ -152,13 +151,17 @@ app.post('/reserver/:id', (req, res) => {
 
     // Requête SQL pour mettre à jour la réservation
     const query = `UPDATE reservations SET statut = ?, user_id = ? WHERE id_reservation = ?`;
-    con.query(query, ["Réservé", req.session.user.id, reservationId], (err, result) => {
+    con.query(query, ["Réservé", userId, reservationId], (err, result) => {
         if (err) {
             console.error("Erreur lors de la mise à jour de la réservation :", err);
             return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
         }
 
         if (result.affectedRows > 0) {
+            // Increment the cart count in the session
+            req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
+
+            // Redirect to a confirmation page or back to the reservation page
             res.redirect(`/reservation-information/${reservationId}`);
         } else {
             res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
@@ -174,6 +177,11 @@ app.post('/api/annuler', async (req, res) => {
         const [result] = await con.promise().query(query, [id]);
 
         if (result.affectedRows > 0) {
+            // Decrement the cart count in the session
+            if (req.session.user && req.session.user.cartCount > 0) {
+                req.session.user.cartCount -= 1;
+            }
+
             res.json({ success: true });
         } else {
             res.json({ success: false, message: "Réservation non trouvée." });
@@ -183,7 +191,6 @@ app.post('/api/annuler', async (req, res) => {
         res.json({ success: false, message: "Erreur serveur." });
     }
 });
-
 
 app.get("/reservation-information/:id", function (req, res) {
     if (req.session.user) {
