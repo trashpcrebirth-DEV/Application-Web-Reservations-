@@ -144,36 +144,66 @@ app.get("/api/reservation", (req, res) => {
 
 
 // Route pour réserver un sport
-app.post('/reserver/:id', (req, res) => {
+app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
     }
 
     const reservationId = req.params.id; // ID de la réservation passée dans l'URL
     const userId = req.session.user.id; // ID de l'utilisateur connecté
+    const nombreJoueurs = parseInt(req.params.nombreJoueurs); // Récupère le nombre de joueurs depuis le formulaire
 
-    console.log("ID de l'utilisateur connecté :", userId); // Vérifiez si l'ID est défini
-    console.log("ID de la réservation :", reservationId); // Vérifiez l'ID de la réservation
+    console.log("ID de l'utilisateur connecté :", userId); 
+    console.log("ID de la réservation :", reservationId);
+    console.log("Nombre de joueurs :", nombreJoueurs); // Vérifie le nombre de joueurs
+
+    if (isNaN(nombreJoueurs) || nombreJoueurs < 1) {
+        return res.status(400).send("Le nombre de joueurs doit être valide et supérieur à 0.");
+    }
 
     // Requête SQL pour mettre à jour la réservation
-    const query = `UPDATE reservations SET statut = ?, user_id = ? WHERE id_reservation = ?`;
-    con.query(query, ["Réservé", userId, reservationId], (err, result) => {
+    const updateReservationQuery = `UPDATE reservations SET statut = ?, user_id = ? WHERE id_reservation = ?`;
+    con.query(updateReservationQuery, ["Réservé", userId, reservationId], (err, result) => {
         if (err) {
             console.error("Erreur lors de la mise à jour de la réservation :", err);
             return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
         }
-
+    
         if (result.affectedRows > 0) {
-            // Increment the cart count in the session
-            req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
-
-            // Redirect to a confirmation page or back to the reservation page
-            res.redirect(`/reservation-information/${reservationId}`);
+            // Assurer qu'une ligne a été affectée
+            const getInstallationQuery = `SELECT id_installation FROM reservations WHERE id_reservation = ?`;
+            con.query(getInstallationQuery, [reservationId], (err, result) => {
+                if (err) {
+                    console.error("Erreur lors de la récupération de l'installation :", err);
+                    return res.status(500).send("Erreur lors de la récupération de l'installation.");
+                }
+    
+                if (result.length > 0) {
+                    const installationId = result[0].id_installation;
+                    const updateCapacityQuery = `UPDATE installations SET capacite = capacite - ? WHERE id_installation = ?`;
+                    con.query(updateCapacityQuery, [nombreJoueurs, installationId], (err, result) => {
+                        if (err) {
+                            console.error("Erreur lors de la mise à jour de la capacité de la table :", err);
+                            return res.status(500).send("Erreur lors de la mise à jour de la capacité de la table.");
+                        }
+    
+                        if (result.affectedRows > 0) {
+                            req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
+                            res.redirect(`/reservation-information/${reservationId}`);
+                        } else {
+                            res.status(404).send("La table n'a pas pu être mise à jour.");
+                        }
+                    });
+                } else {
+                    res.status(404).send("Installation non trouvée pour cette réservation.");
+                }
+            });
         } else {
             res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
         }
     });
 });
+
 app.post('/api/annuler', async (req, res) => {
     const { id } = req.body;
 
@@ -228,7 +258,8 @@ app.get("/reservation-information/:id", function (req, res) {
                     activePage: "reservation",
                     user: req.session.user,
                     reservation: reservation,
-                    nom_installation: nom_insta
+                    nom_installation: nom_insta,
+                    nombreJoueurs: 1
                 });
             });
         });
