@@ -75,7 +75,7 @@
                             <div class="element-info">
                                 <i class="fa-solid fa-dollar-sign icone"></i>
                                 <div>
-                                    <p class="etiquette"><u>Prix total</u> - <%= reservation.prix %>$ par personne %>
+                                    <p class="etiquette"><u>Prix total</u> - <%= reservation.prix %>$ par personne 
                                     </p>
                                     <p class="valeur prix" id="prix">
                                         <%= reservation.prix %> $
@@ -116,6 +116,7 @@
                     </div>
 
                     <div class="actions">
+                        <p id="id-reservation" data-id="<%= reservation.id_reservation %>"></p>
                         <form action="/reserver/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
                             <% if (reservation.statut==='Réservé' ) { %>
                                 <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
@@ -123,49 +124,20 @@
                                     <button type="submit" class="bouton primaire">Réserver</button>
                                     <% } %>
                         </form>
+                        <% if (reservation.statut === 'Réservé') { %>
+                            <form class="bouton annuler" action="/api/annuler/<%= reservation.id_reservation %>" method="POST">
+                                <button type="submit" class="bouton danger">Annuler</button>
+                            </form>
+                        <% } %>
                     </div>
+
+                   
                 </div>
             </div>
         </div>
         <%- include ("../partials/footer.ejs") %>
 
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const nombreJoueursInput = document.getElementById("nombreJoueurs");
-                    const prixElement = document.getElementById("prix");
-                    const basePrice = parseInt(prixElement.textContent)
-
-                    function updatePrice() {
-                        let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  // Convertir la valeur saisie en nombre
-
-                        if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
-                            numberOfPlayers = 1;
-                        }
-
-                        const updatedPrice = basePrice * numberOfPlayers;
-
-                        prixElement.textContent = `${updatedPrice} $`;
-                    }
-
-                    nombreJoueursInput.addEventListener("input", updatePrice);
-
-                    updatePrice();
-                });
-
-                document.addEventListener("DOMContentLoaded", function () { //modifier le nombre dans l'url
-                    const form = document.querySelector('form');
-                    const nombreJoueursInput = document.getElementById('nombreJoueurs');
-
-                    form.addEventListener('submit', function (event) {
-                        const nombreJoueurs = nombreJoueursInput.value;
-                        form.action = `/reserver/<%= reservation.id_reservation %>/${nombreJoueurs}`;
-                    });
-                });
-            </script>
-
-
-
+        <script src="/Javascript/information_reservation.js"></script>
 </body>
 
 </html>

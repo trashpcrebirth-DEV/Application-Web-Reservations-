@@ -1,0 +1,33 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const nombreJoueursInput = document.getElementById("nombreJoueurs");
+    const prixElement = document.getElementById("prix");
+    const basePrice = parseInt(prixElement.textContent)
+
+    function updatePrice() {
+        let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  // Convertir la valeur saisie en nombre
+
+        if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
+            numberOfPlayers = 1;
+        }
+
+        const updatedPrice = basePrice * numberOfPlayers;
+
+        prixElement.textContent = `${updatedPrice} $`;
+    }
+
+    nombreJoueursInput.addEventListener("input", updatePrice);
+
+    updatePrice();
+});
+
+document.addEventListener("DOMContentLoaded", function () { //modifier le nombre dans l'url
+    const form = document.querySelector('form');
+    const nombreJoueursInput = document.getElementById('nombreJoueurs');
+    const id_reservation = document.getElementById('id-reservation').dataset.id;
+
+
+    form.addEventListener('submit', function (event) {
+        const nombreJoueurs = nombreJoueursInput.value;
+        form.action = `/reserver/${id_reservation}/${nombreJoueurs}`;
+    });
+});

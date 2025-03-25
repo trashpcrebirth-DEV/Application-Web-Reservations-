@@ -206,13 +206,13 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
     });
 });
 
-app.post('/api/annuler', async (req, res) => {
-    const { id } = req.body;
+app.post('/api/annuler/:id', async (req, res) => {
+    const reservationId = req.params.id;
 
     try {
         // Requête SQL pour annuler la réservation
         const query = "UPDATE reservations SET statut = 'Disponible', user_id = NULL WHERE id_reservation = ?";
-        const [result] = await con.promise().query(query, [id]);
+        const [result] = await con.promise().query(query, [reservationId]);
 
         if (result.affectedRows > 0) {
             // Decrement the cart count in the session
@@ -220,9 +220,9 @@ app.post('/api/annuler', async (req, res) => {
                 req.session.user.cartCount -= 1;
             }
 
-            res.json({ success: true });
+            res.redirect(`/reservation-information/${reservationId}`);
         } else {
-            res.json({ success: false, message: "Réservation non trouvée." });
+            res.status(404).send("Installation non trouvée pour cette réservation.");
         }
     } catch (error) {
         console.error("Erreur lors de l'annulation de la réservation :", error);

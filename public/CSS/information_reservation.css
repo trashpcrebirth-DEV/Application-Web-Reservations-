@@ -233,3 +233,31 @@ body {
         width: 100%;
     }
 }
+
+.bouton.annuler {
+    color: #ffffff; /* Texte blanc */
+    padding: 5px 20px;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    position: relative;
+    margin-top: -0.425%;
+    margin-left: 2%;
+
+}
+
+.bouton.annuler:hover {
+    background-color: #b91c1c; /* Rouge plus foncé */
+    transform: scale(1.05); /* Effet de zoom léger */
+}
+
+.bouton.annuler:active {
+    transform: scale(0.95); /* Effet de clic */
+}

@@ -64,6 +64,7 @@ function showReservationBox(day, month, year) {
             reserveButton.disabled = true
             reserveButton.style.backgroundColor = "grey"
 
+            /*
             const annulerButton = document.createElement("button")
             annulerButton.textContent = "Annuler"
             annulerButton.classList.add("annuler")
@@ -72,9 +73,9 @@ function showReservationBox(day, month, year) {
             // Passer la bonne date de réservation ici
             const reservationDate = new Date(res.date_time)
             annulerButton.onclick = () => annulerReservation(res.id_reservation, reservationDate)
+            */
 
             resItem.appendChild(reserveButton)
-            resItem.appendChild(annulerButton)
           } else {
             reserveButton.onclick = () => reserver(res.id_reservation)
             resItem.appendChild(reserveButton)
@@ -89,6 +90,8 @@ function showReservationBox(day, month, year) {
     })
 }
 
+
+/*
 function annulerReservation(reservationId, reservationDate) {
   fetch("/api/annuler", {
     method: "POST",
@@ -130,6 +133,8 @@ function annulerReservation(reservationId, reservationDate) {
       alert("Une erreur est survenue, veuillez réessayer.");
     });
 }
+*/
+
 
 function reserver(idReservation) {
   /*
