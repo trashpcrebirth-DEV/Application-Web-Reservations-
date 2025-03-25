@@ -3,7 +3,7 @@ const images = [
     , "/images/images-connexion/Hockey.jpg"
     , "/images/images-connexion/salle-musculation.png"
     , "/images/images-connexion/Volleyball.jpg"
-    
+
 ];
 
 let currentIndex = 0;
@@ -74,3 +74,9 @@ document.getElementById('connexionForm').addEventListener('submit', function (ev
             console.error('Error:', error);
         });
 });
+const urlParams = new URLSearchParams(window.location.search);
+const alertMessage = urlParams.get('alertConnexion');
+if (alertMessage === 'success') {
+    alert("Vous devez vous connecter tout d'abord!");
+}
+

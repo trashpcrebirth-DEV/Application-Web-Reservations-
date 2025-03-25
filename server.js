@@ -206,7 +206,7 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
     });
 });
 
-app.post('/api/annuler/:id', async (req, res) => {
+app.post('/api/annuler/:id/:nombreJoueurs', async (req, res) => { //peut etre d'un ajout d'une table où ca enregistre le nombre de joeur lié à installation pour enlever en prenant son id
     const reservationId = req.params.id;
 
     try {
@@ -349,10 +349,15 @@ app.post('/modifier', (req, res) => {
 
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
-    res.render("pages/contact", {
+    if (req.session.user) {
+        res.render("pages/contact", {
         activePage: 'contact',
         user: req.session.user
     }); // Render le fichier contact.ejs
+    } else {
+        
+        res.redirect("/connexion?alertConnexion=success");
+    }  
 });
 
 //Prend l'image uploadée et l'ajoute à la base de données
@@ -378,9 +383,9 @@ app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
     }
 
     const formattedDate = dateFormat(date_evenement, "yyyy-mm-dd");
-    const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url) VALUES (?, ?, ?, ?, ?, ?)";
+    const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url, statut) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    con.query(query, [nom, formattedDate, lieu, description, formattedParticipants, image_url], (err, result) => {
+    con.query(query, [nom, formattedDate, lieu, description, formattedParticipants, image_url, "En attente"], (err, result) => {
         if (err) {
             console.error("Erreur lors de l'insertion de l'événement :", err);
             return res.status(500).json({ error: "Erreur serveur" });
@@ -450,7 +455,7 @@ app.get('/AProposInstallations', (req, res) => {
 // Route pour la page à propos des événements
 app.get("/AProposEvenement", (req, res) => {
 
-    con.query("SELECT * FROM Liste_Evenements ORDER BY date_evenement", (err, results) => {
+    con.query(`SELECT * FROM Liste_Evenements WHERE statut = "Acceptée" ORDER BY date_evenement;`, (err, results) => {
         const evenementsParMois = [
             "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
             "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
