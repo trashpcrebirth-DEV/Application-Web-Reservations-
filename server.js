@@ -118,7 +118,7 @@ app.get("/reservation", (req, res) => {
 // Route API pour récupérer les réservations au format JSON
 app.get("/api/reservation", (req, res) => {
     const { date, month, year, sport } = req.query;
-    
+
     let query = "SELECT * FROM reservations WHERE 1=1";
     let params = [];
 
@@ -155,7 +155,7 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
     const userId = req.session.user.id; // ID de l'utilisateur connecté
     const nombreJoueurs = parseInt(req.params.nombreJoueurs); // Récupère le nombre de joueurs depuis le formulaire
 
-    console.log("ID de l'utilisateur connecté :", userId); 
+    console.log("ID de l'utilisateur connecté :", userId);
     console.log("ID de la réservation :", reservationId);
     console.log("Nombre de joueurs :", nombreJoueurs); // Vérifie le nombre de joueurs
 
@@ -164,42 +164,20 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
     }
 
     // Requête SQL pour mettre à jour la réservation
-    const updateReservationQuery = `UPDATE reservations SET statut = ?, user_id = ? WHERE id_reservation = ?`;
-    con.query(updateReservationQuery, ["Réservé", userId, reservationId], (err, result) => {
+    const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur) VALUES (?, ?, ?)`;
+    con.query(addItemQuery, [userId, reservationId, nombreJoueurs], (err, result) => {
         if (err) {
-            console.error("Erreur lors de la mise à jour de la réservation :", err);
+            console.error("Erreur lors de l'ajout de l'item:", err);
             return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
         }
-    
+
         if (result.affectedRows > 0) {
-            // Assurer qu'une ligne a été affectée
-            const getInstallationQuery = `SELECT id_installation FROM reservations WHERE id_reservation = ?`;
-            con.query(getInstallationQuery, [reservationId], (err, result) => {
-                if (err) {
-                    console.error("Erreur lors de la récupération de l'installation :", err);
-                    return res.status(500).send("Erreur lors de la récupération de l'installation.");
-                }
-    
-                if (result.length > 0) {
-                    const installationId = result[0].id_installation;
-                    const updateCapacityQuery = `UPDATE installations SET capacite = capacite - ? WHERE id_installation = ?`;
-                    con.query(updateCapacityQuery, [nombreJoueurs, installationId], (err, result) => {
-                        if (err) {
-                            console.error("Erreur lors de la mise à jour de la capacité de la table :", err);
-                            return res.status(500).send("Erreur lors de la mise à jour de la capacité de la table.");
-                        }
-    
-                        if (result.affectedRows > 0) {
-                            req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
-                            res.redirect(`/reservation-information/${reservationId}`);
-                        } else {
-                            res.status(404).send("La table n'a pas pu être mise à jour.");
-                        }
-                    });
-                } else {
-                    res.status(404).send("Installation non trouvée pour cette réservation.");
-                }
-            });
+            if (result.affectedRows > 0) {
+                req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
+                res.redirect(`/reservation-information/${reservationId}`);
+            } else {
+                res.status(404).send("La table n'a pas pu être mise à jour.");
+            }
         } else {
             res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
         }
@@ -254,14 +232,27 @@ app.get("/reservation-information/:id", function (req, res) {
 
                 const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
 
-                res.render("pages/information_reservation", {
-                    siteTitle: "SportZone",
-                    pageTitle: "Détails de la réservation",
-                    activePage: "reservation",
-                    user: req.session.user,
-                    reservation: reservation,
-                    nom_installation: nom_insta,
-                    nombreJoueurs: 1
+                const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
+
+                con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
+                    if (err) {
+                        console.error("Erreur lors de la récupération des items :", err);
+                        return res.status(500).json({ message: "Erreur serveur" });
+                    }
+
+                    // Vérification si l'item existe dans le panier
+                    const isDansPanier = dansPanier.length > 0;
+
+                    res.render("pages/information_reservation", {
+                        siteTitle: "SportZone",
+                        pageTitle: "Détails de la réservation",
+                        activePage: "reservation",
+                        user: req.session.user,
+                        reservation: reservation,
+                        nom_installation: nom_insta,
+                        nombreJoueurs: 1,
+                        isDansPanier: isDansPanier
+                    });
                 });
             });
         });
@@ -269,9 +260,6 @@ app.get("/reservation-information/:id", function (req, res) {
         res.redirect("/connexion");
     }
 });
-
-
-
 
 
 // Route pour la page de profile
@@ -351,13 +339,13 @@ app.post('/modifier', (req, res) => {
 app.get("/contact", (req, res) => {
     if (req.session.user) {
         res.render("pages/contact", {
-        activePage: 'contact',
-        user: req.session.user
-    }); // Render le fichier contact.ejs
+            activePage: 'contact',
+            user: req.session.user
+        }); // Render le fichier contact.ejs
     } else {
-        
+
         res.redirect("/connexion?alertConnexion=success");
-    }  
+    }
 });
 
 //Prend l'image uploadée et l'ajoute à la base de données
@@ -563,34 +551,49 @@ app.get('/deconnexion', function (req, res) {
 
 app.get("/checkout", async (req, res) => {
     if (!req.session.user) {
-        return res.redirect("/connexion"); // Redirigez si l'utilisateur n'est pas connecté
+        return res.redirect("/connexion"); // Redirige si l'utilisateur n'est pas connecté
     }
 
     try {
-        // Récupérer les réservations de l'utilisateur depuis MySQL
-        const [reservations] = await con.promise().query(
-            "SELECT * FROM reservations WHERE user_id = ? AND statut = 'Réservé'",
+        // Récupérer les items associés à l'utilisateur
+        const [items] = await con.promise().query(
+            "SELECT * FROM items WHERE id_utilisateur = ?",
             [req.session.user.id]
         );
 
-        if (reservations.length === 0) {
-            return res.status(400).send("Aucune réservation trouvée pour le paiement.");
+        if (items.length === 0) {
+            return res.status(400).send("Aucun item trouvé pour le paiement.");
         }
 
-        // Transformer les réservations en `line_items` pour Stripe
-        const line_items = reservations.map((reservation) => ({
-            price_data: {
-                currency: "usd", // Remplacez par la devise souhaitée
-                product_data: {
-                    name: reservation.categorie_sport, // Nom du sport
+        // Récupérer les détails des réservations associées aux items
+        const reservationIds = items.map(item => item.id_reservation);
+        
+        const [reservations] = await con.promise().query(
+            "SELECT * FROM reservations WHERE id_reservation IN (?)",
+            [reservationIds]
+        );
 
+        // Associer les réservations aux items
+        const itemsAvecReservation = items.map(item => {
+            const reservation = reservations.find(res => res.id_reservation === item.id_reservation);
+            return {
+                ...item,
+                prix: reservation ? reservation.prix : 0, 
+                categorie_sport: reservation ? reservation.categorie_sport : "Sport inconnu"
+            };
+        });
+
+        const line_items = itemsAvecReservation.map((item) => ({
+            price_data: {
+                currency: "usd",
+                product_data: {
+                    name: item.categorie_sport, 
                 },
-                unit_amount: Math.round(reservation.prix * 100), // Stripe attend un montant en centimes
+                unit_amount: Math.round(item.prix * 100), 
             },
-            quantity: 1, // Chaque réservation est comptée comme une unité
+            quantity: 1, 
         }));
 
-        // Créer une session de paiement Stripe
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: line_items,
@@ -599,7 +602,6 @@ app.get("/checkout", async (req, res) => {
             cancel_url: "http://localhost:4000/paiement",
         });
 
-        // Rediriger l'utilisateur vers la page de paiement Stripe
         res.redirect(session.url);
     } catch (error) {
         console.error("Erreur lors de la création de la session Stripe :", error);
@@ -607,18 +609,44 @@ app.get("/checkout", async (req, res) => {
     }
 });
 
+
+app.get("/success", async (req, res) => {
+    res.render("pages/success", {
+        siteTitle: "SportZone",
+        pageTitle: "Merci",
+        user: req.session.user
+    });
+});
+
+
 // Remplacer toute la route /paiement existante par :
 app.get("/paiement", async (req, res) => {
     if (!req.session.user) return res.redirect("/connexion");
 
     try {
-        // Récupérer les données de MySQL
-        const [reservations] = await con.promise().query(
-            "SELECT * FROM reservations WHERE user_id = ?",
+        // Récupérer les items liés à l'utilisateur
+        const [items] = await con.promise().query(
+            "SELECT * FROM items WHERE id_utilisateur = ?",
             [req.session.user.id]
         );
 
-        // Récupérer les paiements depuis MongoDB
+        if (items.length === 0) {
+            return res.render("pages/paiement", {
+                user: req.session.user,
+                reservations: [],
+                paiements: [],
+                activePage: "paiement"
+            });
+        }
+
+        // Récupérer les détails des réservations associées aux items
+        const reservationIds = items.map(item => item.id_reservation);
+
+        const [reservations] = await con.promise().query(
+            "SELECT * FROM reservations WHERE id_reservation IN (?)",
+            [reservationIds]
+        );
+
         const paiements = await mongoose.connection.db.collection('paiements')
             .find({ userId: req.session.user.id.toString() })
             .toArray();
@@ -635,6 +663,7 @@ app.get("/paiement", async (req, res) => {
         res.status(500).send("Erreur serveur");
     }
 });
+
 
 app.post("/paiement", async (req, res) => {
     const { amount, currency, paymentMethodId } = req.body;
@@ -745,8 +774,8 @@ app.get('/historique', async (req, res) => {
 
         // 2. Récupération depuis MongoDB
         const paiements = await mongoose.connection.db.collection('paiements')
-            .find({ 
-                userId: req.session.user.id.toString() 
+            .find({
+                userId: req.session.user.id.toString()
             })
             .sort({ date: -1 })
             .toArray();

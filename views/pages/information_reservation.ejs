@@ -118,7 +118,7 @@
                     <div class="actions">
                         <p id="id-reservation" data-id="<%= reservation.id_reservation %>"></p>
                         <form action="/reserver/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
-                            <% if (reservation.statut==='Réservé' ) { %>
+                            <% if (isDansPanier) { %>
                                 <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
                                 <% } else { %>
                                     <button type="submit" class="bouton primaire">Réserver</button>
