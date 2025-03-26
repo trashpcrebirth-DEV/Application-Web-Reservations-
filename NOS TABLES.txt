@@ -1,137 +1,145 @@
 CREATE TABLE reservations (
     id_reservation INT AUTO_INCREMENT PRIMARY KEY,
     date_time DATETIME NOT NULL,
+    date_time_fin DATETIME NOT NULL,
     prix DECIMAL(10,2) NOT NULL,
     statut VARCHAR(50) NOT NULL DEFAULT 'Disponible',
-    categorie_sport VARCHAR(100) NOT NULL
+    categorie_sport VARCHAR(100) NOT NULL,
+    user_id INT NULL,
+    id_installation INT NOT NULL,
+    FOREIGN KEY (id_installation) REFERENCES installations(id_installation)
 );
 
-INSERT INTO reservations (date_time, prix, statut, categorie_sport) 
-VALUES 
--- 1er mars
-('2025-03-01 10:00:00', 20.00, 'Disponible', 'Football'),
-('2025-03-01 14:00:00', 25.00, 'Disponible', 'Basketball'),
-('2025-03-01 18:00:00', 30.00, 'Disponible', 'Tennis'),
+DELIMITER $$
 
--- 2 mars
-('2025-03-02 09:00:00', 15.00, 'Disponible', 'Football'),
-('2025-03-02 12:00:00', 20.00, 'Disponible', 'Basketball'),
+CREATE PROCEDURE GenererReservations()
+BEGIN
+    DECLARE start_date DATE DEFAULT '2025-03-01';
+    DECLARE end_date DATE DEFAULT '2025-06-30';
 
--- 3 mars
-('2025-03-03 16:00:00', 35.00, 'Disponible', 'Tennis'),
-('2025-03-03 19:00:00', 40.00, 'Disponible', 'Football'),
+    WHILE start_date <= end_date DO
+        -- Insertions pour chaque installation et chaque sport
+        -- Football (Soccer)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 1),
+        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 2),
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 3);
 
--- 4 mars
-('2025-03-04 11:00:00', 22.00, 'Disponible', 'Basketball'),
-('2025-03-04 15:00:00', 28.00, 'Disponible', 'Tennis'),
+        -- Basketball
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 4),
+        (CONCAT(start_date, ' 15:00:00'), CONCAT(start_date, ' 16:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 5),
+        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 6);
 
--- 5 mars
-('2025-03-05 13:00:00', 18.00, 'Disponible', 'Football'),
-('2025-03-05 17:00:00', 24.00, 'Disponible', 'Basketball'),
+        -- Volleyball
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 7),
+        (CONCAT(start_date, ' 13:00:00'), CONCAT(start_date, ' 14:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 8),
+        (CONCAT(start_date, ' 15:00:00'), CONCAT(start_date, ' 16:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 9);
 
--- 6 mars
-('2025-03-06 10:30:00', 32.00, 'Disponible', 'Tennis'),
-('2025-03-06 20:00:00', 45.00, 'Disponible', 'Football'),
+        -- Handball
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 11:00:00'), CONCAT(start_date, ' 12:30:00'), 35.00, 'Disponible', 'Handball', NULL, 10),
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 35.00, 'Disponible', 'Handball', NULL, 11);
 
--- 7 mars
-('2025-03-07 09:30:00', 19.00, 'Disponible', 'Basketball'),
-('2025-03-07 14:30:00', 26.00, 'Disponible', 'Tennis'),
+        -- Hockey
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 20:00:00'), 100.00, 'Disponible', 'Hockey', NULL, 12);
 
--- 8 mars
-('2025-03-08 12:00:00', 21.00, 'Disponible', 'Football'),
-('2025-03-08 16:00:00', 29.00, 'Disponible', 'Basketball'),
+        -- Cricket
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 12:00:00'), 60.00, 'Disponible', 'Cricket', NULL, 13);
 
--- 9 mars
-('2025-03-09 18:00:00', 34.00, 'Disponible', 'Tennis'),
-('2025-03-09 21:00:00', 50.00, 'Disponible', 'Football'),
+        -- Natation (Bassin Olympique)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 07:00:00'), CONCAT(start_date, ' 08:30:00'), 80.00, 'Disponible', 'Natation', NULL, 14);
 
--- 10 mars
-('2025-03-10 08:00:00', 17.00, 'Disponible', 'Basketball'),
-('2025-03-10 13:00:00', 23.00, 'Disponible', 'Tennis'),
+        -- Natation (Piscine de Loisir)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 50.00, 'Disponible', 'Natation', NULL, 15);
 
--- 11 mars
-('2025-03-11 10:00:00', 20.00, 'Disponible', 'Football'),
-('2025-03-11 15:00:00', 27.00, 'Disponible', 'Basketball'),
+        -- Natation (Bassin d'Apprentissage)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 08:00:00'), CONCAT(start_date, ' 09:00:00'), 30.00, 'Disponible', 'Natation', NULL, 16);
 
--- 12 mars
-('2025-03-12 19:00:00', 36.00, 'Disponible', 'Tennis'),
-('2025-03-12 22:00:00', 55.00, 'Disponible', 'Football'),
+        -- Musculation
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 06:00:00'), CONCAT(start_date, ' 07:30:00'), 25.00, 'Disponible', 'Musculation', NULL, 17),
+        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:30:00'), 25.00, 'Disponible', 'Musculation', NULL, 18);
 
--- 13 mars
-('2025-03-13 11:30:00', 24.00, 'Disponible', 'Basketball'),
-('2025-03-13 16:30:00', 31.00, 'Disponible', 'Tennis'),
+        -- Cours Collectifs
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 19:00:00'), CONCAT(start_date, ' 20:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 19),
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 20),
+        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 21);
 
--- 14 mars
-('2025-03-14 09:00:00', 18.00, 'Disponible', 'Football'),
-('2025-03-14 14:00:00', 25.00, 'Disponible', 'Basketball'),
+        -- Tennis
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 08:00:00'), CONCAT(start_date, ' 09:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 22),
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 23),
+        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 24);
 
--- 15 mars
-('2025-03-15 17:00:00', 33.00, 'Disponible', 'Tennis'),
-('2025-03-15 20:00:00', 48.00, 'Disponible', 'Football'),
+        -- Badminton
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 25),
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 26),
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 27);
 
--- 16 mars
-('2025-03-16 10:00:00', 19.00, 'Disponible', 'Basketball'),
-('2025-03-16 15:00:00', 26.00, 'Disponible', 'Tennis'),
+        -- Squash
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:00:00'), 20.00, 'Disponible', 'Squash', NULL, 28),
+        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:00:00'), 20.00, 'Disponible', 'Squash', NULL, 29),
+        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:00:00'), 20.00, 'Disponible', 'Squash', NULL, 30);
 
--- 17 mars
-('2025-03-17 12:00:00', 22.00, 'Disponible', 'Football'),
-('2025-03-17 18:00:00', 30.00, 'Disponible', 'Basketball'),
+        -- Escalade
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 35.00, 'Disponible', 'Escalade', NULL, 31),
+        (CONCAT(start_date, ' 11:00:00'), CONCAT(start_date, ' 12:30:00'), 35.00, 'Disponible', 'Escalade', NULL, 31);
 
--- 18 mars
-('2025-03-18 21:00:00', 37.00, 'Disponible', 'Tennis'),
-('2025-03-18 23:00:00', 60.00, 'Disponible', 'Football'),
+        -- Athlétisme
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 07:00:00'), CONCAT(start_date, ' 08:30:00'), 40.00, 'Disponible', 'Athlétisme', NULL, 32);
 
--- 19 mars
-('2025-03-19 08:30:00', 20.00, 'Disponible', 'Basketball'),
-('2025-03-19 13:30:00', 28.00, 'Disponible', 'Tennis'),
+        -- Arts Martiaux
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 30.00, 'Disponible', 'Arts Martiaux', NULL, 33),
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:30:00'), 30.00, 'Disponible', 'Arts Martiaux', NULL, 33);
 
--- 20 mars
-('2025-03-20 10:00:00', 23.00, 'Disponible', 'Football'),
-('2025-03-20 16:00:00', 32.00, 'Disponible', 'Basketball'),
+        -- Skating
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 25.00, 'Disponible', 'Skating', NULL, 34);
 
--- 21 mars
-('2025-03-21 19:00:00', 38.00, 'Disponible', 'Tennis'),
-('2025-03-21 22:00:00', 65.00, 'Disponible', 'Football'),
+        -- Golf
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        VALUES
+        (CONCAT(start_date, ' 13:00:00'), CONCAT(start_date, ' 14:30:00'), 50.00, 'Disponible', 'Golf', NULL, 35);
 
--- 22 mars
-('2025-03-22 11:00:00', 21.00, 'Disponible', 'Basketball'),
-('2025-03-22 14:00:00', 29.00, 'Disponible', 'Tennis'),
+        -- Passer au jour suivant
+        SET start_date = DATE_ADD(start_date, INTERVAL 1 DAY);
+    END WHILE;
+END$$
 
--- 23 mars
-('2025-03-23 09:00:00', 24.00, 'Disponible', 'Football'),
-('2025-03-23 17:00:00', 34.00, 'Disponible', 'Basketball'),
+DELIMITER;
 
--- 24 mars
-('2025-03-24 20:00:00', 40.00, 'Disponible', 'Tennis'),
-('2025-03-24 23:00:00', 70.00, 'Disponible', 'Football'),
-
--- 25 mars
-('2025-03-25 08:00:00', 22.00, 'Disponible', 'Basketball'),
-('2025-03-25 12:00:00', 30.00, 'Disponible', 'Tennis'),
-
--- 26 mars
-('2025-03-26 15:00:00', 25.00, 'Disponible', 'Football'),
-('2025-03-26 18:00:00', 35.00, 'Disponible', 'Basketball'),
-
--- 27 mars
-('2025-03-27 21:00:00', 42.00, 'Disponible', 'Tennis'),
-('2025-03-27 23:30:00', 75.00, 'Disponible', 'Football'),
-
--- 28 mars
-('2025-03-28 10:30:00', 23.00, 'Disponible', 'Basketball'),
-('2025-03-28 14:30:00', 31.00, 'Disponible', 'Tennis'),
-
--- 29 mars
-('2025-03-29 09:00:00', 26.00, 'Disponible', 'Football'),
-('2025-03-29 16:00:00', 36.00, 'Disponible', 'Basketball'),
-
--- 30 mars
-('2025-03-30 19:00:00', 44.00, 'Disponible', 'Tennis'),
-('2025-03-30 22:00:00', 80.00, 'Disponible', 'Football'),
-
--- 31 mars
-('2025-03-31 11:00:00', 24.00, 'Disponible', 'Basketball'),
-('2025-03-31 15:00:00', 33.00, 'Disponible', 'Tennis');
+CALL GenererReservations();
 
 CREATE TABLE utilisateurs (
     id INT AUTO_INCREMENT PRIMARY KEY,    -- ID unique pour chaque utilisateur
@@ -178,21 +186,87 @@ CREATE TABLE Liste_Evenements (
     lieu VARCHAR(255),
     description TEXT,
     participants VARCHAR(255),
-    image_url  VARCHAR(255)
-); 
-INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url)
+    image_url VARCHAR(255),
+    statut ENUM('Acceptée', 'En attente', 'Refusée') DEFAULT 'En attente'
+)
+INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url, statut)
 VALUES
-    ("Tournoi de Basketball Inter-entreprises", "2025-03-15", "Gymnase SportZone", "Tournoi amical de basketball pour les entreprises locales, avec des équipes mixtes.", "8 équipes", "https://images.unsplash.com/photo-1518989229647-6377f907a0b2?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Match de Football Amical", "2025-04-05", "Terrain de Football SportZone", "Rencontre amicale entre clubs locaux de football, avec des matchs de 30 minutes.", "12 équipes", "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Tournoi de Tennis en Double", "2025-05-10", "Courts de Tennis SportZone", "Compétition de tennis en double pour les joueurs de tous niveaux.", "16 équipes", "https://images.unsplash.com/photo-1526888935184-a82d2a4b7e67?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Compétition de Volley-ball", "2025-06-20", "Plage SportZone", "Tournoi de volley-ball sur sable, avec des équipes mixtes.", "8 équipes", "https://images.unsplash.com/photo-1547347298-4074fc3086f0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Tournoi de Badminton Inter-entreprises", "2025-08-15", "Gymnase SportZone", "Compétition de badminton entre entreprises locales.", "16 équipes", "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Compétition de Natation", "2025-10-22", "Piscine SportZone", "Événement de natation avec différentes catégories selon les niveaux.", "50 participants", "https://images.unsplash.com/photo-1560090995-01632a28895b?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Défi de Fitness en Groupe", "2025-12-03", "Centre Fitness SportZone", "Séance de fitness en groupe pour améliorer la forme physique et l'endurance.", "30 participants", "https://images.unsplash.com/photo-1527933053326-89d1746b76b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Match de Handball Amical", "2025-01-25", "Gymnase SportZone", "Rencontre amicale de handball entre équipes locales.", "8 équipes", "https://images.unsplash.com/photo-1513028738826-f000cded30a4?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Match de Cricket Amical", "2025-04-25", "Terrain de Cricket SportZone", "Compétition amicale de cricket entre équipes locales.", "10 équipes", "https://images.unsplash.com/photo-1562077772-3bd90403f7f0?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Tournoi de Ping-Pong", "2025-05-20", "Salle de Ping-Pong SportZone", "Compétition de ping-pong ouverte à tous les niveaux.", "20 participants", "https://images.unsplash.com/photo-1518928286447-dc161b7cd6fb?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Tournoi de Baseball", "2025-07-12", "Stade SportZone", "Rencontre de baseball entre clubs locaux.", "8 équipes", "https://images.unsplash.com/photo-1624375664562-fff61869fe8f?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Compétition de Skateboard", "2025-08-09", "Parc SportZone", "Compétition de skateboard avec des figures spectaculaires et des catégories d'âge.", "30 participants", "https://images.unsplash.com/photo-1503416829621-2a647b6c386a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Tournoi de Golf", "2025-09-22", "Golf SportZone", "Compétition de golf entre entreprises locales, avec des parties de 18 trous.", "16 équipes", "https://images.unsplash.com/photo-1576555928619-03d62a29e4a1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-    ("Match de Hockey sur Glace", "2025-11-12", "Patinoire SportZone", "Compétition de hockey sur glace entre les meilleures équipes locales.", "8 équipes", "https://images.unsplash.com/photo-1616041042832-24ee0dff18d4?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    ("Tournoi de Basketball Inter-entreprises", "2025-03-15", "Gymnase SportZone", "Tournoi amical de basketball pour les entreprises locales, avec des équipes mixtes.", "8 équipes", "https://images.unsplash.com/photo-1518989229647-6377f907a0b2?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Match de Football Amical", "2025-04-05", "Terrain de Football SportZone", "Rencontre amicale entre clubs locaux de football, avec des matchs de 30 minutes.", "12 équipes", "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Tournoi de Tennis en Double", "2025-05-10", "Courts de Tennis SportZone", "Compétition de tennis en double pour les joueurs de tous niveaux.", "16 équipes", "https://images.unsplash.com/photo-1526888935184-a82d2a4b7e67?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Compétition de Volley-ball", "2025-06-20", "Plage SportZone", "Tournoi de volley-ball sur sable, avec des équipes mixtes.", "8 équipes", "https://images.unsplash.com/photo-1547347298-4074fc3086f0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Tournoi de Badminton Inter-entreprises", "2025-08-15", "Gymnase SportZone", "Compétition de badminton entre entreprises locales.", "16 équipes", "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Compétition de Natation", "2025-10-22", "Piscine SportZone", "Événement de natation avec différentes catégories selon les niveaux.", "50 participants", "https://images.unsplash.com/photo-1560090995-01632a28895b?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Tournoi de Rugby", "2025-11-05", "Terrain de Rugby SportZone", "Rencontre de rugby entre clubs locaux, avec des matchs de 30 minutes.", "12 équipes", "https://images.unsplash.com/photo-1495329356033-eb76e0af9fd9?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Défi de Fitness en Groupe", "2025-12-03", "Centre Fitness SportZone", "Séance de fitness en groupe pour améliorer la forme physique et l'endurance.", "30 participants", "https://images.unsplash.com/photo-1527933053326-89d1746b76b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Match de Handball Amical", "2025-01-25", "Gymnase SportZone", "Rencontre amicale de handball entre équipes locales.", "8 équipes", "https://images.unsplash.com/photo-1513028738826-f000cded30a4?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Tournoi de Golf", "2025-09-22", "Golf SportZone", "Compétition de golf entre entreprises locales, avec des parties de 18 trous.", "16 équipes", "https://images.unsplash.com/photo-1576555928619-03d62a29e4a1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée"),
+    ("Match de Hockey sur Glace", "2025-11-12", "Patinoire SportZone", "Compétition de hockey sur glace entre les meilleures équipes locales.", "8 équipes", "https://images.unsplash.com/photo-1616041042832-24ee0dff18d4?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Acceptée");
+
+CREATE TABLE installations (
+    id_installation INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    categorie_sport VARCHAR(100) NOT NULL,
+    capacite INT NOT NULL
+);
+
+INSERT INTO installations (nom, categorie_sport, capacite) VALUES 
+    -- Terrains de soccer/foot
+    ('Terrain de Foot A', 'Soccer', 22),
+    ('Terrain de Foot B', 'Soccer', 22),
+    ('Terrain de Foot C', 'Soccer', 22),
+
+    -- Terrains de basketball
+    ('Terrain de Basket A', 'Basketball', 10),
+    ('Terrain de Basket B', 'Basketball', 10),
+    ('Terrain de Basket C', 'Basketball', 10),
+
+    -- Terrains de volleyball
+    ('Terrain de Volley A', 'Volleyball', 12),
+    ('Terrain de Volley B', 'Volleyball', 12),
+    ('Terrain de Volley C', 'Volleyball', 12),
+
+    -- Terrains de handball
+    ('Terrain de Handball A', 'Handball', 14),
+    ('Terrain de Handball B', 'Handball', 14),
+
+    -- Autres installations
+    ('Aréna de Hockey', 'Hockey', 50),
+    ('Terrain de Cricket', 'Cricket', 24),
+    ('Bassin Olympique', 'Natation', 30),
+    ('Piscine de Loisir', 'Natation', 20),
+    ('Bassin d\'Apprentissage', 'Natation', 15),
+
+    -- Salles de musculation
+    ('Salle de Muscu A', 'Musculation', 30),
+    ('Salle de Muscu B', 'Musculation', 30),
+
+    -- Studios de cours collectifs
+    ('Studio A', 'Cours Collectifs', 25),
+    ('Studio B', 'Cours Collectifs', 25),
+    ('Studio C', 'Cours Collectifs', 25),
+
+    -- Courts de tennis
+    ('Court de Tennis A', 'Tennis', 4),
+    ('Court de Tennis B', 'Tennis', 4),
+    ('Court de Tennis C', 'Tennis', 4),
+
+    -- Terrains de badminton
+    ('Terrain de Badminton A', 'Badminton', 4),
+    ('Terrain de Badminton B', 'Badminton', 4),
+    ('Terrain de Badminton C', 'Badminton', 4),
+    ('Terrain de Badminton D', 'Badminton', 4),
+    ('Terrain de Badminton E', 'Badminton', 4),
+    ('Terrain de Badminton F', 'Badminton', 4),
+
+    -- Courts de squash
+    ('Court de Squash A', 'Squash', 2),
+    ('Court de Squash B', 'Squash', 2),
+    ('Court de Squash C', 'Squash', 2),
+
+    -- Autres installations
+    ('Mur d\'Escalade', 'Escalade', 10),
+    ('Piste d\'Athlétisme', 'Athlétisme', 50),
+    ('Dojo', 'Arts Martiaux', 20),
+    ('Parc de Skating', 'Skating', 15),
+    ('Aire de Golf', 'Golf', 10);
