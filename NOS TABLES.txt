@@ -7,6 +7,7 @@ CREATE TABLE reservations (
     categorie_sport VARCHAR(100) NOT NULL,
     user_id INT NULL,
     id_installation INT NOT NULL,
+    image_url VARCHAR(255) NULL,
     FOREIGN KEY (id_installation) REFERENCES installations(id_installation)
 );
 
@@ -20,122 +21,96 @@ BEGIN
     WHILE start_date <= end_date DO
         -- Insertions pour chaque installation et chaque sport
         -- Football (Soccer)
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 1),
-        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 2),
-        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 3);
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 1, 'http://example.com/images/soccer1.jpg'),
+        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 2, 'http://example.com/images/soccer2.jpg'),
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 50.00, 'Disponible', 'Soccer', NULL, 3, 'http://example.com/images/soccer3.jpg');
 
         -- Basketball
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 4),
-        (CONCAT(start_date, ' 15:00:00'), CONCAT(start_date, ' 16:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 5),
-        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 6);
+        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 4, 'http://example.com/images/basketball1.jpg'),
+        (CONCAT(start_date, ' 15:00:00'), CONCAT(start_date, ' 16:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 5, 'http://example.com/images/basketball2.jpg'),
+        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:00:00'), 30.00, 'Disponible', 'Basketball', NULL, 6, 'http://example.com/images/basketball3.jpg');
 
         -- Volleyball
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 7),
-        (CONCAT(start_date, ' 13:00:00'), CONCAT(start_date, ' 14:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 8),
-        (CONCAT(start_date, ' 15:00:00'), CONCAT(start_date, ' 16:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 9);
+        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 7, 'http://example.com/images/volleyball1.jpg'),
+        (CONCAT(start_date, ' 13:00:00'), CONCAT(start_date, ' 14:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 8, 'http://example.com/images/volleyball2.jpg'),
+        (CONCAT(start_date, ' 15:00:00'), CONCAT(start_date, ' 16:30:00'), 40.00, 'Disponible', 'Volleyball', NULL, 9, 'http://example.com/images/volleyball3.jpg');
 
         -- Handball
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 11:00:00'), CONCAT(start_date, ' 12:30:00'), 35.00, 'Disponible', 'Handball', NULL, 10),
-        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 35.00, 'Disponible', 'Handball', NULL, 11);
+        (CONCAT(start_date, ' 11:00:00'), CONCAT(start_date, ' 12:30:00'), 35.00, 'Disponible', 'Handball', NULL, 10, 'http://example.com/images/handball1.jpg'),
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 35.00, 'Disponible', 'Handball', NULL, 11, 'http://example.com/images/handball2.jpg');
 
         -- Hockey
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 20:00:00'), 100.00, 'Disponible', 'Hockey', NULL, 12);
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 20:00:00'), 100.00, 'Disponible', 'Hockey', NULL, 12, 'http://example.com/images/hockey1.jpg');
 
         -- Cricket
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 12:00:00'), 60.00, 'Disponible', 'Cricket', NULL, 13);
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 12:00:00'), 60.00, 'Disponible', 'Cricket', NULL, 13, 'http://example.com/images/cricket1.jpg');
 
         -- Natation (Bassin Olympique)
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 07:00:00'), CONCAT(start_date, ' 08:30:00'), 80.00, 'Disponible', 'Natation', NULL, 14);
+        (CONCAT(start_date, ' 07:00:00'), CONCAT(start_date, ' 08:30:00'), 80.00, 'Disponible', 'Natation', NULL, 14, 'http://example.com/images/natation1.jpg');
 
         -- Natation (Piscine de Loisir)
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 50.00, 'Disponible', 'Natation', NULL, 15);
+        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 50.00, 'Disponible', 'Natation', NULL, 15, 'http://example.com/images/natation2.jpg');
 
         -- Natation (Bassin d'Apprentissage)
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 08:00:00'), CONCAT(start_date, ' 09:00:00'), 30.00, 'Disponible', 'Natation', NULL, 16);
+        (CONCAT(start_date, ' 08:00:00'), CONCAT(start_date, ' 09:00:00'), 30.00, 'Disponible', 'Natation', NULL, 16, 'http://example.com/images/natation3.jpg');
 
         -- Musculation
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 06:00:00'), CONCAT(start_date, ' 07:30:00'), 25.00, 'Disponible', 'Musculation', NULL, 17),
-        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:30:00'), 25.00, 'Disponible', 'Musculation', NULL, 18);
+        (CONCAT(start_date, ' 06:00:00'), CONCAT(start_date, ' 07:30:00'), 25.00, 'Disponible', 'Musculation', NULL, 17, 'http://example.com/images/musculation1.jpg'),
+        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:30:00'), 25.00, 'Disponible', 'Musculation', NULL, 18, 'http://example.com/images/musculation2.jpg');
 
         -- Cours Collectifs
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 19:00:00'), CONCAT(start_date, ' 20:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 19),
-        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 20),
-        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 21);
+        (CONCAT(start_date, ' 19:00:00'), CONCAT(start_date, ' 20:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 19, 'http://example.com/images/cours1.jpg'),
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 20, 'http://example.com/images/cours2.jpg'),
+        (CONCAT(start_date, ' 17:00:00'), CONCAT(start_date, ' 18:00:00'), 20.00, 'Disponible', 'Cours Collectifs', NULL, 21, 'http://example.com/images/cours3.jpg');
 
         -- Tennis
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 08:00:00'), CONCAT(start_date, ' 09:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 22),
-        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 23),
-        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 24);
+        (CONCAT(start_date, ' 08:00:00'), CONCAT(start_date, ' 09:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 22, 'http://example.com/images/tennis1.jpg'),
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 23, 'http://example.com/images/tennis2.jpg'),
+        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:30:00'), 45.00, 'Disponible', 'Tennis', NULL, 24, 'http://example.com/images/tennis3.jpg');
 
         -- Badminton
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 25),
-        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 26),
-        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 27);
+        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 25, 'http://example.com/images/badminton1.jpg'),
+        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 26, 'http://example.com/images/badminton2.jpg'),
+        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:00:00'), 15.00, 'Disponible', 'Badminton', NULL, 27, 'http://example.com/images/badminton3.jpg');
 
         -- Squash
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
+        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation, image_url)
         VALUES
-        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:00:00'), 20.00, 'Disponible', 'Squash', NULL, 28),
-        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:00:00'), 20.00, 'Disponible', 'Squash', NULL, 29),
-        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:00:00'), 20.00, 'Disponible', 'Squash', NULL, 30);
+        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:00:00'), 20.00, 'Disponible', 'Squash', NULL, 28, 'http://example.com/images/squash1.jpg'),
+        (CONCAT(start_date, ' 12:00:00'), CONCAT(start_date, ' 13:00:00'), 20.00, 'Disponible', 'Squash', NULL, 29, 'http://example.com/images/squash2.jpg'),
+        (CONCAT(start_date, ' 14:00:00'), CONCAT(start_date, ' 15:00:00'), 20.00, 'Disponible', 'Squash', NULL, 30, 'http://example.com/images/squash3.jpg');
 
-        -- Escalade
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
-        VALUES
-        (CONCAT(start_date, ' 09:00:00'), CONCAT(start_date, ' 10:30:00'), 35.00, 'Disponible', 'Escalade', NULL, 31),
-        (CONCAT(start_date, ' 11:00:00'), CONCAT(start_date, ' 12:30:00'), 35.00, 'Disponible', 'Escalade', NULL, 31);
-
-        -- Athlétisme
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
-        VALUES
-        (CONCAT(start_date, ' 07:00:00'), CONCAT(start_date, ' 08:30:00'), 40.00, 'Disponible', 'Athlétisme', NULL, 32);
-
-        -- Arts Martiaux
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
-        VALUES
-        (CONCAT(start_date, ' 16:00:00'), CONCAT(start_date, ' 17:30:00'), 30.00, 'Disponible', 'Arts Martiaux', NULL, 33),
-        (CONCAT(start_date, ' 18:00:00'), CONCAT(start_date, ' 19:30:00'), 30.00, 'Disponible', 'Arts Martiaux', NULL, 33);
-
-        -- Skating
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
-        VALUES
-        (CONCAT(start_date, ' 10:00:00'), CONCAT(start_date, ' 11:30:00'), 25.00, 'Disponible', 'Skating', NULL, 34);
-
-        -- Golf
-        INSERT INTO reservations (date_time, date_time_fin, prix, statut, categorie_sport, user_id, id_installation)
-        VALUES
-        (CONCAT(start_date, ' 13:00:00'), CONCAT(start_date, ' 14:30:00'), 50.00, 'Disponible', 'Golf', NULL, 35);
-
-        -- Passer au jour suivant
+        -- Prochain jour
         SET start_date = DATE_ADD(start_date, INTERVAL 1 DAY);
     END WHILE;
-END$$
+END;
+
 
 DELIMITER;
 
