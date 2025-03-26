@@ -153,36 +153,59 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
 
     const reservationId = req.params.id; // ID de la réservation passée dans l'URL
     const userId = req.session.user.id; // ID de l'utilisateur connecté
-    const nombreJoueurs = parseInt(req.params.nombreJoueurs); // Récupère le nombre de joueurs depuis le formulaire
+    const nombreJoueurs = parseInt(req.params.nombreJoueurs); // Récupère le nombre de joueurs depuis l'URL
 
     console.log("ID de l'utilisateur connecté :", userId);
     console.log("ID de la réservation :", reservationId);
     console.log("Nombre de joueurs :", nombreJoueurs); // Vérifie le nombre de joueurs
 
-    if (isNaN(nombreJoueurs) || nombreJoueurs < 1) {
-        return res.status(400).send("Le nombre de joueurs doit être valide et supérieur à 0.");
-    }
+    const verifierReservation = `SELECT r.id_reservation, r.id_installation, i.capacite
+                                FROM reservations r
+                                JOIN installations i ON r.id_installation = i.id_installation
+                                WHERE r.id_reservation = ?`;
 
-    // Requête SQL pour mettre à jour la réservation
-    const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur) VALUES (?, ?, ?)`;
-    con.query(addItemQuery, [userId, reservationId, nombreJoueurs], (err, result) => {
+    con.query(verifierReservation, [reservationId], (err, result) => {
         if (err) {
-            console.error("Erreur lors de l'ajout de l'item:", err);
-            return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
+            console.error("Erreur lors de la vérification de la réservation :", err);
+            return res.status(500).send("Erreur serveur");
         }
 
-        if (result.affectedRows > 0) {
+        if (result.length === 0) {
+            return res.status(404).send("Réservation non trouvée");
+        }
+
+        const reservation = result[0];
+
+        if (reservation.statut !== "Disponible") {
+            return res.status(400).send("La réservation n'est pas disponible.");
+        }
+
+        if (nombreJoueurs > reservation.capacite) {
+            return res.status(400).send(`Le nombre de joueurs ne peut pas dépasser la capacité de l'installation (${reservation.capacite}).`);
+        }
+
+        if (nombreJoueurs < 1) {
+            return res.status(400).send("Le nombre de joueurs doit être supérieur à 0.");
+        }
+
+        // Requête SQL pour ajouter l'item (réservation)
+        const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur) VALUES (?, ?, ?)`;
+        con.query(addItemQuery, [userId, reservationId, nombreJoueurs], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de l'ajout de l'item:", err);
+                return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
+            }
+
             if (result.affectedRows > 0) {
                 req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
-                res.redirect(`/reservation-information/${reservationId}`);
+                return res.redirect(`/reservation-information/${reservationId}`);
             } else {
-                res.status(404).send("La table n'a pas pu être mise à jour.");
+                return res.status(404).send("La réservation n'a pas pu être mise à jour.");
             }
-        } else {
-            res.status(404).send("Réservation non trouvée ou déjà mise à jour.");
-        }
+        });
     });
 });
+
 
 app.post('/api/annuler/:id/:nombreJoueurs', async (req, res) => { //peut etre d'un ajout d'une table où ca enregistre le nombre de joeur lié à installation pour enlever en prenant son id
     const reservationId = req.params.id;
@@ -844,5 +867,5 @@ app.get('/historique', async (req, res) => {
 
 
 
-
+UPDATE Liste_Evenmenets SET statut = 'Accepte', user_id = NULL WHERE id_reservation = ?
 
