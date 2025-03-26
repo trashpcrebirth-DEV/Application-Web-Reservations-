@@ -299,42 +299,70 @@ app.get("/profile", (req, res) => {
 
 // Update user
 app.post('/modifier', (req, res) => {
-    const { nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
-    console.log("Request body:", req.body);
+    console.log("Données reçues:", req.body); // Ajoutez ce log
+    // Check authentication first
+    if (!req.session.user) {
+        return res.status(401).send("Unauthorized");
+    }
 
     const userId = req.session.user.id;
+    const {
+        nom,
+        prenom,
+        mot_de_passe,
+        date_naissance,
+        telephone,
+        langue,
+        email,
+        adresse
+    } = req.body;
 
-    // Prepare values for the query
-    const valuesToUpdate = [
-        nom || null,
-        prenom || null,
-        mot_de_passe || null,
-        date_naissance || null,
-        telephone || null,
-        langue || null,
-        email || null,
-        adresse || null
-    ];
+    console.log("Request body:", req.body);
 
+    // Basic validation - ensure required fields are present
+    if (!nom || !prenom || !email) {
+        return res.status(400).send("Nom, prénom et email sont obligatoires");
+    }
+
+    // Prepare the update query
     const query = `
         UPDATE utilisateurs 
-        SET nom = ?, prenom = ?, mot_de_passe = ?, date_naissance = ?, 
-            telephone = ?, langue = ?, email = ?, adresse = ? 
+        SET nom = ?, 
+            prenom = ?, 
+            mot_de_passe = COALESCE(?, mot_de_passe), 
+            date_naissance = ?, 
+            telephone = ?, 
+            langue = ?, 
+            email = ?, 
+            adresse = ?
         WHERE id = ?
     `;
 
+    // Prepare values (using existing values for optional fields if not provided)
+    const values = [
+        nom,
+        prenom,
+        mot_de_passe, // Password - will keep current if not provided
+        date_naissance || null,
+        telephone || null,
+        langue || null,
+        email,
+        adresse || null,
+        userId
+    ];
+
     console.log("Executing query:", query);
-    console.log("With values:", [...valuesToUpdate, userId]);
+    console.log("With values:", values);
 
     // Execute the query
-    con.query(query, [...valuesToUpdate, userId], (err, result) => {
+    con.query(query, values, (err, result) => {
         if (err) {
             console.error("Error updating user:", err);
             return res.status(500).send("Error updating user information");
         }
 
         if (result.affectedRows > 0) {
-            res.redirect(`/profile?id=${userId}`); // Redirect to profile page
+            res.redirect(`/profile?id=${userId}`);
         } else {
             res.status(404).send("User not found or no changes made");
         }

@@ -6,59 +6,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="../CSS/profile.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script>
         function enableEdit() {
-            document.querySelectorAll('.editable').forEach(function (element) {
-                element.disabled = false; // Enable all editable fields
+            console.log("Activation du mode édition");
+            const editables = document.querySelectorAll('.editable');
+
+            editables.forEach(function (element) {
+                element.disabled = false;
+                element.style.backgroundColor = "#f7f7f7";
+                element.removeAttribute('readonly'); // Ajout important
             });
-            document.getElementById('saveButton').style.display = 'inline-block'; // Show the Save button
-            document.getElementById('saveForm').style.display = 'block'; // Show the form for saving
-            document.querySelector('.modifier').style.display = 'none'; // Hide the "Modify" button
+
+            document.getElementById('saveButton').style.display = 'inline-block';
+            document.querySelector('.modifier').style.display = 'none';
+        }
+
+        function validateForm() {
+            console.log("Validation du formulaire");
+            const nom = document.getElementsByName('nom')[0].value;
+            const prenom = document.getElementsByName('prenom')[0].value;
+            const email = document.getElementsByName('email')[0].value;
+
+            // Validation basique
+            if (!nom || !prenom || !email) {
+                alert('Nom, prénom et email sont obligatoires');
+                return false;
+            }
+
+            // Validation email - seulement vérifier le @
+            if (email.indexOf('@') === -1) {
+                alert('Veuillez entrer un email valide (doit contenir @)');
+                return false;
+            }
+
+            return true;
         }
     </script>
 </head>
 
-<body style="background-color:rgb(22, 23, 21);">
+<body>
     <%- include ("../partials/header.ejs") %>
         <div class="forme">
             <div class="profile-container">
                 <div class="profile-cercle">
                     <span class="initial">
-                        <%= user.nom[0] %>
-                    </span> <!-- Initiale du nom -->
+                        <%= utilisateur.nom[0] %>
+                    </span>
                 </div>
                 <div class="profile-info">
                     <h1>
-                        <%= user.nom %> <%= user.prenom %>
-                    </h1> <!-- Nom et prénom de l'utilisateur -->
+                        <%= utilisateur.nom %>
+                            <%= utilisateur.prenom %>
+                    </h1>
 
-                    <!-- Bouton pour l'historique -->
-                    <button class="historique" onclick="window.location.href='/historique'">Historique</button>
-
+                    <button class="historique" onclick="window.location.href='/historique'">
+                        <i class="fas fa-history"></i> Historique
+                    </button>
                 </div>
             </div>
-            <div class="info-container" style="background-color: rgb(240, 240, 240);">
+            <div class="info-container" style="background-color: white; opacity: 0; animation: fadeIn 1s forwards;">
                 <h2>Dossier</h2>
-                <form action="/modifier" method="POST" id="saveForm">
+                <form action="/modifier" method="POST" id="saveForm" onsubmit="return validateForm()">
                     <div class="info-row">
                         <div class="info-column">
                             <div class="info-box">
+                                <p><strong>Nom:</strong>
+                                    <input type="text" name="nom" value="<%= utilisateur.nom || '' %>" class="editable"
+                                        disabled required>
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <p><strong>Prénom:</strong>
+                                    <input type="text" name="prenom" value="<%= utilisateur.prenom || '' %>" class="editable"
+                                        disabled required>
+                                </p>
+                            </div>
+                            <div class="info-box">
                                 <p><strong>Date d'inscription:</strong>
                                     <input type="text" name="date_inscription"
-                                        value="<%= user.date_inscription ? user.date_inscription.toLocaleDateString() : '' %>"
+                                        value="<%= utilisateur.date_inscription ? utilisateur.date_inscription.toLocaleDateString() : '' %>"
                                         disabled>
                                 </p>
                             </div>
                             <div class="info-box">
                                 <p><strong>Téléphone:</strong>
-                                    <input type="text" name="telephone" value="<%= user.telephone || '' %>"
-                                        class="editable" disabled>
+                                    <input type="tel" name="telephone" value="<%= utilisateur.telephone || '' %>"
+                                        class="editable" disabled pattern="[0-9]{10}" title="Numéro à 10 chiffres">
                                 </p>
                             </div>
                             <div class="info-box">
                                 <p><strong>Email:</strong>
-                                    <input type="email" name="email" value="<%= user.email || '' %>" class="editable"
-                                        disabled>
+                                    <input type="email" name="email" value="<%= utilisateur.email || '' %>" class="editable"
+                                        disabled required title="Entrez une adresse email contenant @">
                                 </p>
                             </div>
                         </div>
@@ -66,21 +106,52 @@
                             <div class="info-box">
                                 <p><strong>Date de naissance:</strong>
                                     <input type="date" name="date_naissance"
-                                        value="<%= user.date_naissance ? new Date(user.date_naissance).toISOString().split('T')[0] : '' %>"
+                                        value="<%= utilisateur.date_naissance ? new Date(utilisateur.date_naissance).toISOString().split('T')[0] : '' %>"
                                         class="editable" disabled>
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <p><strong>Langue:</strong>
+                                    <select name="langue" class="editable" disabled>
+                                        <option value="français" <%=utilisateur.langue==='français' ? 'selected' : '' %>
+                                            >Français</option>
+                                        <option value="english" <%=utilisateur.langue==='english' ? 'selected' : '' %>>English
+                                        </option>
+                                        <option value="español" <%=utilisateur.langue==='español' ? 'selected' : '' %>>Español
+                                        </option>
+                                    </select>
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <p><strong>Adresse:</strong>
+                                    <textarea name="adresse" class="editable"
+                                        disabled><%= utilisateur.adresse || '' %></textarea>
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <p><strong>Nouveau mot de passe:</strong>
+                                    <input type="password" name="mot_de_passe" class="editable" disabled
+                                        placeholder="Laisser vide pour ne pas changer" pattern=".{8,}"
+                                        title="8 caractères minimum">
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <input type="hidden" name="id" value="<%= user.id %>">
-                    <button type="button" class="modifier" onclick="enableEdit()">Modifier</button>
-                    <button type="submit" class="modifier" id="saveButton" style="display:none;">Sauvegarder</button>
+                    <input type="hidden" name="id" value="<%= utilisateur.id %>">
+                    <button type="button" class="modifier" onclick="enableEdit()">
+                        <i class="fas fa-edit"></i> Modifier
+                    </button>
+                    <button type="submit" class="modifier" id="saveButton" style="display:none;">
+                        <i class="fas fa-save"></i> Sauvegarder
+                    </button>
                 </form>
 
                 <form action="/deconnexion" method="GET">
                     <br>
-                    <button type="submit" class="deconnecter">Se déconnecter</button>
+                    <button type="submit" class="deconnecter">
+                        <i class="fas fa-sign-out-alt"></i> Se déconnecter
+                    </button>
                 </form>
             </div>
         </div>
