@@ -124,7 +124,7 @@
                                     <button type="submit" class="bouton primaire">Réserver</button>
                                     <% } %>
                         </form>
-                        <% if (reservation.statut === 'Réservé') { %>
+                        <% if (isDejaReserve) { %>
                             <form class="bouton annuler" action="/api/annuler/<%= reservation.id_reservation %>" method="POST">
                                 <button type="submit" class="bouton danger">Annuler</button>
                             </form>

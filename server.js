@@ -224,34 +224,43 @@ app.get("/reservation-information/:id", function (req, res) {
 
             const reservation = results[0];
 
-            con.query("SELECT nom FROM installations WHERE id_installation = ?", [reservation.id_installation], (err, results) => {
+            con.query("SELECT * FROM utilisateurs_reservations WHERE id_utilisateur = ? AND id_reservation = ?", [req.session.user.id, reservationId], (err, reservationCheck) => {
                 if (err) {
-                    console.error(err);
+                    console.error("Erreur lors de la vérification de la réservation :", err);
                     return res.status(500).send("Erreur serveur");
                 }
 
-                const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
+                const isUserHasReservation = reservationCheck.length > 0;
 
-                const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
-
-                con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
+                con.query("SELECT nom FROM installations WHERE id_installation = ?", [reservation.id_installation], (err, results) => {
                     if (err) {
-                        console.error("Erreur lors de la récupération des items :", err);
-                        return res.status(500).json({ message: "Erreur serveur" });
+                        console.error(err);
+                        return res.status(500).send("Erreur serveur");
                     }
 
-                    // Vérification si l'item existe dans le panier
-                    const isDansPanier = dansPanier.length > 0;
+                    const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
 
-                    res.render("pages/information_reservation", {
-                        siteTitle: "SportZone",
-                        pageTitle: "Détails de la réservation",
-                        activePage: "reservation",
-                        user: req.session.user,
-                        reservation: reservation,
-                        nom_installation: nom_insta,
-                        nombreJoueurs: 1,
-                        isDansPanier: isDansPanier
+                    const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
+
+                    con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
+                        if (err) {
+                            console.error("Erreur lors de la récupération des items :", err);
+                            return res.status(500).json({ message: "Erreur serveur" });
+                        }
+
+                        const isDansPanier = dansPanier.length > 0;
+
+                        res.render("pages/information_reservation", {
+                            siteTitle: "SportZone",
+                            pageTitle: "Détails de la réservation",
+                            activePage: "reservation",
+                            user: req.session.user,
+                            reservation: reservation,
+                            nom_installation: nom_insta,
+                            nombreJoueurs: 1,
+                            isDansPanier: isDansPanier,
+                            isDejaReserve: isUserHasReservation 
+                        });
                     });
                 });
             });
@@ -260,6 +269,7 @@ app.get("/reservation-information/:id", function (req, res) {
         res.redirect("/connexion");
     }
 });
+
 
 
 // Route pour la page de profile
@@ -277,7 +287,8 @@ app.get("/profile", (req, res) => {
             user.date_inscription = new Date(user.date_inscription); // Convertir en objet Date
             res.render("pages/profile", {
                 activePage: 'profile',
-                user: user // Pass user information to the view
+                user: req.session.user,
+                utilisateur: user
             });
         } else {
             res.status(404).send("Utilisateur non trouvé");
