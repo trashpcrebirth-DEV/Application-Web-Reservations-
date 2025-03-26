@@ -304,7 +304,9 @@ app.get("/profile", (req, res) => {
             user.date_inscription = new Date(user.date_inscription); // Convertir en objet Date
             res.render("pages/profile", {
                 activePage: 'profile',
-                user: user // Pass user information to the view
+                user: req.session.user.id,
+                utilisateur: user
+                // Pass user information to the view
             });
         } else {
             res.status(404).send("Utilisateur non trouvé");
