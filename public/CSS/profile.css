@@ -21,7 +21,7 @@ body {
 
 input[type="text"],
 input[type="email"],
-[type="date"] {
+input[type="date"] {
     width: 60%;
     float: right;
 }
@@ -108,6 +108,22 @@ input[type="email"],
 
 .modifier:hover {
     background-color: #2f0fa3;
+}
+
+/* Bouton Historique */
+.historique {
+    background-color: #175BED;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.historique:hover {
+    background-color: #0f3ea3;
 }
 
 /* Styles pour la table des réservations */
