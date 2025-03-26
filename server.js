@@ -321,39 +321,62 @@ app.get("/profile", (req, res) => {
 
 // Update user
 app.post('/modifier', (req, res) => {
+    console.log("Données reçues:", req.body); // Ajoutez ce log
+    // Check authentication first
     if (!req.session.user) {
         return res.status(401).send("Unauthorized");
     }
 
     const userId = req.session.user.id;
-    const { nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
+    const {
+        nom,
+        prenom,
+        mot_de_passe,
+        date_naissance,
+        telephone,
+        langue,
+        email,
+        adresse
+    } = req.body;
 
-    // Validation
+    console.log("Request body:", req.body);
+
+    // Basic validation - ensure required fields are present
     if (!nom || !prenom || !email) {
         return res.status(400).send("Nom, prénom et email sont obligatoires");
     }
 
-    // Construction dynamique de la requête
-    let query = "UPDATE utilisateurs SET nom = ?, prenom = ?, ";
-    const values = [nom, prenom];
-    
-    // Ajouter le mot de passe seulement s'il est fourni
-    if (mot_de_passe && mot_de_passe.trim() !== "") {
-        query += "mot_de_passe = ?, ";
-        values.push(mot_de_passe);
-    }
-    
-    // Suite de la requête
-    query += "date_naissance = ?, telephone = ?, langue = ?, email = ?, adresse = ? WHERE id = ?";
-    values.push(
+    // Prepare the update query
+    const query = `
+        UPDATE utilisateurs 
+        SET nom = ?, 
+            prenom = ?, 
+            mot_de_passe = COALESCE(?, mot_de_passe), 
+            date_naissance = ?, 
+            telephone = ?, 
+            langue = ?, 
+            email = ?, 
+            adresse = ?
+        WHERE id = ?
+    `;
+
+    // Prepare values (using existing values for optional fields if not provided)
+    const values = [
+        nom,
+        prenom,
+        mot_de_passe, // Password - will keep current if not provided
         date_naissance || null,
         telephone || null,
         langue || null,
         email,
         adresse || null,
         userId
-    );
+    ];
 
+    console.log("Executing query:", query);
+    console.log("With values:", values);
+
+    // Execute the query
     con.query(query, values, (err, result) => {
         if (err) {
             console.error("Error updating user:", err);
@@ -844,5 +867,4 @@ app.get('/historique', async (req, res) => {
 
 
 
-UPDATE Liste_Evenmenets SET statut = 'Accepte', user_id = NULL WHERE id_reservation = ?
 

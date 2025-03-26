@@ -264,3 +264,12 @@ CREATE TABLE items (
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE,
     FOREIGN KEY (id_reservation) REFERENCES reservations(id_reservation) ON DELETE CASCADE
 );
+
+CREATE TABLE reservations_installations (
+    id_reservation INT NOT NULL,
+    id_installation INT NOT NULL,
+    capacite INT NOT NULL,
+    PRIMARY KEY (id_reservation, id_installation),
+    FOREIGN KEY (id_reservation) REFERENCES reservations(id_reservation) ON DELETE CASCADE,
+    FOREIGN KEY (id_installation) REFERENCES installations(id_installation) ON DELETE CASCADE
+);
