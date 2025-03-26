@@ -98,6 +98,9 @@ app.get("/", function (req, res) {
     });
 });
 
+
+
+
 // Route pour la page de réservation
 app.get("/reservation", (req, res) => {
     const dateReservation = req.query.date; // Date sélectionnée envoyée en paramètre
@@ -143,6 +146,7 @@ app.get("/api/reservation", (req, res) => {
         res.json({ reservations: results });
     });
 });
+
 
 
 // Route pour réserver un sport
@@ -247,43 +251,34 @@ app.get("/reservation-information/:id", function (req, res) {
 
             const reservation = results[0];
 
-            con.query("SELECT * FROM utilisateurs_reservations WHERE id_utilisateur = ? AND id_reservation = ?", [req.session.user.id, reservationId], (err, reservationCheck) => {
+            con.query("SELECT nom FROM installations WHERE id_installation = ?", [reservation.id_installation], (err, results) => {
                 if (err) {
-                    console.error("Erreur lors de la vérification de la réservation :", err);
+                    console.error(err);
                     return res.status(500).send("Erreur serveur");
                 }
 
-                const isUserHasReservation = reservationCheck.length > 0;
+                const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
 
-                con.query("SELECT nom FROM installations WHERE id_installation = ?", [reservation.id_installation], (err, results) => {
+                const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
+
+                con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
                     if (err) {
-                        console.error(err);
-                        return res.status(500).send("Erreur serveur");
+                        console.error("Erreur lors de la récupération des items :", err);
+                        return res.status(500).json({ message: "Erreur serveur" });
                     }
 
-                    const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
+                    // Vérification si l'item existe dans le panier
+                    const isDansPanier = dansPanier.length > 0;
 
-                    const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
-
-                    con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
-                        if (err) {
-                            console.error("Erreur lors de la récupération des items :", err);
-                            return res.status(500).json({ message: "Erreur serveur" });
-                        }
-
-                        const isDansPanier = dansPanier.length > 0;
-
-                        res.render("pages/information_reservation", {
-                            siteTitle: "SportZone",
-                            pageTitle: "Détails de la réservation",
-                            activePage: "reservation",
-                            user: req.session.user,
-                            reservation: reservation,
-                            nom_installation: nom_insta,
-                            nombreJoueurs: 1,
-                            isDansPanier: isDansPanier,
-                            isDejaReserve: isUserHasReservation 
-                        });
+                    res.render("pages/information_reservation", {
+                        siteTitle: "SportZone",
+                        pageTitle: "Détails de la réservation",
+                        activePage: "reservation",
+                        user: req.session.user,
+                        reservation: reservation,
+                        nom_installation: nom_insta,
+                        nombreJoueurs: 1,
+                        isDansPanier: isDansPanier
                     });
                 });
             });
@@ -292,7 +287,6 @@ app.get("/reservation-information/:id", function (req, res) {
         res.redirect("/connexion");
     }
 });
-
 
 
 // Route pour la page de profile
@@ -310,8 +304,7 @@ app.get("/profile", (req, res) => {
             user.date_inscription = new Date(user.date_inscription); // Convertir en objet Date
             res.render("pages/profile", {
                 activePage: 'profile',
-                user: req.session.user,
-                utilisateur: user
+                user: user // Pass user information to the view
             });
         } else {
             res.status(404).send("Utilisateur non trouvé");
@@ -321,62 +314,39 @@ app.get("/profile", (req, res) => {
 
 // Update user
 app.post('/modifier', (req, res) => {
-    console.log("Données reçues:", req.body); // Ajoutez ce log
-    // Check authentication first
     if (!req.session.user) {
         return res.status(401).send("Unauthorized");
     }
 
     const userId = req.session.user.id;
-    const {
-        nom,
-        prenom,
-        mot_de_passe,
-        date_naissance,
-        telephone,
-        langue,
-        email,
-        adresse
-    } = req.body;
+    const { nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
 
-    console.log("Request body:", req.body);
-
-    // Basic validation - ensure required fields are present
+    // Validation
     if (!nom || !prenom || !email) {
         return res.status(400).send("Nom, prénom et email sont obligatoires");
     }
 
-    // Prepare the update query
-    const query = `
-        UPDATE utilisateurs 
-        SET nom = ?, 
-            prenom = ?, 
-            mot_de_passe = COALESCE(?, mot_de_passe), 
-            date_naissance = ?, 
-            telephone = ?, 
-            langue = ?, 
-            email = ?, 
-            adresse = ?
-        WHERE id = ?
-    `;
-
-    // Prepare values (using existing values for optional fields if not provided)
-    const values = [
-        nom,
-        prenom,
-        mot_de_passe, // Password - will keep current if not provided
+    // Construction dynamique de la requête
+    let query = "UPDATE utilisateurs SET nom = ?, prenom = ?, ";
+    const values = [nom, prenom];
+    
+    // Ajouter le mot de passe seulement s'il est fourni
+    if (mot_de_passe && mot_de_passe.trim() !== "") {
+        query += "mot_de_passe = ?, ";
+        values.push(mot_de_passe);
+    }
+    
+    // Suite de la requête
+    query += "date_naissance = ?, telephone = ?, langue = ?, email = ?, adresse = ? WHERE id = ?";
+    values.push(
         date_naissance || null,
         telephone || null,
         langue || null,
         email,
         adresse || null,
         userId
-    ];
+    );
 
-    console.log("Executing query:", query);
-    console.log("With values:", values);
-
-    // Execute the query
     con.query(query, values, (err, result) => {
         if (err) {
             console.error("Error updating user:", err);
@@ -384,7 +354,7 @@ app.post('/modifier', (req, res) => {
         }
 
         if (result.affectedRows > 0) {
-            res.redirect(`/profile?id=${userId}`);
+            res.redirect(`/profile?id=${userId}`); // Redirect to profile page
         } else {
             res.status(404).send("User not found or no changes made");
         }
@@ -629,7 +599,7 @@ app.get("/checkout", async (req, res) => {
 
         // Récupérer les détails des réservations associées aux items
         const reservationIds = items.map(item => item.id_reservation);
-        
+
         const [reservations] = await con.promise().query(
             "SELECT * FROM reservations WHERE id_reservation IN (?)",
             [reservationIds]
@@ -640,7 +610,7 @@ app.get("/checkout", async (req, res) => {
             const reservation = reservations.find(res => res.id_reservation === item.id_reservation);
             return {
                 ...item,
-                prix: reservation ? reservation.prix : 0, 
+                prix: reservation ? reservation.prix : 0,
                 categorie_sport: reservation ? reservation.categorie_sport : "Sport inconnu"
             };
         });
@@ -649,11 +619,11 @@ app.get("/checkout", async (req, res) => {
             price_data: {
                 currency: "usd",
                 product_data: {
-                    name: item.categorie_sport, 
+                    name: item.categorie_sport,
                 },
-                unit_amount: Math.round(item.prix * 100), 
+                unit_amount: Math.round(item.prix * 100),
             },
-            quantity: 1, 
+            quantity: 1,
         }));
 
         const session = await stripe.checkout.sessions.create({
@@ -672,13 +642,66 @@ app.get("/checkout", async (req, res) => {
 });
 
 
-app.get("/success", async (req, res) => {
-    res.render("pages/success", {
-        siteTitle: "SportZone",
-        pageTitle: "Merci",
-        user: req.session.user
+app.get('/success', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
+    }
+    const userId = req.session.user.id;
+
+    // Récupérer les items associés à l'utilisateur
+    const [items] = await con.promise().query(
+        "SELECT * FROM items WHERE id_utilisateur = ?",
+        [req.session.user.id]
+    );
+
+    if (items.length === 0) {
+        return res.status(400).send("Aucun item trouvé pour le paiement.");
+    }
+
+    // Promise array to handle all insert queries
+    const promises = items.map(item => {
+        return new Promise((resolve, reject) => {
+            // Vérifier si la réservation existe déjà pour cet utilisateur
+            const checkExistingQuery = "SELECT * FROM utilisateurs_reservations WHERE id_utilisateur = ? AND id_reservation = ?";
+            
+            con.query(checkExistingQuery, [userId, item.id_reservation], (err, result) => {
+                if (err) {
+                    reject("Erreur lors de la vérification de la réservation.");
+                } else if (result.length > 0) {
+                    // La réservation existe déjà, donc on ignore l'insertion
+                    resolve();
+                } else {
+                    // Requête SQL pour insérer dans la table utilisateurs_reservations
+                    const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, statut) VALUES (?, ?, ?, 'Réservé')`;
+
+                    con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur], (err, result) => {
+                        if (err) {
+                            console.error('Erreur SQL:', err);
+                            reject("Erreur lors de la mise à jour de la réservation. Détails: " + err.message);
+                        } else if (result.affectedRows > 0) {
+                            req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
+                            resolve();
+                        } else {
+                            reject("Réservation non trouvée ou déjà mise à jour.");
+                        }
+                    });
+                }
+            });
+        });
     });
+
+    try {
+        // Attendre que toutes les promesses soient résolues (tous les items traités)
+        await Promise.all(promises);
+        res.status(200).send("Réservations mises à jour avec succès.");
+    } catch (err) {
+        // Si une promesse échoue, envoyer la réponse d'erreur
+        res.status(500).send(err);
+    }
 });
+
+
+
 
 
 // Remplacer toute la route /paiement existante par :
