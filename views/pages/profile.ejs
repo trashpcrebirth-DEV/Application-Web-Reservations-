@@ -4,128 +4,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Mon Profil</title>
     <link rel="stylesheet" href="../CSS/profile.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
     <%- include ("../partials/header.ejs") %>
-        <div class="forme">
-            <div class="profile-container">
-                <div class="profile-cercle">
-                    <span class="initial">
-                        <%= utilisateur.nom[0] %>
-                    </span>
-                </div>
-                <div class="profile-info">
-                    <h1>
-                        <%= utilisateur.nom %>
-                            <%= utilisateur.prenom %>
-                    </h1>
-
-                    <button class="historique" onclick="window.location.href='/historique'">
-                        <i class="fas fa-history"></i> Historique
-                    </button>
-                </div>
+    
+    <div class="profile-wrapper">
+        <!-- Carte de Profil -->
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <span class="initial"><%= utilisateur.nom[0] %></span>
             </div>
-            <div class="info-container" style="background-color: white; opacity: 0; animation: fadeIn 1s forwards;">
-                <h2>Dossier</h2>
-                <form action="/modifier" method="POST" id="saveForm" onsubmit="return validateForm()">
-                    <div class="info-row">
-                        <div class="info-column">
-                            <div class="info-box">
-                                <p><strong>Nom:</strong>
-                                    <input type="text" name="nom" value="<%= utilisateur.nom || '' %>" class="editable"
-                                        disabled required>
-                                </p>
-                            </div>
-                            <div class="info-box">
-                                <p><strong>Prénom:</strong>
-                                    <input type="text" name="prenom" value="<%= utilisateur.prenom || '' %>" class="editable"
-                                        disabled required>
-                                </p>
-                            </div>
-                            <div class="info-box">
-                                <p><strong>Date d'inscription:</strong>
-                                    <input type="text" name="date_inscription"
-                                        value="<%= utilisateur.date_inscription ? utilisateur.date_inscription.toLocaleDateString() : '' %>"
-                                        disabled>
-                                </p>
-                            </div>
-                            <div class="info-box">
-                                <p><strong>Téléphone:</strong>
-                                    <input type="tel" name="telephone" value="<%= utilisateur.telephone || '' %>"
-                                        class="editable" disabled pattern="[0-9]{10}" title="Numéro à 10 chiffres">
-                                </p>
-                            </div>
-                            <div class="info-box">
-                                <p><strong>Email:</strong>
-                                    <input type="email" name="email" value="<%= utilisateur.email || '' %>" class="editable"
-                                        disabled required title="Entrez une adresse email contenant @">
-                                </p>
-                            </div>
+            <h2 class="profile-name"><%= utilisateur.prenom %> <%= utilisateur.nom %></h2>
+            <p class="profile-email"><%= utilisateur.email %></p>
+            
+            <button class="btn btn-secondary" onclick="window.location.href='/historique'">
+                <i class="fas fa-history btn-icon"></i> Historique
+            </button>
+        </div>
+        
+        <!-- Section d'Informations -->
+        <div class="profile-info">
+            <h2 class="section-title">Informations Personnelles</h2>
+            
+            <form action="/modifier" method="POST" id="saveForm" onsubmit="return validateForm()">
+                <div class="info-grid">
+                    <!-- Colonne 1 -->
+                    <div class="info-column">
+                        <div class="info-group">
+                            <label class="info-label">Nom</label>
+                            <input type="text" name="nom" value="<%= utilisateur.nom || '' %>" class="info-input editable" disabled required>
                         </div>
-                        <div class="info-column">
-                            <div class="info-box">
-                                <p><strong>Date de naissance:</strong>
-                                    <input type="date" name="date_naissance"
-                                        value="<%= utilisateur.date_naissance ? new Date(utilisateur.date_naissance).toISOString().split('T')[0] : '' %>"
-                                        class="editable" disabled>
-                                </p>
-                            </div>
-                            <div class="info-box">
-                                <p><strong>Langue:</strong>
-                                    <select name="langue" class="editable" disabled>
-                                        <option value="français" <%=utilisateur.langue==='français' ? 'selected' : '' %>
-                                            >Français</option>
-                                        <option value="english" <%=utilisateur.langue==='english' ? 'selected' : '' %>>English
-                                        </option>
-                                        <option value="español" <%=utilisateur.langue==='español' ? 'selected' : '' %>>Español
-                                        </option>
-                                    </select>
-                                </p>
-                            </div>
-                            <div class="info-box">
-                                <p><strong>Adresse:</strong>
-                                    <textarea name="adresse" class="editable"
-                                        disabled><%= utilisateur.adresse || '' %></textarea>
-                                </p>
-                            </div>
-                            <div class="info-box password-container">
-                                <p><strong>Nouveau mot de passe:</strong>
-                                    <div class="password-input-wrapper">
-                                        <input type="password" name="mot_de_passe" id="passwordField" class="editable" disabled
-                                            placeholder="Laisser vide pour ne pas changer" pattern=".{8,}"
-                                            title="8 caractères minimum">
-                                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
-                                    </div>
-                                </p>
+                        
+                        <div class="info-group">
+                            <label class="info-label">Prénom</label>
+                            <input type="text" name="prenom" value="<%= utilisateur.prenom || '' %>" class="info-input editable" disabled required>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label class="info-label">Date de naissance</label>
+                            <input type="date" name="date_naissance" value="<%= utilisateur.date_naissance ? new Date(utilisateur.date_naissance).toISOString().split('T')[0] : '' %>" class="info-input editable" disabled>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label class="info-label">Téléphone</label>
+                            <input type="tel" 
+                                   name="telephone" 
+                                   id="phoneInput" 
+                                   value="<%= utilisateur.telephone ? utilisateur.telephone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3') : '' %>" 
+                                   class="info-input editable" 
+                                   disabled
+                                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                                   title="Format: 514-111-1111"
+                                   placeholder="514-111-1111"
+                                   maxlength="12">
+                        </div>
+                    </div>
+                    
+                    <!-- Colonne 2 -->
+                    <div class="info-column">
+                        <div class="info-group">
+                            <label class="info-label">Email</label>
+                            <input type="email" name="email" value="<%= utilisateur.email || '' %>" class="info-input editable" disabled required>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label class="info-label">Langue</label>
+                            <select name="langue" class="info-input editable" disabled>
+                                <option value="français" <%=utilisateur.langue==='français' ? 'selected' : '' %>>Français</option>
+                                <option value="english" <%=utilisateur.langue==='english' ? 'selected' : '' %>>English</option>
+                                <option value="español" <%=utilisateur.langue==='español' ? 'selected' : '' %>>Español</option>
+                            </select>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label class="info-label">Adresse</label>
+                            <textarea name="adresse" class="info-input editable" disabled><%= utilisateur.adresse || '' %></textarea>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label class="info-label">Nouveau mot de passe</label>
+                            <div class="password-wrapper">
+                                <input type="password" name="mot_de_passe" id="passwordField" class="info-input editable" disabled placeholder="Laisser vide pour ne pas changer" pattern=".{8,}" title="8 caractères minimum">
+                                <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
                             </div>
                         </div>
                     </div>
-
-                    <input type="hidden" name="id" value="<%= utilisateur.id %>">
-                    <button type="button" class="modifier" onclick="enableEdit()">
-                        <i class="fas fa-edit"></i> Modifier
+                </div>
+                
+                <input type="hidden" name="id" value="<%= utilisateur.id %>">
+                
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-primary" onclick="enableEdit()">
+                        <i class="fas fa-edit btn-icon"></i> Modifier
                     </button>
-                    <button type="submit" class="modifier" id="saveButton" style="display:none;">
-                        <i class="fas fa-save"></i> Sauvegarder
+                    <button type="submit" class="btn btn-primary" id="saveButton" style="display:none;">
+                        <i class="fas fa-save btn-icon"></i> Sauvegarder
                     </button>
-                </form>
-
-                <form action="/deconnexion" method="GET">
-                    <br>
-                    <button type="submit" class="deconnecter">
-                        <i class="fas fa-sign-out-alt"></i> Se déconnecter
-                    </button>
-                </form>
-            </div>
+                    
+                    <form action="/deconnexion" method="GET" style="flex-grow:1;">
+                        <button type="submit" class="btn btn-danger" style="width:100%;">
+                            <i class="fas fa-sign-out-alt btn-icon"></i> Déconnexion
+                        </button>
+                    </form>
+                </div>
+            </form>
         </div>
-        <%- include ("../partials/footer.ejs") %>
-        
-        <!-- Ajout de la référence au fichier JS externe -->
-        <script src="../Javascript/profile.js"></script>
+    </div>
+    
+    <%- include ("../partials/footer.ejs") %>
+    
+    <script src="../Javascript/profile.js"></script>
 </body>
 
 </html>
