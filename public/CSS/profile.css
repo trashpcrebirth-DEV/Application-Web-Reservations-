@@ -177,6 +177,14 @@ textarea.info-input {
     margin-top: 2rem;
 }
 
+.deconnexion-form {
+    margin-top: 1.5rem;
+}
+
+.deconnexion-form .btn {
+    width: 100%;
+}
+
 /* Password Toggle */
 .password-wrapper {
     position: relative;
