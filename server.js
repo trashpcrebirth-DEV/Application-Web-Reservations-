@@ -323,7 +323,7 @@ app.get("/profile", (req, res) => {
 });
 
 // Update user
-app.post('/modifier', (req, res) => {
+app.post('/modifier', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Unauthorized");
     }
@@ -336,39 +336,50 @@ app.post('/modifier', (req, res) => {
         return res.status(400).send("Nom, prénom et email sont obligatoires");
     }
 
-    // Construction dynamique de la requête
-    let query = "UPDATE utilisateurs SET nom = ?, prenom = ?, ";
-    const values = [nom, prenom];
+    try {
+        // Construction dynamique de la requête
+        let query = "UPDATE utilisateurs SET nom = ?, prenom = ?, ";
+        const values = [nom, prenom];
 
-    // Ajouter le mot de passe seulement s'il est fourni
-    if (mot_de_passe && mot_de_passe.trim() !== "") {
-        query += "mot_de_passe = ?, ";
-        values.push(mot_de_passe);
+        // Ajouter le mot de passe seulement s'il est fourni
+        if (mot_de_passe && mot_de_passe.trim() !== "") {
+            const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+            query += "mot_de_passe = ?, ";
+            values.push(hashedPassword);
+        }
+
+        // Suite de la requête
+        query += "date_naissance = ?, telephone = ?, langue = ?, email = ?, adresse = ? WHERE id = ?";
+        values.push(
+            date_naissance || null,
+            telephone || null,
+            langue || null,
+            email,
+            adresse || null,
+            userId
+        );
+
+        con.query(query, values, (err, result) => {
+            if (err) {
+                console.error("Error updating user:", err);
+                return res.status(500).send("Error updating user information");
+            }
+
+            if (result.affectedRows > 0) {
+                // Mettre à jour les informations de session si nécessaire
+                req.session.user.nom = nom;
+                req.session.user.prenom = prenom;
+                req.session.user.email = email;
+                
+                res.redirect(`/profile?id=${userId}`);
+            } else {
+                res.status(404).send("User not found or no changes made");
+            }
+        });
+    } catch (error) {
+        console.error("Error hashing password:", error);
+        res.status(500).send("Error updating user information");
     }
-
-    // Suite de la requête
-    query += "date_naissance = ?, telephone = ?, langue = ?, email = ?, adresse = ? WHERE id = ?";
-    values.push(
-        date_naissance || null,
-        telephone || null,
-        langue || null,
-        email,
-        adresse || null,
-        userId
-    );
-
-    con.query(query, values, (err, result) => {
-        if (err) {
-            console.error("Error updating user:", err);
-            return res.status(500).send("Error updating user information");
-        }
-
-        if (result.affectedRows > 0) {
-            res.redirect(`/profile?id=${userId}`); // Redirect to profile page
-        } else {
-            res.status(404).send("User not found or no changes made");
-        }
-    });
 });
 
 
