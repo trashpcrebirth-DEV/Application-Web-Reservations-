@@ -733,6 +733,34 @@ app.get('/success', async (req, res) => {
                 } else {
                     reject("Réservation non trouvée ou déjà mise à jour.");
                 }
+
+                const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
+
+                con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
+                    if (err) {
+                        console.error('Erreur SQL lors de la récupération de la capacité:', err);
+                        return reject("Erreur lors de la récupération de la capacité.");
+                    }
+
+                    if (results.length === 0) {
+                        return reject("Réservation non trouvée.");
+                    }
+
+                    const currentCapacity = results[0].capacite;
+                    const newCapacity = currentCapacity - item.nombreJoueur;  // Soustraire le nombre de joueurs
+
+                    // Étape 2 : Mettre à jour la réservation avec la nouvelle capacité
+                    const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+
+                    con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
+                        if (err) {
+                            console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                            return reject("Erreur lors de la mise à jour de la réservation.");
+                        }
+
+                        resolve("Réservation mise à jour avec succès.");
+                    });
+                });
             });
         });
     });
@@ -937,7 +965,7 @@ app.get('/historique', async (req, res) => {
                 siteTitle: "SportZone",
                 pageTitle: "Historique des réservations",
                 user: req.session.user,
-                reservations: [{message: "No reservations found"}], // Add a message to debug
+                reservations: [{ message: "No reservations found" }], // Add a message to debug
                 activePage: 'historique'
             });
         }
@@ -957,7 +985,7 @@ app.get('/historique', async (req, res) => {
 
     } catch (error) {
         console.error("Erreur dans /historique:", error.stack);
-        
+
         // Send a simple error message to the user
         res.status(500).send(`<h1>Erreur lors du chargement de l'historique</h1><p>${error.message}</p>`);
     }
@@ -966,7 +994,7 @@ app.get('/historique', async (req, res) => {
 
 
 
- 
+
 
 
 
