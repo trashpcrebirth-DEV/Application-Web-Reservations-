@@ -183,24 +183,63 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
 });
 
 
-app.post('/api/annuler/:id/:nombreJoueurs', async (req, res) => { //peut etre d'un ajout d'une table où ca enregistre le nombre de joeur lié à installation pour enlever en prenant son id
+app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une table où ca enregistre le nombre de joeur lié à installation pour enlever en prenant son id
     const reservationId = req.params.id;
+    const userId = req.session.user.id;
 
     try {
-        // Requête SQL pour annuler la réservation
-        const query = "UPDATE reservations SET statut = 'Disponible', user_id = NULL WHERE id_reservation = ?";
-        const [result] = await con.promise().query(query, [reservationId]);
+        const annulerReservationQuery = `SELECT nombreJoueur FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?`;
 
-        if (result.affectedRows > 0) {
-            // Decrement the cart count in the session
-            if (req.session.user && req.session.user.cartCount > 0) {
-                req.session.user.cartCount -= 1;
+        con.query(annulerReservationQuery, [reservationId, userId], (err, results) => {
+            if (err) {
+                console.error('Erreur SQL lors de la récupération du nombre de joueurs:', err);
+                return reject("Erreur lors de la récupération du nombre de joueurs.");
             }
 
-            res.redirect(`/reservation-information/${reservationId}`);
-        } else {
-            res.status(404).send("Installation non trouvée pour cette réservation.");
-        }
+            if (results.length === 0) {
+                return reject("Réservation non trouvée dans la table utilisateurs_reservations.");
+            }
+
+            const nombreJoueurAnnule = results[0].nombreJoueur;
+
+            const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
+
+            con.query(getCurrentCapacityQuery, [reservationId], (err, results) => {
+                if (err) {
+                    console.error('Erreur SQL lors de la récupération de la capacité:', err);
+                    return reject("Erreur lors de la récupération de la capacité.");
+                }
+
+                if (results.length === 0) {
+                    return reject("Réservation non trouvée.");
+                }
+
+                const currentCapacity = results[0].capacite;
+
+                const newCapacity = currentCapacity + nombreJoueurAnnule;
+
+                const updateCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+
+                con.query(updateCapacityQuery, [newCapacity, reservationId], (err, result) => {
+                    if (err) {
+                        console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                        return reject("Erreur lors de la mise à jour de la réservation.");
+                    }
+
+                    const deleteReservationQuery = `DELETE FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?`;
+
+                    con.query(deleteReservationQuery, [reservationId, userId], (err, result) => {
+                        if (err) {
+                            console.error('Erreur SQL lors de la suppression de la réservation utilisateur:', err);
+                            return reject("Erreur lors de l'annulation de la réservation.");
+                        }
+
+                        resolve("Réservation annulée et capacité mise à jour.");
+                    });
+                });
+            });
+        });
+
     } catch (error) {
         console.error("Erreur lors de l'annulation de la réservation :", error);
         res.json({ success: false, message: "Erreur serveur." });
@@ -658,7 +697,6 @@ app.get('/success', async (req, res) => {
                     // La réservation existe déjà, donc on ignore l'insertion
                     resolve();
                 } else {
-                    // Requête SQL pour insérer dans la table utilisateurs_reservations
                     const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, statut) VALUES (?, ?, ?, 'Réservé')`;
 
                     con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur], (err, result) => {
@@ -671,6 +709,34 @@ app.get('/success', async (req, res) => {
                         } else {
                             reject("Réservation non trouvée ou déjà mise à jour.");
                         }
+                    });
+
+                    const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
+
+                    con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
+                        if (err) {
+                            console.error('Erreur SQL lors de la récupération de la capacité:', err);
+                            return reject("Erreur lors de la récupération de la capacité.");
+                        }
+
+                        if (results.length === 0) {
+                            return reject("Réservation non trouvée.");
+                        }
+
+                        const currentCapacity = results[0].capacite;
+                        const newCapacity = currentCapacity - item.nombreJoueur;  // Soustraire le nombre de joueurs
+
+                        // Étape 2 : Mettre à jour la réservation avec la nouvelle capacité
+                        const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+
+                        con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation, userId], (err, result) => {
+                            if (err) {
+                                console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                                return reject("Erreur lors de la mise à jour de la réservation.");
+                            }
+
+                            resolve("Réservation mise à jour avec succès.");
+                        });
                     });
                 }
             });
