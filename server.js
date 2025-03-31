@@ -901,42 +901,86 @@ app.get("/event/delete/:id", function (req, res) {
 });
 
 
+
+
 app.get('/historique', async (req, res) => {
     try {
-        // 1. Vérification de connexion
         if (!req.session.user) {
             return res.redirect('/connexion');
         }
 
+        // Debug log user session
         console.log("Tentative d'accès à l'historique pour user:", req.session.user.id);
+        console.log("Session data:", req.session);
 
-        // 2. Récupération depuis MongoDB
-        const paiements = await mongoose.connection.db.collection('paiements')
-            .find({
-                userId: req.session.user.id.toString()
-            })
-            .sort({ date: -1 })
-            .toArray();
+        // Check if user ID is correct
+        const userId = req.session.user.id;
+        console.log("User ID used in query:", userId);
 
-        console.log(`${paiements.length} paiements trouvés`);
+        // Try a simple query to see if we can connect and get data
+        con.query('SELECT 1', (err, result) => {
+            if (err) {
+                console.error("Database query test failed:", err);
+                return res.status(500).send("Database query test failed.");
+            } else {
+                console.log("Database query test passed:", result);
+            }
+        });
 
-        // 3. Rendu de la vue
+        // Execute the query with the hardcoded ID (for testing)
+        const result = await con.execute(
+            `SELECT id_reservation, nombreJoueur, statut
+             FROM utilisateurs_reservations
+             WHERE id_utilisateur = ?`,
+            [req.session.user.id]  // Make sure the value passed is an integer, not a string
+        );
+
+        // Check the result structure
+        console.log("Structure of the result:", result);
+
+        // Check if the result is empty
+        if (!result[0] || result[0].length === 0) {
+            console.error("Aucune donnée trouvée dans la réponse de la requête");
+            return res.render('pages/historique', {
+                siteTitle: "SportZone",
+                pageTitle: "Historique des réservations",
+                user: req.session.user,
+                reservations: [{message: "No reservations found"}], // Add a message to debug
+                activePage: 'historique'
+            });
+        }
+
+        // Log the length of reservations
+        const rows = result[0];
+        console.log(`${rows.length} réservations trouvées`);
+
+        // Return the page with the result
         res.render('pages/historique', {
             siteTitle: "SportZone",
-            pageTitle: "Historique des paiements",
+            pageTitle: "Historique des réservations",
             user: req.session.user,
-            paiements: paiements,
+            reservations: rows,
             activePage: 'historique'
         });
 
     } catch (error) {
-        console.error("Erreur dans /historique:", error);
-        res.status(500).render('pages/erreur', {
-            message: "Erreur lors du chargement de l'historique",
-            error: error.message
-        });
+        console.error("Erreur dans /historique:", error.stack);
+        
+        // Send a simple error message to the user
+        res.status(500).send(`<h1>Erreur lors du chargement de l'historique</h1><p>${error.message}</p>`);
     }
 });
+
+
+
+
+ 
+
+
+
+
+
+
 
 
 
