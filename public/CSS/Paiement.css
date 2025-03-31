@@ -215,6 +215,38 @@ span.price {
     background-color: #ccc;
     cursor: not-allowed;
 }
+.remove-btn {
+    background: linear-gradient(135deg, #ff4d4d, #ff0000); /* Dégradé rouge */
+    color: white;
+    border: none;
+    border-radius: 12px; /* Coins arrondis */
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    line-height: 35px; /* Centrer le texte verticalement */
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombre douce */
+}
+
+.remove-btn:hover {
+    background: linear-gradient(135deg, #e60000, #b30000); /* Rouge plus foncé au survol */
+    transform: scale(1.1); /* Agrandissement au survol */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Ombre plus prononcée */
+}
+
+.remove-btn:focus {
+    outline: none; /* Supprime le contour par défaut */
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.8); /* Effet lumineux rouge au focus */
+}
+
+.remove-btn:active {
+    transform: scale(0.95); /* Réduction légère lors du clic */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre réduite */
+}
 
 @media (max-width: 800px) {
     .row {

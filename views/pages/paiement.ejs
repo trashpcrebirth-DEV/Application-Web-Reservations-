@@ -27,7 +27,7 @@
                       <%= reservation.categorie_sport %>
                     </strong> -
                     <span class="price">
-                      <%= reservation.prix %> €
+                      <%= reservation.prix %> $
                     </span>
                     <br>
                     <span><strong>Date :</strong>
@@ -42,6 +42,7 @@
                             minute: "2-digit" }) %>
                         </span>
                     </span>
+                    <button class="remove-btn" onclick="removeReservation(<%= reservation.id_reservation %>)">x</button>
 
 
                   </li>
@@ -59,4 +60,27 @@
 
 </body>
 
+<script>
+  function removeReservation(reservationId) {
+      fetch(`/api/items/${reservationId}`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              // Rafraîchir la page pour mettre à jour la liste des réservations
+              location.reload();
+          } else {
+              alert(data.message);
+          }
+      })
+      .catch(err => {
+          console.error("Erreur lors de la suppression :", err);
+          alert("Erreur lors de la suppression de la réservation.");
+      });
+  }
+</script>
 </html>
