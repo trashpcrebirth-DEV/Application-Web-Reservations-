@@ -2,8 +2,7 @@
 <html lang="fr">
 
 <head>
-    <%- include('../partials/head') %>
-    <title><%= siteTitle %> - <%= pageTitle %></title>
+    <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/historique.css">
 </head>
 
@@ -13,37 +12,36 @@
     <main class="container mt-5">
         <div class="text-center">
             <h1 class="page-title"><i class="fas fa-history"></i> <%= pageTitle %></h1>
-            <p class="lead text-muted">Consultez vos réservations récentes ci-dessous</p>
         </div>
 
-        <% if (reservations.length === 0) { %>
+        <% if (reservations.length === 1 && reservations[0].message) { %>
             <div class="alert alert-info text-center">
-                <i class="fas fa-exclamation-circle"></i> Aucune réservation trouvée.
+                <%= reservations[0].message %>
             </div>
         <% } else { %>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID Réservation</th>
-                        <th>Nombre de Joueurs</th>
-                        <th>Statut</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% reservations.forEach(r => { %>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td><%= r.id_reservation %></td>
-                            <td><%= r.nombreJoueur %></td>
-                            <td><%= r.statut %></td>
+                            <th>ID Réservation</th>
+                            <th>Nombre de Joueurs</th>
+                            <th>Statut</th>
                         </tr>
-                    <% }); %>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <% reservations.forEach(r => { %>
+                            <tr>
+                                <td><%= r.id_reservation %></td>
+                                <td><%= r.nombreJoueur %></td>
+                                <td><%= r.statut %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
         <% } %>
-
     </main>
 
     <%- include ("../partials/footer.ejs") %>
-
 </body>
 </html>
