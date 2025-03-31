@@ -604,6 +604,27 @@ app.get('/deconnexion', function (req, res) {
     });
 });
 
+app.delete('/api/items/:id', (req, res) => {
+    const reservationId = req.params.id;
+
+    const query = "DELETE FROM reservations WHERE id_reservation = ?";
+    con.query(query, [reservationId], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la suppression :", err);
+            return res.status(500).json({ success: false, message: "Erreur serveur." });
+        }
+
+        if (result.affectedRows > 0) {
+            // Décrémenter le compteur de réservations dans la session
+            if (req.session.user && req.session.user.cartCount > 0) {
+                req.session.user.cartCount -= 1;
+            }
+            res.json({ success: true, message: "Réservation supprimée avec succès." });
+        } else {
+            res.status(404).json({ success: false, message: "Réservation non trouvée." });
+        }
+    });
+});
 app.get("/checkout", async (req, res) => {
     if (!req.session.user) {
         return res.redirect("/connexion"); // Redirige si l'utilisateur n'est pas connecté
