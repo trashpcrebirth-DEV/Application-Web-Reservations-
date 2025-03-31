@@ -961,7 +961,6 @@ app.get('/historique', (req, res) => {
             }
         );
 
-<<<<<<< HEAD
         // Check the result structure
         console.log("Structure of the result:", result);
 
@@ -994,10 +993,6 @@ app.get('/historique', (req, res) => {
         console.error("Erreur dans /historique:", error.stack);
 
         // Send a simple error message to the user
-=======
-    } catch (error) {
-        console.error("Erreur lors du chargement de l'historique:", error.stack);
->>>>>>> cfc1c4577cf8a83d55115f58bd2fb3d4857e3633
         res.status(500).send(`<h1>Erreur lors du chargement de l'historique</h1><p>${error.message}</p>`);
     }
 });
