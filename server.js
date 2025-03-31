@@ -155,59 +155,31 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
     }
 
-    const reservationId = req.params.id; // ID de la réservation passée dans l'URL
-    const userId = req.session.user.id; // ID de l'utilisateur connecté
-    const nombreJoueurs = parseInt(req.params.nombreJoueurs); // Récupère le nombre de joueurs depuis l'URL
+    const reservationId = req.params.id;
+    const userId = req.session.user.id;
+    const nombreJoueurs = parseInt(req.params.nombreJoueurs);
 
     console.log("ID de l'utilisateur connecté :", userId);
     console.log("ID de la réservation :", reservationId);
     console.log("Nombre de joueurs :", nombreJoueurs); // Vérifie le nombre de joueurs
 
-    const verifierReservation = `SELECT r.id_reservation, r.id_installation, i.capacite
-                                FROM reservations r
-                                JOIN installations i ON r.id_installation = i.id_installation
-                                WHERE r.id_reservation = ?`;
 
-    con.query(verifierReservation, [reservationId], (err, result) => {
+    // Requête SQL pour ajouter l'item (réservation)
+    const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur) VALUES (?, ?, ?)`;
+    con.query(addItemQuery, [userId, reservationId, nombreJoueurs], (err, result) => {
         if (err) {
-            console.error("Erreur lors de la vérification de la réservation :", err);
-            return res.status(500).send("Erreur serveur");
+            console.error("Erreur lors de l'ajout de l'item:", err);
+            return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
         }
 
-        if (result.length === 0) {
-            return res.status(404).send("Réservation non trouvée");
+        if (result.affectedRows > 0) {
+            req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
+            return res.redirect(`/reservation-information/${reservationId}`);
+        } else {
+            return res.status(404).send("La réservation n'a pas pu être mise à jour.");
         }
-
-        const reservation = result[0];
-
-        if (reservation.statut !== "Disponible") {
-            return res.status(400).send("La réservation n'est pas disponible.");
-        }
-
-        if (nombreJoueurs > reservation.capacite) {
-            return res.status(400).send(`Le nombre de joueurs ne peut pas dépasser la capacité de l'installation (${reservation.capacite}).`);
-        }
-
-        if (nombreJoueurs < 1) {
-            return res.status(400).send("Le nombre de joueurs doit être supérieur à 0.");
-        }
-
-        // Requête SQL pour ajouter l'item (réservation)
-        const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur) VALUES (?, ?, ?)`;
-        con.query(addItemQuery, [userId, reservationId, nombreJoueurs], (err, result) => {
-            if (err) {
-                console.error("Erreur lors de l'ajout de l'item:", err);
-                return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
-            }
-
-            if (result.affectedRows > 0) {
-                req.session.user.cartCount = (req.session.user.cartCount || 0) + 1;
-                return res.redirect(`/reservation-information/${reservationId}`);
-            } else {
-                return res.status(404).send("La réservation n'a pas pu être mise à jour.");
-            }
-        });
     });
+
 });
 
 
@@ -251,7 +223,7 @@ app.get("/reservation-information/:id", function (req, res) {
 
             const reservation = results[0];
 
-            con.query("SELECT * FROM utilisateurs_reservations WHERE id_utilisateur = ? AND id_reservation = ?", [req.session.user.id, reservationId], (err, reservationCheck) => {
+            con.query("SELECT * FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, req.session.user.id], (err, reservationCheck) => {
                 if (err) {
                     console.error("Erreur lors de la vérification de la réservation :", err);
                     return res.status(500).send("Erreur serveur");
@@ -259,37 +231,28 @@ app.get("/reservation-information/:id", function (req, res) {
 
                 const isUserHasReservation = reservationCheck.length > 0;
 
-                con.query("SELECT nom FROM installations WHERE id_installation = ?", [reservation.id_installation], (err, results) => {
+                const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
+
+                con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
                     if (err) {
-                        console.error(err);
-                        return res.status(500).send("Erreur serveur");
+                        console.error("Erreur lors de la récupération des items :", err);
+                        return res.status(500).json({ message: "Erreur serveur" });
                     }
 
-                    const nom_insta = results.length > 0 ? results[0].nom : "Installation inconnue";
+                    const isDansPanier = dansPanier.length > 0;
 
-                    const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
-
-                    con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
-                        if (err) {
-                            console.error("Erreur lors de la récupération des items :", err);
-                            return res.status(500).json({ message: "Erreur serveur" });
-                        }
-
-                        const isDansPanier = dansPanier.length > 0;
-
-                        res.render("pages/information_reservation", {
-                            siteTitle: "SportZone",
-                            pageTitle: "Détails de la réservation",
-                            activePage: "reservation",
-                            user: req.session.user,
-                            reservation: reservation,
-                            nom_installation: nom_insta,
-                            nombreJoueurs: 1,
-                            isDansPanier: isDansPanier,
-                            isDejaReserve: isUserHasReservation 
-                        });
+                    res.render("pages/information_reservation", {
+                        siteTitle: "SportZone",
+                        pageTitle: "Détails de la réservation",
+                        activePage: "reservation",
+                        user: req.session.user,
+                        reservation: reservation,
+                        nombreJoueurs: 1,
+                        isDansPanier: isDansPanier,
+                        isDejaReserve: isUserHasReservation
                     });
                 });
+
             });
         });
     } else {
@@ -370,7 +333,7 @@ app.post('/modifier', async (req, res) => {
                 req.session.user.nom = nom;
                 req.session.user.prenom = prenom;
                 req.session.user.email = email;
-                
+
                 res.redirect(`/profile?id=${userId}`);
             } else {
                 res.status(404).send("User not found or no changes made");
