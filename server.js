@@ -662,6 +662,9 @@ app.get("/checkout", async (req, res) => {
     }
 });
 
+app.get('/confirmation', (req, res) => {
+    res.render('pages/confirmation', { message: "Votre réservation a bien été confirmée !" });
+});
 
 app.get('/success', async (req, res) => {
     if (!req.session.user) {
@@ -714,7 +717,7 @@ app.get('/success', async (req, res) => {
     try {
         // Attendre que toutes les promesses soient résolues (tous les items traités)
         await Promise.all(promises);
-        res.status(200).send("Réservations mises à jour avec succès.");
+        return res.redirect("/confirmation");
     } catch (err) {
         // Si une promesse échoue, envoyer la réponse d'erreur
         res.status(500).send(err);
