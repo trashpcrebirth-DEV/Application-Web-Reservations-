@@ -713,10 +713,10 @@ app.get('/success', async (req, res) => {
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
             // Ajouter l'item dans la table utilisateurs_reservations
-            const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, statut) 
-                                  VALUES (?, ?, ?, 'Réservé')`;
+            const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut) 
+                                  VALUES (?, ?, ?, ?, 'Réservé')`;
 
-            con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur], (err, result) => {
+            con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur, item.prix], (err, result) => {
                 if (err) {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
@@ -938,9 +938,7 @@ app.get('/historique', (req, res) => {
 
         // Exécuter la requête pour obtenir les réservations de l'utilisateur
         con.query(
-            `SELECT *
-             FROM utilisateurs_reservations
-             WHERE id_utilisateur = ?`,
+            `SELECT *FROM utilisateurs_reservations WHERE id_utilisateur = ?`,
             [userId],
             (error, results) => {
                 if (error) {
