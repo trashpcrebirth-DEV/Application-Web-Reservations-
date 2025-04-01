@@ -150,7 +150,7 @@ app.get("/api/reservation", (req, res) => {
 
 
 // Route pour réserver un sport
-app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
+app.post('/reserver/:id/:nombreJoueurs/:prix', (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
     }
@@ -158,6 +158,8 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
     const reservationId = req.params.id;
     const userId = req.session.user.id;
     const nombreJoueurs = parseInt(req.params.nombreJoueurs);
+    const prixTape = parseFloat(req.params.prix);
+
 
     console.log("ID de l'utilisateur connecté :", userId);
     console.log("ID de la réservation :", reservationId);
@@ -165,8 +167,8 @@ app.post('/reserver/:id/:nombreJoueurs', (req, res) => {
 
 
     // Requête SQL pour ajouter l'item (réservation)
-    const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur) VALUES (?, ?, ?)`;
-    con.query(addItemQuery, [userId, reservationId, nombreJoueurs], (err, result) => {
+    const addItemQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur, prix) VALUES (?, ?, ?, ?)`;
+    con.query(addItemQuery, [userId, reservationId, nombreJoueurs, prixTape], (err, result) => {
         if (err) {
             console.error("Erreur lors de l'ajout de l'item:", err);
             return res.status(500).send("Erreur lors de la mise à jour de la réservation.");
@@ -800,9 +802,10 @@ app.get("/paiement", async (req, res) => {
         // Récupérer les détails des réservations associées aux items
         const reservationIds = items.map(item => item.id_reservation);
 
+
         const [reservations] = await con.promise().query(
-            "SELECT * FROM reservations WHERE id_reservation IN (?)",
-            [reservationIds]
+            `SELECT reservations.*, items.prix, items.nombreJoueur FROM reservations JOIN items ON reservations.id_reservation = items.id_reservation WHERE items.id_utilisateur = ?`,
+            [req.session.user.id]
         );
 
         const paiements = await mongoose.connection.db.collection('paiements')
@@ -948,12 +951,12 @@ app.get('/historique', (req, res) => {
                 console.log("Résultats de la requête SQL:", results); // Affiche les résultats pour vérifier
 
                 // Vérifier si des réservations existent
-                const reservations = results && results.length > 0 ? results : [{message: "Aucune réservation trouvée"}];
+                const reservations = results && results.length > 0 ? results : [{ message: "Aucune réservation trouvée" }];
 
                 // Rendre la page avec les résultats des réservations
                 res.render('pages/historique', {
                     siteTitle: "SportZone",
-                    pageTitle:"Historique des réservations",
+                    pageTitle: "Historique des réservations",
                     user: req.session.user,
                     reservations: reservations,
                     activePage: 'historique'
@@ -1001,12 +1004,6 @@ app.get('/historique', (req, res) => {
 
 
 
-<<<<<<< HEAD
-=======
-
-
- 
->>>>>>> cfc1c4577cf8a83d55115f58bd2fb3d4857e3633
 
 
 

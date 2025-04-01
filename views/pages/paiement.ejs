@@ -24,7 +24,7 @@
                 <% reservations.forEach(function(reservation) { %>
                   <li>
                     <strong>
-                      <%= reservation.categorie_sport %>
+                      <%= reservation.categorie_sport %> (<%= reservation.nombreJoueur %>x)
                     </strong> -
                     <span class="price">
                       <%= reservation.prix %> $

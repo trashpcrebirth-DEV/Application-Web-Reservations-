@@ -23,11 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () { //modifier le nombre dans l'url
     const form = document.querySelector('form');
     const nombreJoueursInput = document.getElementById('nombreJoueurs');
+    const prixInput = document.getElementById('prix');
     const id_reservation = document.getElementById('id-reservation').dataset.id;
 
 
     form.addEventListener('submit', function (event) {
         const nombreJoueurs = nombreJoueursInput.value;
-        form.action = `/reserver/${id_reservation}/${nombreJoueurs}`;
+        const prixValeur = prixInput.textContent.replace(/[^\d.]/g, '');
+        form.action = `/reserver/${id_reservation}/${nombreJoueurs}/${prixValeur}`;
     });
 });
