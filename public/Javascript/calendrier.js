@@ -1,20 +1,14 @@
-let currentDate = new Date();
-let selectedDate = { 
-  day: currentDate.getDate(), 
-  month: currentDate.getMonth(), 
-  year: currentDate.getFullYear() 
-};
+const currentDate = new Date()
+let selectedDate = new Date();
 
 function formatTime(dateString) {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  const date = new Date(dateString)
+  return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
 }
 
 function showReservationBox(day, month, year) {
-  const months = [
-    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
-    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
-  ];
+  selectedDate = new Date(year, month, day); // Met à jour la date sélectionnée
+  const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   const listeReservations = document.getElementById("listeReservations");
   const dateSelectionnee = document.getElementById("dateSelectionnee");
   const reservationList = document.getElementById("reservationList");
@@ -23,15 +17,9 @@ function showReservationBox(day, month, year) {
   const sport = document.getElementById("sportFilter").value;
   const installation = document.getElementById("installationFilter").value;
 
-  // Mettre à jour selectedDate si nécessaire
-  if (day !== selectedDate.day || month !== selectedDate.month || year !== selectedDate.year) {
-    selectedDate = { day, month, year };
-  }
-
   dateSelectionnee.textContent = sport
     ? `${day} ${months[month]} ${year} (${sport})`
     : `${day} ${months[month]} ${year} (Tous les sports)`;
-
 
   reservationList.innerHTML = "";
 
@@ -80,6 +68,9 @@ function showReservationBox(day, month, year) {
       reservationList.innerHTML = "<p class='aucune-reservation'>Erreur de chargement</p>";
     });
 }
+
+
+
 /*
 function annulerReservation(reservationId, reservationDate) {
   fetch("/api/annuler", {
@@ -193,72 +184,70 @@ function highlightReservedDays() {
     .catch(() => console.error("Erreur lors de la récupération des réservations."));
 }
 
-document.getElementById("sportFilter").addEventListener("change", () => {
-  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year);
-});
-
-document.getElementById("installationFilter").addEventListener("change", () => {
-  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year);
-});
-
+document.getElementById("sportFilter").addEventListener("change", highlightReservedDays);
+document.getElementById("installationFilter").addEventListener("change", highlightReservedDays);
 
 function updateCalendar() {
-  const monthYearText = document.getElementById("monthYear");
-  const daysGrid = document.getElementById("daysGrid");
-  const month = selectedDate.month;  // Utilisation de selectedDate pour obtenir le mois
-  const year = selectedDate.year;    // Utilisation de selectedDate pour obtenir l'année
+  const monthYearText = document.getElementById("monthYear")
+  const daysGrid = document.getElementById("daysGrid")
+  const month = currentDate.getMonth()
+  const year = currentDate.getFullYear()
   const months = [
-    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
-    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
-  ];
-  monthYearText.textContent = `${months[month]} ${year}`;
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+    "Octobre",
+    "Novembre",
+    "Décembre",
+  ]
+  monthYearText.textContent = `${months[month]} ${year}`
 
-  const firstDayOfMonth = new Date(year, month, 1);
-  const firstDayOfWeek = firstDayOfMonth.getDay();
-  const lastDayOfMonth = new Date(year, month + 1, 0);
-  const daysInMonth = lastDayOfMonth.getDate();
+  const firstDayOfMonth = new Date(year, month, 1)
+  const firstDayOfWeek = firstDayOfMonth.getDay()
+  const lastDayOfMonth = new Date(year, month + 1, 0)
+  const daysInMonth = lastDayOfMonth.getDate()
 
-  daysGrid.innerHTML = "";
+  daysGrid.innerHTML = ""
 
   for (let i = 0; i < firstDayOfWeek; i++) {
-    daysGrid.innerHTML += '<div class="day empty"></div>';
+    daysGrid.innerHTML += '<div class="day empty"></div>'
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
-    const dayElement = document.createElement("div");
-    dayElement.classList.add("day");
-    dayElement.textContent = day;
-    dayElement.addEventListener("click", () => showReservationBox(day, month, year));
-    daysGrid.appendChild(dayElement);
+    const dayElement = document.createElement("div")
+    dayElement.classList.add("day")
+    dayElement.textContent = day
+    dayElement.addEventListener("click", () => showReservationBox(day, month, year))
+    daysGrid.appendChild(dayElement)
   }
   highlightReservedDays(); // Ajout pour colorer les jours réservés
 }
 
-
 function nextMonth() {
-  currentDate.setMonth(selectedDate.month + 1);
-  selectedDate.month = currentDate.getMonth(); // Mettre à jour selectedDate
-  selectedDate.year = currentDate.getFullYear(); // Mettre à jour l'année
-  updateCalendar();
+  currentDate.setMonth(currentDate.getMonth() + 1)
+  updateCalendar()
 }
 
-// Navigation vers le mois précédent
 function prevMonth() {
-  currentDate.setMonth(selectedDate.month - 1);
-  selectedDate.month = currentDate.getMonth(); // Mettre à jour selectedDate
-  selectedDate.year = currentDate.getFullYear(); // Mettre à jour l'année
-  updateCalendar();
+  currentDate.setMonth(currentDate.getMonth() - 1)
+  updateCalendar()
 }
-
 
 document.getElementById("nextMonth").addEventListener("click", nextMonth)
 document.getElementById("prevMonth").addEventListener("click", prevMonth)
 document.getElementById("sportFilter").addEventListener("change", () => {
-  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year); // Utiliser selectedDate ici
+  showReservationBox(selectedDate.getDate(), selectedDate.getMonth(), selectedDate.getFullYear());
 });
 
 document.getElementById("installationFilter").addEventListener("change", () => {
-  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year); // Utiliser selectedDate ici
+  showReservationBox(selectedDate.getDate(), selectedDate.getMonth(), selectedDate.getFullYear());
 });
 
-updateCalendar();
+
+updateCalendar()
