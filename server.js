@@ -120,7 +120,7 @@ app.get("/reservation", (req, res) => {
 
 // Route API pour récupérer les réservations au format JSON
 app.get("/api/reservation", (req, res) => {
-    const { date, month, year, sport } = req.query;
+    const { date, month, year, sport, installation } = req.query;
 
     let query = "SELECT * FROM reservations WHERE 1=1";
     let params = [];
@@ -136,6 +136,11 @@ app.get("/api/reservation", (req, res) => {
     if (sport && sport.trim() !== "" && sport !== "Tous les sports") {
         query += " AND categorie_sport = ?";
         params.push(sport);
+    }
+
+    if (installation && installation.trim() !== "" && installation !== "Tous les installations") {
+        query += " AND installation = ?";
+        params.push(installation);
     }
 
     con.query(query, params, (err, results) => {
@@ -608,15 +613,34 @@ app.post('/connexion', function (req, res) {
 });
 
 // Route pour la déconnexion
-app.get('/deconnexion', function (req, res) {
-    req.session.destroy(function (err) {
-        if (err) {
-            console.error("Erreur lors de la déconnexion :", err);
-            return res.status(500).json({ success: false, message: "Erreur serveur" });
-        }
-        console.log("Déconnexion réussie");
-        res.redirect('/'); // Rediriger vers la page d'accueil après la déconnexion
-    });
+app.get('/deconnexion', (req, res) => {
+    if (req.session.user) {
+        const userId = req.session.user.id;
+
+        // Supprimer les items de l'utilisateur connecté
+        const deleteItemsQuery = `DELETE FROM items WHERE id_utilisateur = ?`;
+        con.query(deleteItemsQuery, [userId], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de la suppression des items :", err);
+                return res.status(500).send("Erreur serveur lors de la déconnexion.");
+            }
+
+            console.log(`Items supprimés pour l'utilisateur ID: ${userId}`);
+
+            // Détruire la session
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error("Erreur lors de la destruction de la session :", err);
+                    return res.status(500).send("Erreur serveur lors de la déconnexion.");
+                }
+
+                // Rediriger vers la page d'accueil ou une autre page
+                res.redirect('/');
+            });
+        });
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.delete('/api/items/:id', (req, res) => {

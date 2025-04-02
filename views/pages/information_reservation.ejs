@@ -21,8 +21,8 @@
                 <div class="entete">
                     <h1>Réservation #<%= reservation.id_reservation %>
                     </h1>
-                    <span class="statut <%= reservation.statut === 'Disponible' ? 'pasreserve' : 'reserve' %>">
-                        <%= reservation.statut %>
+                    <span class="statut <%= isDejaReserve ? 'reserve' : 'pasreserve' %>">
+                        <%= isDejaReserve ? 'Réservé' : reservation.statut %>
                     </span>
                 </div>
 
@@ -121,7 +121,7 @@
                     <div class="actions">
                         <p id="id-reservation" data-id="<%= reservation.id_reservation %>"></p>
                         <form action="/reserver/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
-                            <% if (isDansPanier) { %>
+                            <% if (isDansPanier || isDejaReserve) { %>
                                 <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
                                 <% } else { %>
                                     <button type="submit" class="bouton primaire">Réserver</button>
