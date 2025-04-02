@@ -62,9 +62,10 @@ function showReservationBox(day, month, year) {
           reserveButton.classList.add("reserver")
           reserveButton.setAttribute("data-id", res.id_reservation)
 
-          if (res.statut === "Réservé") {
+          if (res.statut === "Pleine") {
             reserveButton.disabled = true
-            reserveButton.style.backgroundColor = "grey"
+            reserveButton.style.backgroundColor = "red"
+            reserveButton.textContent = "Remplis - Inaccessible"
 
             /*
             const annulerButton = document.createElement("button")
@@ -170,25 +171,44 @@ function highlightReservedDays() {
   const month = currentDate.getMonth();
   const year = currentDate.getFullYear();
   const formattedMonth = String(month + 1).padStart(2, "0");
-  
-  fetch(`/api/reservation?month=${formattedMonth}&year=${year}`)
+  const installation = document.getElementById("installationFilter").value;
+  const selectedSport = document.getElementById("sportFilter").value; 
+
+  fetch(`/api/reservation?month=${formattedMonth}&year=${year}&sport=${selectedSport}&installation=${installation}`)
     .then(response => response.json())
     .then(data => {
-      const reservedDays = new Set(data.reservations.map(res => new Date(res.date_time).getDate()));
+      const daysElements = document.querySelectorAll(".day");
+      const reservationsByDay = {};
 
-      document.querySelectorAll(".day").forEach(dayElement => {
+      data.reservations.forEach(res => {
+        const day = new Date(res.date_time).getDate();
+        if (!reservationsByDay[day]) {
+          reservationsByDay[day] = [];
+        }
+        reservationsByDay[day].push(res);
+      });
+
+      daysElements.forEach(dayElement => {
         const day = parseInt(dayElement.textContent);
-        if (reservedDays.has(day)) {
-          dayElement.style.backgroundColor = "blue";
-          dayElement.style.color = "white";
-        } else {
+        const reservations = reservationsByDay[day] || [];
+
+        if (reservations.length === 0) {
           dayElement.style.backgroundColor = "";
           dayElement.style.color = "";
+        } else if (reservations.every(res => res.statut === "Pleine")) {
+          dayElement.style.backgroundColor = "gray";
+          dayElement.style.color = "white";
+        } else {
+          dayElement.style.backgroundColor = "blue";
+          dayElement.style.color = "white";
         }
       });
     })
     .catch(() => console.error("Erreur lors de la récupération des réservations."));
 }
+
+document.getElementById("sportFilter").addEventListener("change", highlightReservedDays);
+document.getElementById("installationFilter").addEventListener("change", highlightReservedDays);
 
 function updateCalendar() {
   const monthYearText = document.getElementById("monthYear")

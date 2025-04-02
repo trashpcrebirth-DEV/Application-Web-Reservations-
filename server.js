@@ -138,7 +138,7 @@ app.get("/api/reservation", (req, res) => {
         params.push(sport);
     }
 
-    if (installation && installation.trim() !== "" && installation !== "Tous les installations") {
+    if (installation && installation.trim() !== "" && installation !== "Toutes les installations") {
         query += " AND installation = ?";
         params.push(installation);
     }
