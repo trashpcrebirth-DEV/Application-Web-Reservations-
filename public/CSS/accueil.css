@@ -470,6 +470,52 @@ i{
     left: 100%;
 }
 
+.bouton-reservation-2 {
+    display: inline-block;
+    padding: 15px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #175BED;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+    margin-left: 60%;
+    margin-top: -40%;
+}
+
+.bouton-reservation-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 72, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.bouton-reservation-2:hover {
+    background-color: #175BED;
+    box-shadow: 0 0 20px rgba(4, 52, 245, 0.921);
+    transform: scale(1.05);
+}
+
+.bouton-reservation-2:hover::before {
+    left: 100%;
+}
+
 /* Animation au survol https://www.florin-pop.com/blog/2019/03/css-pulse-effect/ */
 @keyframes pulse {
     0% {
@@ -485,6 +531,70 @@ i{
 
 .bouton-reservation:hover {
     animation: pulse 1.5s infinite;
+}
+
+.services-complementaires {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0a0a0a, #0d3ba0);
+    position: relative;
+    overflow: hidden;
+    color: white;
+    border-top: 0.1px solid #175BED;
+}
+
+.grille-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.carte-service {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.carte-service:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(23, 91, 237, 0.3);
+}
+
+.icone-service {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 50px;
+}
+
+.icone-service::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #175bed, #0a3d9c);
+    filter: blur(15px);
+    opacity: 0.5;
+    z-index: -1;
+}
+
+.conteneur {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
 }
 /* FIN DU BODY */
 
