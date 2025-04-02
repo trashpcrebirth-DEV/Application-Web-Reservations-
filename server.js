@@ -782,7 +782,13 @@ app.get('/success', async (req, res) => {
 
     try {
         await Promise.all(promises);
+<<<<<<< Updated upstream
         return res.redirect("/confirmation");
+=======
+        req.session.user.cartCount = 0;  // Remise à zéro du panier
+
+        return res.redirect("/confirmation"); // Rediriger vers la page de confirmation après succès
+>>>>>>> Stashed changes
     } catch (err) {
         res.status(500).send(err);
     }
