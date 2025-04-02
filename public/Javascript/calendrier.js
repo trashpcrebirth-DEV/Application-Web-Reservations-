@@ -1,52 +1,53 @@
-const currentDate = new Date()
+let currentDate = new Date();
+let selectedDate = { 
+  day: currentDate.getDate(), 
+  month: currentDate.getMonth(), 
+  year: currentDate.getFullYear() 
+};
 
 function formatTime(dateString) {
-  const date = new Date(dateString)
-  return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 }
 
 function showReservationBox(day, month, year) {
   const months = [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre",
-  ]
-  const listeReservations = document.getElementById("listeReservations")
-  const dateSelectionnee = document.getElementById("dateSelectionnee")
-  const reservationList = document.getElementById("reservationList")
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+  ];
+  const listeReservations = document.getElementById("listeReservations");
+  const dateSelectionnee = document.getElementById("dateSelectionnee");
+  const reservationList = document.getElementById("reservationList");
 
-  const formattedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-  const sport = document.getElementById("sportFilter").value
-  const installation = document.getElementById("installationFilter").value
+  const formattedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const sport = document.getElementById("sportFilter").value;
+  const installation = document.getElementById("installationFilter").value;
+
+  // Mettre à jour selectedDate si nécessaire
+  if (day !== selectedDate.day || month !== selectedDate.month || year !== selectedDate.year) {
+    selectedDate = { day, month, year };
+  }
 
   dateSelectionnee.textContent = sport
     ? `${day} ${months[month]} ${year} (${sport})`
-    : `${day} ${months[month]} ${year} (Tous les sports)`
+    : `${day} ${months[month]} ${year} (Tous les sports)`;
 
-  reservationList.innerHTML = ""
 
-  let apiUrl = `/api/reservation?date=${formattedDate}`
-  if (sport) apiUrl += `&sport=${sport}`
-  if (installation) apiUrl += `&installation=${installation}`
+  reservationList.innerHTML = "";
+
+  let apiUrl = `/api/reservation?date=${formattedDate}`;
+  if (sport) apiUrl += `&sport=${sport}`;
+  if (installation) apiUrl += `&installation=${installation}`;
 
   fetch(apiUrl)
     .then((response) => response.json())
     .then((data) => {
       if (!data.reservations || data.reservations.length === 0) {
-        reservationList.innerHTML = "<p class='aucune-reservation'>Aucune réservation pour cette date.</p>"
+        reservationList.innerHTML = "<p class='aucune-reservation'>Aucune réservation pour cette date.</p>";
       } else {
         data.reservations.forEach((res) => {
-          const resItem = document.createElement("div")
-          resItem.classList.add("reservation-item")
+          const resItem = document.createElement("div");
+          resItem.classList.add("reservation-item");
 
           resItem.innerHTML = `
             <div class="reservation-details">
@@ -55,45 +56,30 @@ function showReservationBox(day, month, year) {
               <span><strong>Statut:</strong> ${res.statut}</span>
               <span><strong>Sport:</strong> ${res.categorie_sport}</span>
             </div>
-          `
+          `;
 
-          const reserveButton = document.createElement("button")
-          reserveButton.textContent = res.statut === "Réservé" ? "Réservé" : "Réserver"
-          reserveButton.classList.add("reserver")
-          reserveButton.setAttribute("data-id", res.id_reservation)
+          const reserveButton = document.createElement("button");
+          reserveButton.textContent = res.statut === "Réservé" ? "Réservé" : "Réserver";
+          reserveButton.classList.add("reserver");
+          reserveButton.setAttribute("data-id", res.id_reservation);
 
           if (res.statut === "Pleine") {
-            reserveButton.disabled = true
-            reserveButton.style.backgroundColor = "red"
-            reserveButton.textContent = "Remplis - Inaccessible"
-
-            /*
-            const annulerButton = document.createElement("button")
-            annulerButton.textContent = "Annuler"
-            annulerButton.classList.add("annuler")
-            annulerButton.setAttribute("data-id", res.id_reservation)
-
-            // Passer la bonne date de réservation ici
-            const reservationDate = new Date(res.date_time)
-            annulerButton.onclick = () => annulerReservation(res.id_reservation, reservationDate)
-            */
-
-            resItem.appendChild(reserveButton)
+            reserveButton.disabled = true;
+            reserveButton.style.backgroundColor = "red";
+            reserveButton.textContent = "Remplis - Inaccessible";
           } else {
-            reserveButton.onclick = () => reserver(res.id_reservation)
-            resItem.appendChild(reserveButton)
+            reserveButton.onclick = () => reserver(res.id_reservation);
           }
 
-          reservationList.appendChild(resItem)
-        })
+          resItem.appendChild(reserveButton);
+          reservationList.appendChild(resItem);
+        });
       }
     })
     .catch(() => {
-      reservationList.innerHTML = "<p class='aucune-reservation'>Erreur de chargement</p>"
-    })
+      reservationList.innerHTML = "<p class='aucune-reservation'>Erreur de chargement</p>";
+    });
 }
-
-
 /*
 function annulerReservation(reservationId, reservationDate) {
   fetch("/api/annuler", {
@@ -207,74 +193,72 @@ function highlightReservedDays() {
     .catch(() => console.error("Erreur lors de la récupération des réservations."));
 }
 
-document.getElementById("sportFilter").addEventListener("change", highlightReservedDays);
-document.getElementById("installationFilter").addEventListener("change", highlightReservedDays);
+document.getElementById("sportFilter").addEventListener("change", () => {
+  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year);
+});
+
+document.getElementById("installationFilter").addEventListener("change", () => {
+  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year);
+});
+
 
 function updateCalendar() {
-  const monthYearText = document.getElementById("monthYear")
-  const daysGrid = document.getElementById("daysGrid")
-  const month = currentDate.getMonth()
-  const year = currentDate.getFullYear()
+  const monthYearText = document.getElementById("monthYear");
+  const daysGrid = document.getElementById("daysGrid");
+  const month = selectedDate.month;  // Utilisation de selectedDate pour obtenir le mois
+  const year = selectedDate.year;    // Utilisation de selectedDate pour obtenir l'année
   const months = [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre",
-  ]
-  monthYearText.textContent = `${months[month]} ${year}`
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+  ];
+  monthYearText.textContent = `${months[month]} ${year}`;
 
-  const firstDayOfMonth = new Date(year, month, 1)
-  const firstDayOfWeek = firstDayOfMonth.getDay()
-  const lastDayOfMonth = new Date(year, month + 1, 0)
-  const daysInMonth = lastDayOfMonth.getDate()
+  const firstDayOfMonth = new Date(year, month, 1);
+  const firstDayOfWeek = firstDayOfMonth.getDay();
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+  const daysInMonth = lastDayOfMonth.getDate();
 
-  daysGrid.innerHTML = ""
+  daysGrid.innerHTML = "";
 
   for (let i = 0; i < firstDayOfWeek; i++) {
-    daysGrid.innerHTML += '<div class="day empty"></div>'
+    daysGrid.innerHTML += '<div class="day empty"></div>';
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
-    const dayElement = document.createElement("div")
-    dayElement.classList.add("day")
-    dayElement.textContent = day
-    dayElement.addEventListener("click", () => showReservationBox(day, month, year))
-    daysGrid.appendChild(dayElement)
+    const dayElement = document.createElement("div");
+    dayElement.classList.add("day");
+    dayElement.textContent = day;
+    dayElement.addEventListener("click", () => showReservationBox(day, month, year));
+    daysGrid.appendChild(dayElement);
   }
   highlightReservedDays(); // Ajout pour colorer les jours réservés
 }
 
+
 function nextMonth() {
-  currentDate.setMonth(currentDate.getMonth() + 1)
-  updateCalendar()
+  currentDate.setMonth(selectedDate.month + 1);
+  selectedDate.month = currentDate.getMonth(); // Mettre à jour selectedDate
+  selectedDate.year = currentDate.getFullYear(); // Mettre à jour l'année
+  updateCalendar();
 }
 
+// Navigation vers le mois précédent
 function prevMonth() {
-  currentDate.setMonth(currentDate.getMonth() - 1)
-  updateCalendar()
+  currentDate.setMonth(selectedDate.month - 1);
+  selectedDate.month = currentDate.getMonth(); // Mettre à jour selectedDate
+  selectedDate.year = currentDate.getFullYear(); // Mettre à jour l'année
+  updateCalendar();
 }
+
 
 document.getElementById("nextMonth").addEventListener("click", nextMonth)
 document.getElementById("prevMonth").addEventListener("click", prevMonth)
 document.getElementById("sportFilter").addEventListener("change", () => {
-  const selectedDate = currentDate.getDate()
-  const selectedMonth = currentDate.getMonth()
-  const selectedYear = currentDate.getFullYear()
-  showReservationBox(selectedDate, selectedMonth, selectedYear)
-})
-document.getElementById("installationFilter").addEventListener("change", () => {
-  const selectedDate = currentDate.getDate()
-  const selectedMonth = currentDate.getMonth()
-  const selectedYear = currentDate.getFullYear()
-  showReservationBox(selectedDate, selectedMonth, selectedYear)
-})
+  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year); // Utiliser selectedDate ici
+});
 
-updateCalendar()
+document.getElementById("installationFilter").addEventListener("change", () => {
+  showReservationBox(selectedDate.day, selectedDate.month, selectedDate.year); // Utiliser selectedDate ici
+});
+
+updateCalendar();
