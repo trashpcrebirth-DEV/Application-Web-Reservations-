@@ -26,6 +26,7 @@ function showReservationBox(day, month, year) {
 
   const formattedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
   const sport = document.getElementById("sportFilter").value
+  const installation = document.getElementById("installationFilter").value
 
   dateSelectionnee.textContent = sport
     ? `${day} ${months[month]} ${year} (${sport})`
@@ -35,6 +36,7 @@ function showReservationBox(day, month, year) {
 
   let apiUrl = `/api/reservation?date=${formattedDate}`
   if (sport) apiUrl += `&sport=${sport}`
+  if (installation) apiUrl += `&installation=${installation}`
 
   fetch(apiUrl)
     .then((response) => response.json())
@@ -243,6 +245,12 @@ function prevMonth() {
 document.getElementById("nextMonth").addEventListener("click", nextMonth)
 document.getElementById("prevMonth").addEventListener("click", prevMonth)
 document.getElementById("sportFilter").addEventListener("change", () => {
+  const selectedDate = currentDate.getDate()
+  const selectedMonth = currentDate.getMonth()
+  const selectedYear = currentDate.getFullYear()
+  showReservationBox(selectedDate, selectedMonth, selectedYear)
+})
+document.getElementById("installationFilter").addEventListener("change", () => {
   const selectedDate = currentDate.getDate()
   const selectedMonth = currentDate.getMonth()
   const selectedYear = currentDate.getFullYear()

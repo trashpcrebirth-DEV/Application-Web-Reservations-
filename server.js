@@ -120,7 +120,7 @@ app.get("/reservation", (req, res) => {
 
 // Route API pour récupérer les réservations au format JSON
 app.get("/api/reservation", (req, res) => {
-    const { date, month, year, sport } = req.query;
+    const { date, month, year, sport, installation } = req.query;
 
     let query = "SELECT * FROM reservations WHERE 1=1";
     let params = [];
@@ -136,6 +136,11 @@ app.get("/api/reservation", (req, res) => {
     if (sport && sport.trim() !== "" && sport !== "Tous les sports") {
         query += " AND categorie_sport = ?";
         params.push(sport);
+    }
+
+    if (installation && installation.trim() !== "" && installation !== "Tous les installations") {
+        query += " AND installation = ?";
+        params.push(installation);
     }
 
     con.query(query, params, (err, results) => {
