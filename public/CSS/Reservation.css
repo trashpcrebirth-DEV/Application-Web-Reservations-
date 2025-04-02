@@ -478,3 +478,40 @@ body {
     transform: translateX(0);
   }
 }
+
+.bar .legende {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-left: auto;
+  padding: 10px;
+  font-weight: 500;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+
+.bar .legende span {
+  margin-right: 5px; 
+}
+
+.bar .color-box {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; 
+  display: inline-block;
+  margin-right: 5px; 
+  box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.5); 
+}
+
+.bar .blue {
+  background-color: blue;
+}
+
+.bar .gray {
+  background-color: gray;
+}
+
+.bar .blanc {
+  background-color: rgb(240, 231, 231);
+}

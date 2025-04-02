@@ -1,13 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
     const nombreJoueursInput = document.getElementById("nombreJoueurs");
     const prixElement = document.getElementById("prix");
-    const basePrice = parseInt(prixElement.textContent)
+    const basePrice = parseInt(prixElement.textContent);
+    const maxPlayers = parseInt(document.getElementById("placeMaximale").textContent);
 
     function updatePrice() {
-        let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  // Convertir la valeur saisie en nombre
+        let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  
 
         if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
             numberOfPlayers = 1;
+        }
+
+        if (numberOfPlayers > maxPlayers) {
+            alert(`Le nombre de joueurs ne peut pas dépasser ${maxPlayers}.`);
+            numberOfPlayers = maxPlayers; 
+            nombreJoueursInput.value = maxPlayers; 
         }
 
         const updatedPrice = basePrice * numberOfPlayers;
@@ -20,12 +27,11 @@ document.addEventListener("DOMContentLoaded", function () {
     updatePrice();
 });
 
-document.addEventListener("DOMContentLoaded", function () { //modifier le nombre dans l'url
+document.addEventListener("DOMContentLoaded", function () { 
     const form = document.querySelector('form');
     const nombreJoueursInput = document.getElementById('nombreJoueurs');
     const prixInput = document.getElementById('prix');
     const id_reservation = document.getElementById('id-reservation').dataset.id;
-
 
     form.addEventListener('submit', function (event) {
         const nombreJoueurs = nombreJoueursInput.value;

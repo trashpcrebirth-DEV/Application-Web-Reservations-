@@ -788,17 +788,29 @@ app.get('/success', async (req, res) => {
                     const currentCapacity = results[0].capacite;
                     const newCapacity = currentCapacity - item.nombreJoueur;  // Soustraire le nombre de joueurs
 
-                    // Étape 2 : Mettre à jour la réservation avec la nouvelle capacité
-                    const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+                    if (newCapacity <= 0) {
+                        const enleveNombreJoueurEtStatutQuery = `UPDATE reservations SET capacite = ?, statut = ? WHERE id_reservation = ?`;
+                        
+                        con.query(enleveNombreJoueurEtStatutQuery, [newCapacity, ,"Pleine", item.id_reservation], (err, result) => {
+                            if (err) {
+                                console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                                return reject("Erreur lors de la mise à jour de la réservation.");
+                            }
 
-                    con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
-                        if (err) {
-                            console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
-                            return reject("Erreur lors de la mise à jour de la réservation.");
-                        }
+                            resolve("Réservation mise à jour avec succès.");
+                        });
+                    } else{
+                        const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
 
-                        resolve("Réservation mise à jour avec succès.");
-                    });
+                        con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
+                            if (err) {
+                                console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                                return reject("Erreur lors de la mise à jour de la réservation.");
+                            }
+
+                            resolve("Réservation mise à jour avec succès.");
+                        });
+                    }     
                 });
             });
         });
