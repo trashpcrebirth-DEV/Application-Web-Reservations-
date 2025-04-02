@@ -240,7 +240,7 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
                             console.error('Erreur SQL lors de la suppression de la réservation utilisateur:', err);
                             return reject("Erreur lors de l'annulation de la réservation.");
                         }
-                        console.log('Réservation annulée et table mise à jour:');
+                        res.redirect(`/reservation-information/${reservationId}`);
                     });
                 });
             });
