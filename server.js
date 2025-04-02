@@ -12,6 +12,8 @@ import dateFormat from "dateformat";
 import multer from "multer";
 import Stripe from "stripe";
 import mongoose from 'mongoose';
+import PDFDocument from "pdfkit";
+import fs from "fs";
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/mongodb', {
@@ -728,7 +730,6 @@ app.get('/confirmation', (req, res) => {
     res.render('pages/confirmation', { message: "Votre réservation a bien été confirmée !" });
 });
 
-
 app.get('/success', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
@@ -746,6 +747,9 @@ app.get('/success', async (req, res) => {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
 
+    // Stocker les réservations récentes en session
+    req.session.lastReservations = items;
+
     // Promise array pour gérer toutes les requêtes d'insertion et de suppression
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
@@ -758,7 +762,7 @@ app.get('/success', async (req, res) => {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
                 } else if (result.affectedRows > 0) {
-                    // Supprimer l'item du panier (table items) une fois la réservation effectuée
+                    // Supprimer l'item du panier après l'avoir sauvegardé
                     const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
                     con.query(deleteItemQuery, [item.id_item], (err, result) => {
                         if (err) {
@@ -772,59 +776,18 @@ app.get('/success', async (req, res) => {
                 } else {
                     reject("Réservation non trouvée ou déjà mise à jour.");
                 }
-
-                const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
-
-                con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
-                    if (err) {
-                        console.error('Erreur SQL lors de la récupération de la capacité:', err);
-                        return reject("Erreur lors de la récupération de la capacité.");
-                    }
-
-                    if (results.length === 0) {
-                        return reject("Réservation non trouvée.");
-                    }
-
-                    const currentCapacity = results[0].capacite;
-                    const newCapacity = currentCapacity - item.nombreJoueur;  // Soustraire le nombre de joueurs
-
-                    if (newCapacity <= 0) {
-                        const enleveNombreJoueurEtStatutQuery = `UPDATE reservations SET capacite = ?, statut = ? WHERE id_reservation = ?`;
-                        
-                        con.query(enleveNombreJoueurEtStatutQuery, [newCapacity, ,"Pleine", item.id_reservation], (err, result) => {
-                            if (err) {
-                                console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
-                                return reject("Erreur lors de la mise à jour de la réservation.");
-                            }
-
-                            resolve("Réservation mise à jour avec succès.");
-                        });
-                    } else{
-                        const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
-
-                        con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
-                            if (err) {
-                                console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
-                                return reject("Erreur lors de la mise à jour de la réservation.");
-                            }
-
-                            resolve("Réservation mise à jour avec succès.");
-                        });
-                    }     
-                });
             });
         });
     });
 
     try {
-        // Attendre que toutes les promesses soient résolues (tous les items traités)
         await Promise.all(promises);
-        return res.redirect("/confirmation"); // Rediriger vers la page de confirmation après succès
+        return res.redirect("/confirmation");
     } catch (err) {
-        // Si une promesse échoue, envoyer la réponse d'erreur
         res.status(500).send(err);
     }
 });
+
 
 
 
@@ -1019,21 +982,40 @@ app.get('/historique', (req, res) => {
     }
 });
 
+// Route facture
 
+app.get('/facture', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send("Vous devez être connecté pour télécharger une facture.");
+    }
 
+    if (!req.session.lastReservations || req.session.lastReservations.length === 0) {
+        return res.status(400).send("Aucune réservation récente trouvée.");
+    }
 
+    const reservations = req.session.lastReservations;
+    const doc = new PDFDocument();
 
+    res.setHeader('Content-Disposition', 'attachment; filename="facture.pdf"');
+    res.setHeader('Content-Type', 'application/pdf');
 
+    doc.pipe(res);
 
+    doc.fontSize(20).text('Facture', { align: 'center' });
+    doc.moveDown();
 
+    reservations.forEach((resv, index) => {
+        doc.fontSize(14).text(`Réservation #${index + 1}`);
+        doc.text(`ID Réservation: ${resv.id_reservation}`);
+        doc.text(`Nombre de joueurs: ${resv.nombreJoueur}`);
+        const prix = parseFloat(resv.prix) || 0;  
+        doc.text(`Prix: ${prix.toFixed(2)} $`);
+        doc.text(`Statut: Réservé`);
+        doc.moveDown();
+    });
 
+    doc.end();
 
-
-
-
-
-
-
-
-
-
+    // Supprimer les réservations après génération de la facture
+    delete req.session.lastReservations;
+});
