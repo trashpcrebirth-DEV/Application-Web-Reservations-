@@ -227,3 +227,26 @@ textarea.info-input {
         width: 100%;
     }
 }
+.profile-stats {
+    font-size: 1.2rem;
+    color: #444;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.btn-historique {
+    background-color: #4361ee; /* Bleu de base */
+    color: white;
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 0.95rem;
+}
+
+.btn-historique:hover {
+    background-color: #3a56d4; /* Bleu plus foncé au survol */
+    transform: translateY(-2px);
+}

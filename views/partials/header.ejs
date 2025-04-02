@@ -27,11 +27,14 @@
                         <li class="boite-bleu"><a href="/profile"><i class="fa-solid fa-user"></i><span>
                                     Profile</span></a></li>
                                     <li class="cart-icon">
-                                        <a href="/paiement">
-                                            <i class="fa-solid fa-cart-shopping"></i>
-                                            <span class="cart-count"><%= user && user.cartCount ? user.cartCount : 0 %></span>
-                                        </a>
-                                    </li>
+                                        <li class="cart-icon">
+                                            <a href="/paiement" class="cart-link">
+                                                <i class="fa-solid fa-cart-shopping"></i>
+                                                <% if (user.cartCount > 0) { %>
+                                                    <span id="cart-count" class="cart-badge"><%= user.cartCount %></span>
+                                                <% } %>
+                                            </a>
+                                        </li>
                         <% } %>
             </ul>
         </div>

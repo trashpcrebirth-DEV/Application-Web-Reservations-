@@ -3,9 +3,14 @@ html, body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    background-color: #f4f7fc; /* Fond clair */
-    font-family: 'Arial', sans-serif;
 }
+
+main {
+    flex: 1; /* Permet d'occuper tout l'espace disponible */
+}
+
+
+
 
 .container {
     max-width: 900px;
@@ -21,7 +26,7 @@ html, body {
     color: #333;
     font-weight: bold;
     margin-bottom: 20px;
-    margin-right: 20px; /* Adjust this value to move the title to the left */
+    margin-left: 45px; /* Adjust this value to move the title to the left */
 
 }
 

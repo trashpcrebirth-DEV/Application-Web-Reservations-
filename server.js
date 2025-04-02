@@ -308,28 +308,41 @@ app.get("/reservation-information/:id", function (req, res) {
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
+    const userId = req.session.user.id; // ID de l'utilisateur connecté
 
-    const userId = req.session.user.id; // Utiliser l'ID de l'utilisateur connecté
+    // Requête pour récupérer les informations de l'utilisateur
+    const queryUser = "SELECT * FROM utilisateurs WHERE id = ?";
 
-    const query = "SELECT * FROM utilisateurs WHERE id = ?";
+    // Requête pour compter le nombre de réservations en fonction de id_reservation
+    const queryReservations = "SELECT COUNT(id_reservation) AS nombreCommandes FROM utilisateurs_reservations WHERE id_utilisateur = ?";
 
-    con.query(query, [userId], (err, result) => {
+    con.query(queryUser, [userId], (err, result) => {
         if (err) throw err;
 
         if (result.length > 0) {
             const user = result[0];
-            user.date_inscription = new Date(user.date_inscription); // Convertir en objet Date
-            res.render("pages/profile", {
-                activePage: 'profile',
-                user: req.session.user.id,
-                utilisateur: user
-                // Pass user information to the view
+            user.date_inscription = new Date(user.date_inscription);
+
+            // Exécuter la seconde requête pour récupérer le nombre de commandes
+            con.query(queryReservations, [userId], (err, resultReservations) => {
+                if (err) throw err;
+
+                const nombreCommandes = resultReservations[0].nombreCommandes || 0;
+
+                res.render("pages/profile", {
+                    activePage: 'profile',
+                    user: req.session.user.id,
+                    utilisateur: user,
+                    nombreCommandes: nombreCommandes // Passer le nombre de commandes à la vue
+                });
             });
+
         } else {
             res.status(404).send("Utilisateur non trouvé");
         }
     });
 });
+
 
 // Update user
 app.post('/modifier', async (req, res) => {
@@ -600,15 +613,34 @@ app.post('/connexion', function (req, res) {
 });
 
 // Route pour la déconnexion
-app.get('/deconnexion', function (req, res) {
-    req.session.destroy(function (err) {
-        if (err) {
-            console.error("Erreur lors de la déconnexion :", err);
-            return res.status(500).json({ success: false, message: "Erreur serveur" });
-        }
-        console.log("Déconnexion réussie");
-        res.redirect('/'); // Rediriger vers la page d'accueil après la déconnexion
-    });
+app.get('/deconnexion', (req, res) => {
+    if (req.session.user) {
+        const userId = req.session.user.id;
+
+        // Supprimer les items de l'utilisateur connecté
+        const deleteItemsQuery = `DELETE FROM items WHERE id_utilisateur = ?`;
+        con.query(deleteItemsQuery, [userId], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de la suppression des items :", err);
+                return res.status(500).send("Erreur serveur lors de la déconnexion.");
+            }
+
+            console.log(`Items supprimés pour l'utilisateur ID: ${userId}`);
+
+            // Détruire la session
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error("Erreur lors de la destruction de la session :", err);
+                    return res.status(500).send("Erreur serveur lors de la déconnexion.");
+                }
+
+                // Rediriger vers la page d'accueil ou une autre page
+                res.redirect('/');
+            });
+        });
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.delete('/api/items/:id', (req, res) => {
@@ -933,28 +965,31 @@ app.get("/event/delete/:id", function (req, res) {
 
 app.get('/historique', (req, res) => {
     try {
+        // Vérifie si l'utilisateur est connecté
         if (!req.session.user) {
             return res.redirect('/connexion');
         }
 
         // Récupérer l'ID de l'utilisateur depuis la session
         const userId = req.session.user.id;
-        console.log("ID utilisateur:", userId); // Vérifiez que l'ID correspond bien
+        console.log("ID utilisateur :", userId); // Vérifier que l'ID correspond bien
 
         // Exécuter la requête pour obtenir les réservations de l'utilisateur
         con.query(
-            `SELECT *FROM utilisateurs_reservations WHERE id_utilisateur = ?`,
+            `SELECT * FROM utilisateurs_reservations WHERE id_utilisateur = ?`,
             [userId],
             (error, results) => {
                 if (error) {
-                    console.error("Erreur lors de l'exécution de la requête SQL:", error.stack);
-                    return res.status(500).send(`<h1>Erreur lors de l'exécution de la requête</h1><p>${error.message}</p>`);
+                    console.error("Erreur lors de l'exécution de la requête SQL :", error.stack);
+                    return res.status(500).send(`<h1>Erreur</h1><p>${error.message}</p>`);
                 }
 
-                console.log("Résultats de la requête SQL:", results); // Affiche les résultats pour vérifier
+                console.log("Résultats de la requête SQL :", results); // Affiche les résultats pour vérifier
 
                 // Vérifier si des réservations existent
-                const reservations = results && results.length > 0 ? results : [{ message: "Aucune réservation trouvée" }];
+                const reservations = results && results.length > 0 
+                    ? results 
+                    : [{ message: "Aucune réservation trouvée" }];
 
                 // Rendre la page avec les résultats des réservations
                 res.render('pages/historique', {
@@ -966,42 +1001,12 @@ app.get('/historique', (req, res) => {
                 });
             }
         );
-
-        // Check the result structure
-        console.log("Structure of the result:", result);
-
-        // Check if the result is empty
-        if (!result[0] || result[0].length === 0) {
-            console.error("Aucune donnée trouvée dans la réponse de la requête");
-            return res.render('pages/historique', {
-                siteTitle: "SportZone",
-                pageTitle: "Historique des réservations",
-                user: req.session.user,
-                reservations: [{ message: "No reservations found" }], // Add a message to debug
-                activePage: 'historique'
-            });
-        }
-
-        // Log the length of reservations
-        const rows = result[0];
-        console.log(`${rows.length} réservations trouvées`);
-
-        // Return the page with the result
-        res.render('pages/historique', {
-            siteTitle: "SportZone",
-            pageTitle: "Historique des réservations",
-            user: req.session.user,
-            reservations: rows,
-            activePage: 'historique'
-        });
-
     } catch (error) {
-        console.error("Erreur dans /historique:", error.stack);
-
-        // Send a simple error message to the user
+        console.error("Erreur lors du chargement de l'historique :", error.stack);
         res.status(500).send(`<h1>Erreur lors du chargement de l'historique</h1><p>${error.message}</p>`);
     }
 });
+
 
 
 
