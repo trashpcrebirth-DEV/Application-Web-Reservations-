@@ -26,6 +26,7 @@
                             <th>ID Réservation</th>
                             <th>Nombre de Joueurs</th>
                             <th>Statut</th>
+                            <th>Prix ($)</th> <!-- Nouvelle colonne Prix -->
                         </tr>
                     </thead>
                     <tbody>
@@ -34,9 +35,11 @@
                                 <td><%= r.id_reservation %></td>
                                 <td><%= r.nombreJoueur %></td>
                                 <td><%= r.statut %></td>
+                                <td><%= r.prix ? parseFloat(r.prix).toFixed(2) : "N/A" %> $</td>
                             </tr>
                         <% }); %>
                     </tbody>
+                    
                 </table>
             </div>
         <% } %>
