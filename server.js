@@ -12,8 +12,6 @@ import dateFormat from "dateformat";
 import multer from "multer";
 import Stripe from "stripe";
 import mongoose from 'mongoose';
-import PDFDocument from "pdfkit";
-import fs from "fs";
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/mongodb', {
@@ -140,7 +138,7 @@ app.get("/api/reservation", (req, res) => {
         params.push(sport);
     }
 
-    if (installation && installation.trim() !== "" && installation !== "Toutes les installations") {
+    if (installation && installation.trim() !== "" && installation !== "Tous les installations") {
         query += " AND installation = ?";
         params.push(installation);
     }
@@ -258,6 +256,8 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
 app.get("/reservation-information/:id", function (req, res) {
     if (req.session.user) {
         const reservationId = req.params.id;
+
+        
 
         con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
             if (err) {
@@ -619,32 +619,32 @@ app.get('/deconnexion', (req, res) => {
     if (req.session.user) {
         const userId = req.session.user.id;
 
-        // Supprimer les items de l'utilisateur connecté
-        const deleteItemsQuery = `DELETE FROM items WHERE id_utilisateur = ?`;
+        // Supprimer les items du panier associés à l'utilisateur
+        const deleteItemsQuery = "DELETE FROM items WHERE id_utilisateur = ?";
         con.query(deleteItemsQuery, [userId], (err, result) => {
             if (err) {
-                console.error("Erreur lors de la suppression des items :", err);
-                return res.status(500).send("Erreur serveur lors de la déconnexion.");
+                console.error("Erreur lors de la suppression des items du panier :", err);
+                return res.status(500).send("Erreur serveur");
             }
 
-            console.log(`Items supprimés pour l'utilisateur ID: ${userId}`);
+            console.log("Items supprimés pour l'utilisateur :", userId);
 
-            // Détruire la session
+            // Détruire la session après avoir vidé les items
             req.session.destroy((err) => {
                 if (err) {
                     console.error("Erreur lors de la destruction de la session :", err);
-                    return res.status(500).send("Erreur serveur lors de la déconnexion.");
+                    return res.status(500).send("Erreur serveur");
                 }
 
-                // Rediriger vers la page d'accueil ou une autre page
-                res.redirect('/');
+                // Rediriger vers la page de connexion ou d'accueil
+                res.redirect("/connexion");
             });
         });
     } else {
-        res.redirect('/');
+        // Si aucun utilisateur n'est connecté, rediriger directement
+        res.redirect("/connexion");
     }
 });
-
 app.delete('/api/items/:id', (req, res) => {
     const reservationId = req.params.id;
 
@@ -730,6 +730,7 @@ app.get('/confirmation', (req, res) => {
     res.render('pages/confirmation', { message: "Votre réservation a bien été confirmée !" });
 });
 
+
 app.get('/success', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
@@ -747,9 +748,6 @@ app.get('/success', async (req, res) => {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
 
-    // Stocker les réservations récentes en session
-    req.session.lastReservations = items;
-
     // Promise array pour gérer toutes les requêtes d'insertion et de suppression
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
@@ -762,7 +760,7 @@ app.get('/success', async (req, res) => {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
                 } else if (result.affectedRows > 0) {
-                    // Supprimer l'item du panier après l'avoir sauvegardé
+                    // Supprimer l'item du panier (table items) une fois la réservation effectuée
                     const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
                     con.query(deleteItemQuery, [item.id_item], (err, result) => {
                         if (err) {
@@ -770,7 +768,35 @@ app.get('/success', async (req, res) => {
                             reject("Erreur lors de la suppression de l'item.");
                         } else {
                             console.log("Item supprimé du panier:", item.id_item);
-                            resolve();
+
+                            // Étape 1 : Récupérer la capacité actuelle de la réservation
+                            const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
+
+                            con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
+                                if (err) {
+                                    console.error('Erreur SQL lors de la récupération de la capacité:', err);
+                                    return reject("Erreur lors de la récupération de la capacité.");
+                                }
+
+                                if (results.length === 0) {
+                                    return reject("Réservation non trouvée.");
+                                }
+
+                                const currentCapacity = results[0].capacite;
+                                const newCapacity = currentCapacity - item.nombreJoueur; // Soustraire le nombre de joueurs
+
+                                // Étape 2 : Mettre à jour la réservation avec la nouvelle capacité
+                                const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+
+                                con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
+                                    if (err) {
+                                        console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                                        return reject("Erreur lors de la mise à jour de la réservation.");
+                                    }
+
+                                    resolve("Réservation mise à jour avec succès.");
+                                });
+                            });
                         }
                     });
                 } else {
@@ -781,21 +807,18 @@ app.get('/success', async (req, res) => {
     });
 
     try {
+        // Attendre que toutes les promesses soient résolues (tous les items traités)
         await Promise.all(promises);
-<<<<<<< Updated upstream
-        return res.redirect("/confirmation");
-=======
-        req.session.user.cartCount = 0;  // Remise à zéro du panier
+
+        // Mettre à jour le cart count à 0 dans la session
+        req.session.cartCount = 0;
 
         return res.redirect("/confirmation"); // Rediriger vers la page de confirmation après succès
->>>>>>> Stashed changes
     } catch (err) {
+        // Si une promesse échoue, envoyer la réponse d'erreur
         res.status(500).send(err);
     }
 });
-
-
-
 
 // Remplacer toute la route /paiement existante par :
 app.get("/paiement", async (req, res) => {
@@ -988,40 +1011,21 @@ app.get('/historique', (req, res) => {
     }
 });
 
-// Route facture
 
-app.get('/facture', (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).send("Vous devez être connecté pour télécharger une facture.");
-    }
 
-    if (!req.session.lastReservations || req.session.lastReservations.length === 0) {
-        return res.status(400).send("Aucune réservation récente trouvée.");
-    }
 
-    const reservations = req.session.lastReservations;
-    const doc = new PDFDocument();
 
-    res.setHeader('Content-Disposition', 'attachment; filename="facture.pdf"');
-    res.setHeader('Content-Type', 'application/pdf');
 
-    doc.pipe(res);
 
-    doc.fontSize(20).text('Facture', { align: 'center' });
-    doc.moveDown();
 
-    reservations.forEach((resv, index) => {
-        doc.fontSize(14).text(`Réservation #${index + 1}`);
-        doc.text(`ID Réservation: ${resv.id_reservation}`);
-        doc.text(`Nombre de joueurs: ${resv.nombreJoueur}`);
-        const prix = parseFloat(resv.prix) || 0;  
-        doc.text(`Prix: ${prix.toFixed(2)} $`);
-        doc.text(`Statut: Réservé`);
-        doc.moveDown();
-    });
 
-    doc.end();
 
-    // Supprimer les réservations après génération de la facture
-    delete req.session.lastReservations;
-});
+
+
+
+
+
+
+
+
+
