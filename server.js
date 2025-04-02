@@ -811,7 +811,7 @@ app.get('/success', async (req, res) => {
         await Promise.all(promises);
 
         // Mettre à jour le cart count à 0 dans la session
-        req.session.cartCount = 0;
+        req.session.user.cartCount = 0;
 
         return res.redirect("/confirmation"); // Rediriger vers la page de confirmation après succès
     } catch (err) {
