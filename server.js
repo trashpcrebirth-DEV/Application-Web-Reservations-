@@ -99,6 +99,21 @@ app.get("/", function (req, res) {
 });
 
 
+app.use(async (req, res, next) => {
+    if (req.session.user) {
+        try {
+            const [rows] = await con.promise().query(
+                "SELECT COUNT(*) AS count FROM notifications WHERE id_utilisateur = ? AND is_read = FALSE",
+                [req.session.user.id]
+            );
+            req.session.user.notificationsCount = rows[0].count;
+        } catch (err) {
+            console.error("Erreur lors du comptage des notifications :", err);
+            req.session.user.notificationsCount = 0;
+        }
+    }
+    next();
+});
 
 
 // Route pour la page de réservation
@@ -586,7 +601,6 @@ app.post('/connexion', function (req, res) {
     const { email, mot_de_passe } = req.body;
     const requete = "SELECT * FROM utilisateurs WHERE email = ?";
     const parametres = [email];
-
     con.query(requete, parametres, async function (err, result) {
         if (err) {
             console.error("Erreur lors de la connexion :", err);
@@ -737,7 +751,6 @@ app.get('/success', async (req, res) => {
 
     const userId = req.session.user.id;
 
-    // Récupérer les items associés à l'utilisateur dans le panier
     const [items] = await con.promise().query(
         "SELECT * FROM items WHERE id_utilisateur = ?",
         [userId]
@@ -747,10 +760,8 @@ app.get('/success', async (req, res) => {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
 
-    // Promise array pour gérer toutes les requêtes d'insertion et de suppression
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
-            // Ajouter l'item dans la table utilisateurs_reservations
             const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut) 
                                   VALUES (?, ?, ?, ?, 'Réservé')`;
 
@@ -758,63 +769,50 @@ app.get('/success', async (req, res) => {
                 if (err) {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
-                } else if (result.affectedRows > 0) {
-                    // Supprimer l'item du panier (table items) une fois la réservation effectuée
+                } else {
                     const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
                     con.query(deleteItemQuery, [item.id_item], (err, result) => {
                         if (err) {
-                            console.error('Erreur lors de la suppression de l\'item:', err);
                             reject("Erreur lors de la suppression de l'item.");
                         } else {
-                            console.log("Item supprimé du panier:", item.id_item);
-
-                            // Étape 1 : Récupérer la capacité actuelle de la réservation
                             const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
 
                             con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
-                                if (err) {
-                                    console.error('Erreur SQL lors de la récupération de la capacité:', err);
-                                    return reject("Erreur lors de la récupération de la capacité.");
-                                }
+                                if (err) return reject("Erreur lors de la récupération de la capacité.");
 
-                                if (results.length === 0) {
-                                    return reject("Réservation non trouvée.");
-                                }
+                                if (results.length === 0) return reject("Réservation non trouvée.");
 
                                 const currentCapacity = results[0].capacite;
-                                const newCapacity = currentCapacity - item.nombreJoueur; // Soustraire le nombre de joueurs
+                                const newCapacity = currentCapacity - item.nombreJoueur;
 
-                                // Étape 2 : Mettre à jour la réservation avec la nouvelle capacité
                                 const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
 
                                 con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
-                                    if (err) {
-                                        console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
-                                        return reject("Erreur lors de la mise à jour de la réservation.");
-                                    }
+                                    if (err) return reject("Erreur lors de la mise à jour de la réservation.");
+
+                                    // ➤ 🔔 Ajouter une notification pour l'utilisateur
+                                    const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
+                                    const messageNotif = `Votre réservation pour ${item.categorie_sport} a été confirmée. Rendez-vous à l'heure prévue !`;
+
+                                    con.query(notificationQuery, [userId, messageNotif], (err, result) => {
+                                        if (err) console.error("Erreur lors de l'ajout de la notification :", err);
+                                    });
 
                                     resolve("Réservation mise à jour avec succès.");
                                 });
                             });
                         }
                     });
-                } else {
-                    reject("Réservation non trouvée ou déjà mise à jour.");
                 }
             });
         });
     });
 
     try {
-        // Attendre que toutes les promesses soient résolues (tous les items traités)
         await Promise.all(promises);
-
-        // Mettre à jour le cart count à 0 dans la session
         req.session.user.cartCount = 0;
-
-        return res.redirect("/confirmation"); // Rediriger vers la page de confirmation après succès
+        return res.redirect("/confirmation");
     } catch (err) {
-        // Si une promesse échoue, envoyer la réponse d'erreur
         res.status(500).send(err);
     }
 });
@@ -883,6 +881,40 @@ app.post("/paiement", async (req, res) => {
     } catch (error) {
         console.error("Erreur lors du paiement :", error);
         res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get("/api/notifications", async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ success: false, message: "Non connecté" });
+
+    const userId = req.session.user.id;
+
+    try {
+        const [notifications] = await con.promise().query(
+            "SELECT * FROM notifications WHERE id_utilisateur = ? AND is_read = FALSE ORDER BY created_at DESC",
+            [userId]
+        );
+
+        res.json({ success: true, notifications });
+    } catch (err) {
+        console.error("Erreur lors de la récupération des notifications :", err);
+        res.status(500).json({ success: false, message: "Erreur serveur" });
+    }
+});
+
+app.post("/api/notifications/:id/lire", async (req, res) => {
+    const notificationId = req.params.id;
+
+    try {
+        await con.promise().query(
+            "UPDATE notifications SET is_read = TRUE WHERE id = ?",
+            [notificationId]
+        );
+
+        res.json({ success: true, message: "Notification marquée comme lue." });
+    } catch (err) {
+        console.error("Erreur lors de la mise à jour de la notification :", err);
+        res.status(500).json({ success: false, message: "Erreur serveur" });
     }
 });
 
