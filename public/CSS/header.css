@@ -162,7 +162,7 @@ i{
     display: none;
     position: absolute;
     right: 0;
-    top: 60px;
+    top: 70px;
     background-color: white;
     color: black;
     width: 250px;
@@ -170,17 +170,39 @@ i{
     padding: 10px;
     border-radius: 5px;
     z-index: 1000; 
+    
+
 
 }
 
 .notification-item {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    font-size: 12px; 
+    
+    
 }
 
 .notification-item:last-child {
     border-bottom: none;
 }
+
+.btn-marquer-lu {
+    background-color: #175BED;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-marquer-lu:hover {
+    background-color: #0e3cb8;
+}
+
 
 
 @keyframes pulse {
@@ -193,4 +215,20 @@ i{
         opacity: 0;
     }
 }
+
+@keyframes ring {
+    0% { transform: rotate(0); }
+    10% { transform: rotate(15deg); }
+    20% { transform: rotate(-10deg); }
+    30% { transform: rotate(7deg); }
+    40% { transform: rotate(-5deg); }
+    50% { transform: rotate(3deg); }
+    60% { transform: rotate(-2deg); }
+    70%, 100% { transform: rotate(0); }
+}
+
+.ring-animation {
+    animation: ring 0.6s ease;
+}
+
 /* FIN DU HEADER */
