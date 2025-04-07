@@ -250,3 +250,46 @@ textarea.info-input {
     background-color: #3a56d4; /* Bleu plus foncé au survol */
     transform: translateY(-2px);
 }
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #ccc;
+    overflow: hidden;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+}
+
+/* Positionne la caméra en bas du cercle (en dehors légèrement) */
+.upload-label {
+    position: absolute;
+    bottom: 250px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+    width: 10%;
+    height: 8%;
+}
+
+.upload-label:hover {
+    background-color: #f0f0f0;
+}
+
+.upload-label i {
+    font-size: 14px;
+    color: #333;
+}
+
+

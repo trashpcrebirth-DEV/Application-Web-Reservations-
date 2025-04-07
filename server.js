@@ -1065,3 +1065,5 @@ app.get('/facture', (req, res) => {
     // Supprimer les réservations après génération de la facture
     delete req.session.lastReservations;
 });
+ 
+

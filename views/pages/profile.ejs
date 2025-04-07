@@ -16,10 +16,21 @@
             <!-- Carte de Profil -->
             <div class="profile-card">
                 <div class="profile-avatar">
-                    <span class="initial">
-                        <%= utilisateur.nom[0] %>
-                    </span>
+                    <% if (utilisateur.photo_url) { %>
+                        <img src="<%= utilisateur.photo_url %>" alt="Photo de profil" class="avatar-image">
+                        <% } else { %>
+                            <span class="initial">
+                                <%= utilisateur.nom[0] %>
+                            </span>
+                            <% } %>
                 </div>
+                <!-- Icône caméra EN DEHORS du cercle -->
+                <label class="upload-label" for="profilePicInput">
+                    <i class="fas fa-camera"></i>
+                </label>
+                <input type="file" id="profilePicInput" accept="image/*" style="display:none"
+                    onchange="uploadProfilePic(event)">
+
                 <h2 class="profile-name">
                     <%= utilisateur.prenom %>
                         <%= utilisateur.nom %>
@@ -31,10 +42,10 @@
                 <p class="profile-stats">Nombre de commandes : <strong>
                         <%= nombreCommandes %>
                     </strong></p>
-                    <button class="btn btn-historique" onclick="window.location.href='/historique'">
-                        <i class="fas fa-history btn-icon"></i> Historique
-                    </button>
-                    
+                <button class="btn btn-historique" onclick="window.location.href='/historique'">
+                    <i class="fas fa-history btn-icon"></i> Historique
+                </button>
+
 
             </div>
 
