@@ -22,9 +22,9 @@
                     <h1>Réservation - <%= reservation.categorie_sport %> 
                     </h1>
                     <span class="places-restantes">
-                        <span id="placeMaximale"><%= reservation.capacite %></span> places restantes
+                        <i class="fa-solid fa-address-book"></i> <span id="placeMaximale"><%= reservation.capacite %></span> places restantes
                     </span>
-                    <span class="statut <%= isDejaReserve ? 'reserve' : 'pasreserve' %>">
+                    <span class="statut <%= isDejaReserve ? 'reserve' : 'pasreserve' || isRempli ? 'reserve' : 'pasreserve'%>">
                         <%= isDejaReserve ? 'Réservé' : reservation.statut %>
                     </span>
                 </div>
@@ -124,7 +124,7 @@
                     <div class="actions">
                         <p id="id-reservation" data-id="<%= reservation.id_reservation %>"></p>
                         <form action="/reserver/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
-                            <% if (isDansPanier || isDejaReserve) { %>
+                            <% if (isDansPanier || isDejaReserve || isRempli) { %>
                                 <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
                                 <% } else { %>
                                     <button type="submit" class="bouton primaire">Réserver</button>
@@ -134,6 +134,16 @@
                             <form class="bouton annuler" action="/api/annuler/<%= reservation.id_reservation %>" method="POST">
                                 <button type="submit" class="bouton danger">Annuler</button>
                             </form>
+                        <% } else if (isDansListeAttente){ %> 
+                            <span id="isRempliInformartion" value="<%= isRempli %>"></span>
+                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>" method="POST">
+                                <button type="submit" class="bouton-liste-attente" disabled>Rejoindre la liste d'attente</button>
+                            </form>  
+                        <% } else if(isRempli) { %>
+                            <span id="isRempliInformartion" value="<%= isRempli %>"></span>
+                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>" method="POST">
+                                <button type="submit" class="bouton-liste-attente">Rejoindre la liste d'attente</button>
+                            </form>
                         <% } %>
                     </div>
 
@@ -142,7 +152,6 @@
             </div>
         </div>
         <%- include ("../partials/footer.ejs") %>
-
         <script src="/Javascript/information_reservation.js"></script>
 </body>
 

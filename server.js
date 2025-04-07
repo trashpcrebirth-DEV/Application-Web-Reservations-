@@ -269,11 +269,37 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
     }
 });
 
+app.post('/ajouter-liste-attente/:id_reservation', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send("Vous devez être connecté pour rejoindre la liste d'attente.");
+    }
+
+    const id_utilisateur = req.session.user.id;
+    const id_reservation = req.params.id_reservation;
+
+    const insertQuery = `
+        INSERT INTO liste_attente (id_utilisateur, id_reservation)
+        VALUES (?, ?)
+    `;
+
+    con.query(insertQuery, [id_utilisateur, id_reservation], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de l'ajout à la liste d'attente :", err);
+            return res.status(500).send("Une erreur est survenue lors de l'ajout à la liste d'attente.");
+        }
+
+        if (result.affectedRows > 0) {
+            return res.redirect(`/reservation-information/${id_reservation}`);
+        } else {
+            return res.status(400).send("Impossible d'ajouter à la liste d'attente.");
+        }
+    });
+});
+
 app.get("/reservation-information/:id", function (req, res) {
     if (req.session.user) {
         const reservationId = req.params.id;
-
-        
+        const userId = req.session.user.id;
 
         con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
             if (err) {
@@ -287,17 +313,16 @@ app.get("/reservation-information/:id", function (req, res) {
 
             const reservation = results[0];
 
-            con.query("SELECT * FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, req.session.user.id], (err, reservationCheck) => {
+            con.query("SELECT * FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, reservationCheck) => {
                 if (err) {
                     console.error("Erreur lors de la vérification de la réservation :", err);
                     return res.status(500).send("Erreur serveur");
                 }
 
                 const isUserHasReservation = reservationCheck.length > 0;
+                const isCapaciteRempli = reservation.capacite <= 0 && reservationCheck.length <= 0;
 
-                const selectItemQuery = `SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?`;
-
-                con.query(selectItemQuery, [reservationId, req.session.user.id], (err, dansPanier) => {
+                con.query("SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, dansPanier) => {
                     if (err) {
                         console.error("Erreur lors de la récupération des items :", err);
                         return res.status(500).json({ message: "Erreur serveur" });
@@ -305,24 +330,37 @@ app.get("/reservation-information/:id", function (req, res) {
 
                     const isDansPanier = dansPanier.length > 0;
 
-                    res.render("pages/information_reservation", {
-                        siteTitle: "SportZone",
-                        pageTitle: "Détails de la réservation",
-                        activePage: "reservation",
-                        user: req.session.user,
-                        reservation: reservation,
-                        nombreJoueurs: 1,
-                        isDansPanier: isDansPanier,
-                        isDejaReserve: isUserHasReservation
+                    con.query("SELECT * FROM liste_attente WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, attenteCheck) => {
+                        if (err) {
+                            console.error("Erreur lors de la vérification de la liste d'attente :", err);
+                            return res.status(500).send("Erreur serveur");
+                        }
+
+                        const isDansListeAttente = attenteCheck.length > 0;
+
+                        res.render("pages/information_reservation", {
+                            siteTitle: "SportZone",
+                            pageTitle: "Détails de la réservation",
+                            activePage: "reservation",
+                            user: req.session.user,
+                            reservation: reservation,
+                            nombreJoueurs: 1,
+                            isDansPanier: isDansPanier,
+                            isDejaReserve: isUserHasReservation,
+                            isRempli: isCapaciteRempli,
+                            isDansListeAttente: isDansListeAttente
+                        });
                     });
                 });
-
             });
         });
     } else {
         res.redirect("/connexion");
     }
 });
+
+
+
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {

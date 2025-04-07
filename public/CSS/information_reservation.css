@@ -296,3 +296,30 @@ body {
     border-radius: 5px;
     margin-left: 35%;
 }
+
+.bouton-liste-attente {
+    color: #ffffff; /* Texte blanc */
+    background-color: #cfcf20e7;
+    padding: 12.5px 50px;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    text-decoration: none;
+    position: relative;
+    margin-top: -0.425%;
+    margin-left: 5.5%;
+    white-space: nowrap;
+}
+
+.bouton-liste-attente:hover {
+    background-color: #ece277; /* Rouge plus foncé */
+    transform: scale(0.95); /* Effet de zoom léger */
+}
+
+.bouton-liste-attente:active {
+    transform: scale(0.95); /* Effet de clic */
+}
