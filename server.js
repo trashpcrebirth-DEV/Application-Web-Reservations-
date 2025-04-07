@@ -14,7 +14,6 @@ import Stripe from "stripe";
 import mongoose from 'mongoose';
 import PDFDocument from "pdfkit";
 import fs from "fs";
-import moment from "moment";
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/mongodb', {
@@ -300,12 +299,7 @@ app.post('/ajouter-liste-attente/:id_reservation', (req, res) => {
 app.get("/reservation-information/:id", function (req, res) {
     if (req.session.user) {
         const reservationId = req.params.id;
-<<<<<<< HEAD
         const userId = req.session.user.id;
-=======
-
-
->>>>>>> 55c86f68df2bea5f646f91c280336819773257df
 
         con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
             if (err) {
@@ -793,29 +787,29 @@ app.get('/success', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
     }
-
+ 
     const userId = req.session.user.id;
-
+ 
     // Récupérer les items associés à l'utilisateur dans le panier
     const [items] = await con.promise().query(
         "SELECT * FROM items WHERE id_utilisateur = ?",
         [userId]
     );
-
+ 
     if (items.length === 0) {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
-
+ 
     // Stocker les réservations récentes en session
     req.session.lastReservations = items;
-
+ 
     // Promise array pour gérer toutes les requêtes d'insertion et de suppression
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
             // Ajouter l'item dans la table utilisateurs_reservations
             const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut)
                                   VALUES (?, ?, ?, ?, 'Réservé')`;
-
+ 
             con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur, item.prix], (err, result) => {
                 if (err) {
                     console.error('Erreur SQL:', err);
@@ -838,7 +832,7 @@ app.get('/success', async (req, res) => {
             });
         });
     });
-
+ 
     try {
         await Promise.all(promises);
         return res.redirect("/confirmation");
@@ -1052,8 +1046,8 @@ app.get('/historique', (req, res) => {
                 console.log("Résultats de la requête SQL :", results); // Affiche les résultats pour vérifier
 
                 // Vérifier si des réservations existent
-                const reservations = results && results.length > 0
-                    ? results
+                const reservations = results && results.length > 0 
+                    ? results 
                     : [{ message: "Aucune réservation trouvée" }];
 
                 // Rendre la page avec les résultats des réservations
@@ -1073,107 +1067,39 @@ app.get('/historique', (req, res) => {
 });
 
 // Route facture
-
+ 
 app.get('/facture', (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour télécharger une facture.");
     }
-
+ 
     if (!req.session.lastReservations || req.session.lastReservations.length === 0) {
         return res.status(400).send("Aucune réservation récente trouvée.");
     }
-
+ 
     const reservations = req.session.lastReservations;
-    const doc = new PDFDocument({ margin: 50 });
-
+    const doc = new PDFDocument();
+ 
     res.setHeader('Content-Disposition', 'attachment; filename="facture.pdf"');
     res.setHeader('Content-Type', 'application/pdf');
+ 
     doc.pipe(res);
-
-    const rectX = 40;
-    const rectWidth = 520;
-    let rectTopY = 180;
-    const rowHeight = 20;
-    const colWidths = [40, 120, 80, 80, 100];
-    const tablePadding = 20;
-
-    // Ajouter une image en haut
-    const imagePath = 'public/images/Logo-noir.png';
-    const imageWidth = 200;
-    const imageHeight = 150;
-
-    // Calcule la position X pour centrer l'image
-    const xPos = ((doc.page.width - imageWidth) / 2); // Centrage horizontal de l'image
-    const yPos = 20; // Position Y fixe
-
-    // Ajouter l'image au document
-    doc.image(imagePath, xPos, yPos, { width: imageWidth, height: imageHeight });
-    doc.moveDown(6);
-
-    // En-tête
-    doc.fontSize(14).text('1234 Rue du Sport, Montréal, QC', { align: 'center' });
-    doc.text('Téléphone : (514) 123-4567', { align: 'center' });
-    doc.text('info@sportzone.ca', { align: 'center' });
+ 
+    doc.fontSize(20).text('Facture', { align: 'center' });
     doc.moveDown();
-
-    // Début du rectangle : on note la position Y
-    rectTopY = doc.y;
-
-    // Infos client et date
-    doc
-        .fontSize(16).text(`FACTURE`, { align: 'left' })
-        .fontSize(12)
-        .text(`Client : ${req.session.user.nom || 'Utilisateur inconnu'}`)
-        .text(`Date : ${moment().format('DD/MM/YYYY')}`)
-        .moveDown(2);
-
-    doc.fontSize(14).text('Détails des Réservations :');
-    doc.moveDown();
-
-    const drawRow = (y, row, isHeader = false) => {
-        let x = rectX + tablePadding;
-        row.forEach((text, i) => {
-            doc.rect(x, y, colWidths[i], rowHeight).stroke();
-            doc.font(isHeader ? 'Helvetica' : 'Helvetica')
-                .fontSize(12)
-                .text(text, x + 5, y + 5, { width: colWidths[i] - 10 });
-            x += colWidths[i];
-        });
-    };
-
-    const tableTopY = doc.y;
-    drawRow(tableTopY, ['N°', 'ID Réservation', 'Joueurs', 'Prix ($)', 'Statut'], true);
-
-    let total = 0;
-    let y = tableTopY + rowHeight;
-
+ 
     reservations.forEach((resv, index) => {
-        const prix = parseFloat(resv.prix) || 0;
-        total += prix;
-        drawRow(y, [
-            `${index + 1}`,
-            `${resv.id_reservation}`,
-            `${resv.nombreJoueur}`,
-            `${prix.toFixed(2)}`,
-            `Payé`
-        ]);
-        y += rowHeight;
+        doc.fontSize(14).text(`Réservation #${index + 1}`);
+        doc.text(`ID Réservation: ${resv.id_reservation}`);
+        doc.text(`Nombre de joueurs: ${resv.nombreJoueur}`);
+        const prix = parseFloat(resv.prix) || 0;  
+        doc.text(`Prix: ${prix.toFixed(2)} $`);
+        doc.text(`Statut: Réservé`);
+        doc.moveDown();
     });
-
-    // Total
-    doc.moveDown();
-    doc.fontSize(14).text(`Total : ${total.toFixed(2)} $`, 350);
-    const rectBottomY = doc.y + 30;
-
-    // Grand rectangle autour du contenu
-    doc.rect(rectX, rectTopY - 10, rectWidth, rectBottomY - rectTopY + 20).stroke();
-
-    // Pied de page
-    doc.moveDown(3);
-    doc.fontSize(10)
-        .text('Merci pour votre réservation !', { align: 'center' })
-        .text('Sportzone © ' + new Date().getFullYear(), { align: 'center' });
-
+ 
     doc.end();
+ 
+    // Supprimer les réservations après génération de la facture
     delete req.session.lastReservations;
 });
