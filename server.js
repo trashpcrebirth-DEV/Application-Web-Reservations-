@@ -14,6 +14,7 @@ import Stripe from "stripe";
 import mongoose from 'mongoose';
 import PDFDocument from "pdfkit";
 import fs from "fs";
+import moment from "moment";
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/mongodb', {
@@ -1067,46 +1068,110 @@ app.get('/historique', (req, res) => {
 });
 
 // Route facture
- 
+
 app.get('/facture', (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour télécharger une facture.");
     }
- 
+
     if (!req.session.lastReservations || req.session.lastReservations.length === 0) {
         return res.status(400).send("Aucune réservation récente trouvée.");
     }
- 
+
     const reservations = req.session.lastReservations;
-    const doc = new PDFDocument();
- 
+    const doc = new PDFDocument({ margin: 50 });
+
     res.setHeader('Content-Disposition', 'attachment; filename="facture.pdf"');
     res.setHeader('Content-Type', 'application/pdf');
- 
     doc.pipe(res);
- 
-    doc.fontSize(20).text('Facture', { align: 'center' });
+
+    const rectX = 40;
+    const rectWidth = 520;
+    let rectTopY = 180;
+    const rowHeight = 20;
+    const colWidths = [40, 120, 80, 80, 100];
+    const tablePadding = 20;
+
+    // Ajouter une image en haut
+    const imagePath = 'public/images/Logo-noir.png';
+    const imageWidth = 200;
+    const imageHeight = 150;
+
+    // Calcule la position X pour centrer l'image
+    const xPos = ((doc.page.width - imageWidth) / 2); // Centrage horizontal de l'image
+    const yPos = 20; // Position Y fixe
+
+    // Ajouter l'image au document
+    doc.image(imagePath, xPos, yPos, { width: imageWidth, height: imageHeight });
+    doc.moveDown(6);
+
+    // En-tête
+    doc.fontSize(14).text('1234 Rue du Sport, Montréal, QC', { align: 'center' });
+    doc.text('Téléphone : (514) 123-4567', { align: 'center' });
+    doc.text('info@sportzone.ca', { align: 'center' });
     doc.moveDown();
- 
+
+    // Début du rectangle : on note la position Y
+    rectTopY = doc.y;
+
+    // Infos client et date
+    doc
+        .fontSize(16).text(`FACTURE`, { align: 'left' })
+        .fontSize(12)
+        .text(`Client : ${req.session.user.nom || 'Utilisateur inconnu'}`)
+        .text(`Date : ${moment().format('DD/MM/YYYY')}`)
+        .moveDown(2);
+
+    doc.fontSize(14).text('Détails des Réservations :');
+    doc.moveDown();
+
+    const drawRow = (y, row, isHeader = false) => {
+        let x = rectX + tablePadding;
+        row.forEach((text, i) => {
+            doc.rect(x, y, colWidths[i], rowHeight).stroke();
+            doc.font(isHeader ? 'Helvetica' : 'Helvetica')
+                .fontSize(12)
+                .text(text, x + 5, y + 5, { width: colWidths[i] - 10 });
+            x += colWidths[i];
+        });
+    };
+
+    const tableTopY = doc.y;
+    drawRow(tableTopY, ['N°', 'ID Réservation', 'Joueurs', 'Prix ($)', 'Statut'], true);
+
+    let total = 0;
+    let y = tableTopY + rowHeight;
+
     reservations.forEach((resv, index) => {
-        doc.fontSize(14).text(`Réservation #${index + 1}`);
-        doc.text(`ID Réservation: ${resv.id_reservation}`);
-        doc.text(`Nombre de joueurs: ${resv.nombreJoueur}`);
-        const prix = parseFloat(resv.prix) || 0;  
-        doc.text(`Prix: ${prix.toFixed(2)} $`);
-        doc.text(`Statut: Réservé`);
-        doc.moveDown();
+        const prix = parseFloat(resv.prix) || 0;
+        total += prix;
+        drawRow(y, [
+            `${index + 1}`,
+            `${resv.id_reservation}`,
+            `${resv.nombreJoueur}`,
+            `${prix.toFixed(2)}`,
+            `Payé`
+        ]);
+        y += rowHeight;
     });
- 
+
+    // Total
+    doc.moveDown();
+    doc.fontSize(14).text(`Total : ${total.toFixed(2)} $`, 350);
+    const rectBottomY = doc.y + 30;
+
+    // Grand rectangle autour du contenu
+    doc.rect(rectX, rectTopY - 10, rectWidth, rectBottomY - rectTopY + 20).stroke();
+
+    // Pied de page
+    doc.moveDown(3);
+    doc.fontSize(10)
+        .text('Merci pour votre réservation !', { align: 'center' })
+        .text('Sportzone © ' + new Date().getFullYear(), { align: 'center' });
+
     doc.end();
- 
-    // Supprimer les réservations après génération de la facture
     delete req.session.lastReservations;
 });
- 
-
-
-
 
 // Définir le stockage pour les photos de profil
 const profileStorage = multer.diskStorage({
@@ -1119,7 +1184,7 @@ const profileStorage = multer.diskStorage({
       cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Générer un nom de fichier unique
     }
   });
-  
+
   // Filtrage : n'accepter que les images
   const profileFileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
@@ -1128,7 +1193,7 @@ const profileStorage = multer.diskStorage({
       cb(new Error('Seules les images sont autorisées.'), false);
     }
   };
-  
+
   // Initialiser Multer avec le stockage et le filtre
   const profileUpload = multer({
     storage: profileStorage,
@@ -1137,14 +1202,14 @@ const profileStorage = multer.diskStorage({
 
   app.post('/upload-profile-pic', profileUpload.single('profile_pic'), (req, res) => {
     const userId = req.session.user.id; // Récupérer l'ID de l'utilisateur (assurez-vous que la session est configurée)
-  
+
     if (!req.file) {
       return res.status(400).send('Aucun fichier reçu.');
     }
-  
+
     // Construire l'URL relative de l'image
     const imageUrl = '/uploads/' + req.file.filename;
-  
+
     // Met à jour la base de données avec le nouvel URL de la photo
     const updateQuery = "UPDATE utilisateurs SET photo_url = ? WHERE id = ?";
     con.query(updateQuery, [imageUrl, userId], (err, result) => {
@@ -1152,7 +1217,7 @@ const profileStorage = multer.diskStorage({
         console.error(err);
         return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
       }
-  
+
       // Rediriger l'utilisateur vers sa page de profil (ou répondre avec l'URL de l'image)
       res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
     });
