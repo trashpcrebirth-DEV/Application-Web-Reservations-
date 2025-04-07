@@ -19,7 +19,7 @@
 
             <div class="carte-details">
                 <div class="entete"> 
-                    <h1>Réservation - <%= reservation.categorie_sport %> 
+                    <h1>Réservation - <%= reservation.categorie_sport %> <%= reservation.id_reservation %> 
                     </h1>
                     <span class="places-restantes">
                         <i class="fa-solid fa-address-book"></i> <span id="placeMaximale"><%= reservation.capacite %></span> places restantes
@@ -136,13 +136,13 @@
                             </form>
                         <% } else if (isDansListeAttente){ %> 
                             <span id="isRempliInformartion" value="<%= isRempli %>"></span>
-                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>" method="POST">
+                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
                                 <button type="submit" class="bouton-liste-attente" disabled>Rejoindre la liste d'attente</button>
                             </form>  
                         <% } else if(isRempli) { %>
                             <span id="isRempliInformartion" value="<%= isRempli %>"></span>
-                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>" method="POST">
-                                <button type="submit" class="bouton-liste-attente">Rejoindre la liste d'attente</button>
+                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
+                                <button type="submit" class="bouton-liste-attente">Rejoindre la liste d'attente avec (x<span id="listeNbJoueur"></span>)</button>
                             </form>
                         <% } %>
                     </div>

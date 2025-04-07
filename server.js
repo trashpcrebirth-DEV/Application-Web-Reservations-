@@ -208,7 +208,7 @@ app.post('/reserver/:id/:nombreJoueurs/:prix', (req, res) => {
 });
 
 
-app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une table où ca enregistre le nombre de joeur lié à installation pour enlever en prenant son id
+app.post('/api/annuler/:id', async (req, res) => {
     const reservationId = req.params.id;
     const userId = req.session.user.id;
 
@@ -218,11 +218,11 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
         con.query(annulerReservationQuery, [reservationId, userId], (err, results) => {
             if (err) {
                 console.error('Erreur SQL lors de la récupération du nombre de joueurs:', err);
-                return reject("Erreur lors de la récupération du nombre de joueurs.");
+                return res.status(500).json({ success: false, message: "Erreur lors de la récupération du nombre de joueurs." });
             }
 
             if (results.length === 0) {
-                return reject("Réservation non trouvée dans la table utilisateurs_reservations.");
+                return res.status(404).json({ success: false, message: "Réservation non trouvée dans la table utilisateurs_reservations." });
             }
 
             const nombreJoueurAnnule = results[0].nombreJoueur;
@@ -232,15 +232,14 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
             con.query(getCurrentCapacityQuery, [reservationId], (err, results) => {
                 if (err) {
                     console.error('Erreur SQL lors de la récupération de la capacité:', err);
-                    return reject("Erreur lors de la récupération de la capacité.");
+                    return res.status(500).json({ success: false, message: "Erreur lors de la récupération de la capacité." });
                 }
 
                 if (results.length === 0) {
-                    return reject("Réservation non trouvée.");
+                    return res.status(404).json({ success: false, message: "Réservation non trouvée." });
                 }
 
                 const currentCapacity = results[0].capacite;
-
                 const newCapacity = currentCapacity + nombreJoueurAnnule;
 
                 const updateCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
@@ -248,7 +247,7 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
                 con.query(updateCapacityQuery, [newCapacity, reservationId], (err, result) => {
                     if (err) {
                         console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
-                        return reject("Erreur lors de la mise à jour de la réservation.");
+                        return res.status(500).json({ success: false, message: "Erreur lors de la mise à jour de la capacité de la réservation." });
                     }
 
                     const deleteReservationQuery = `DELETE FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?`;
@@ -256,34 +255,68 @@ app.post('/api/annuler/:id', async (req, res) => { //peut etre d'un ajout d'une 
                     con.query(deleteReservationQuery, [reservationId, userId], (err, result) => {
                         if (err) {
                             console.error('Erreur SQL lors de la suppression de la réservation utilisateur:', err);
-                            return reject("Erreur lors de l'annulation de la réservation.");
+                            return res.status(500).json({ success: false, message: "Erreur lors de l'annulation de la réservation." });
                         }
+
+                        if (newCapacity > 0) {
+                            const getListeAttenteQuery = `SELECT * FROM liste_attente WHERE id_reservation = ? ORDER BY date_ajout ASC`;
+
+                            con.query(getListeAttenteQuery, [reservationId], (err, attenteList) => {
+                                if (err) {
+                                    console.error('Erreur SQL lors de la récupération de la liste d’attente:', err);
+                                    return res.status(500).json({ success: false, message: "Erreur lors de la récupération de la liste d'attente." });
+                                }
+
+                                for (let i = 0; i < attenteList.length && newCapacity > 0; i++) {
+                                    const utilisateur = attenteList[i];
+
+                                    if (utilisateur.nombreJoueur <= newCapacity) {
+                                        const addUserToReservationQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur, prix) VALUES (?, ?, ?, ?)`;
+
+                                        con.query(addUserToReservationQuery, [utilisateur.id_utilisateur, reservationId, utilisateur.nombreJoueur, utilisateur.prix], (err) => {
+                                            if (err) {
+                                                console.error('Erreur SQL lors de l’ajout de l’utilisateur de la liste d’attente à la réservation:', err);
+                                            } else {
+                                                newCapacity -= utilisateur.nombreJoueur;
+
+                                                const deleteFromAttenteQuery = `DELETE FROM liste_attente WHERE id_attente = ?`;
+                                                con.query(deleteFromAttenteQuery, [utilisateur.id_attente]);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+
                         res.redirect(`/reservation-information/${reservationId}`);
                     });
                 });
             });
         });
-
     } catch (error) {
         console.error("Erreur lors de l'annulation de la réservation :", error);
-        res.json({ success: false, message: "Erreur serveur." });
+        res.status(500).json({ success: false, message: "Erreur serveur." });
     }
 });
 
-app.post('/ajouter-liste-attente/:id_reservation', (req, res) => {
+
+app.post('/ajouter-liste-attente/:id_reservation/:nombreJoueurs/:prix', (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour rejoindre la liste d'attente.");
     }
 
     const id_utilisateur = req.session.user.id;
     const id_reservation = req.params.id_reservation;
+    const nombreJoueurs = parseInt(req.params.nombreJoueurs);
+    const prixTape = parseFloat(req.params.prix);
+
 
     const insertQuery = `
-        INSERT INTO liste_attente (id_utilisateur, id_reservation)
-        VALUES (?, ?)
+        INSERT INTO liste_attente (id_utilisateur, id_reservation, nombreJoueur, prix)
+        VALUES (?, ?, ?, ?)
     `;
 
-    con.query(insertQuery, [id_utilisateur, id_reservation], (err, result) => {
+    con.query(insertQuery, [id_utilisateur, id_reservation, nombreJoueurs, prixTape], (err, result) => {
         if (err) {
             console.error("Erreur lors de l'ajout à la liste d'attente :", err);
             return res.status(500).send("Une erreur est survenue lors de l'ajout à la liste d'attente.");
@@ -791,7 +824,6 @@ app.get('/success', async (req, res) => {
  
     const userId = req.session.user.id;
  
-    // Récupérer les items associés à l'utilisateur dans le panier
     const [items] = await con.promise().query(
         "SELECT * FROM items WHERE id_utilisateur = ?",
         [userId]
@@ -801,13 +833,10 @@ app.get('/success', async (req, res) => {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
  
-    // Stocker les réservations récentes en session
     req.session.lastReservations = items;
  
-    // Promise array pour gérer toutes les requêtes d'insertion et de suppression
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
-            // Ajouter l'item dans la table utilisateurs_reservations
             const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut)
                                   VALUES (?, ?, ?, ?, 'Réservé')`;
  
@@ -816,15 +845,25 @@ app.get('/success', async (req, res) => {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
                 } else if (result.affectedRows > 0) {
-                    // Supprimer l'item du panier après l'avoir sauvegardé
-                    const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
-                    con.query(deleteItemQuery, [item.id_item], (err, result) => {
+                    // Mise à jour de la capacité de la réservation
+                    const updateCapacityQuery = `UPDATE reservations 
+                                                 SET capacite = capacite - ? 
+                                                 WHERE id_reservation = ?`;
+                    con.query(updateCapacityQuery, [item.nombreJoueur, item.id_reservation], (err, result) => {
                         if (err) {
-                            console.error('Erreur lors de la suppression de l\'item:', err);
-                            reject("Erreur lors de la suppression de l'item.");
+                            console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
+                            reject("Erreur lors de la mise à jour de la capacité.");
                         } else {
-                            console.log("Item supprimé du panier:", item.id_item);
-                            resolve();
+                            const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
+                            con.query(deleteItemQuery, [item.id_item], (err, result) => {
+                                if (err) {
+                                    console.error('Erreur lors de la suppression de l\'item:', err);
+                                    reject("Erreur lors de la suppression de l'item.");
+                                } else {
+                                    console.log("Item supprimé du panier:", item.id_item);
+                                    resolve();
+                                }
+                            });
                         }
                     });
                 } else {
@@ -841,6 +880,7 @@ app.get('/success', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
 
 // Remplacer toute la route /paiement existante par :
 app.get("/paiement", async (req, res) => {
