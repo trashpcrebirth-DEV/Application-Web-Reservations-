@@ -24,12 +24,14 @@
                             </span>
                             <% } %>
                 </div>
-                <!-- Icône caméra EN DEHORS du cercle -->
-                <label class="upload-label" for="profilePicInput">
-                    <i class="fas fa-camera"></i>
-                </label>
-                <input type="file" id="profilePicInput" accept="image/*" style="display:none"
-                    onchange="uploadProfilePic(event)">
+                <form action="/upload-profile-pic" method="POST" enctype="multipart/form-data" id="profilePicForm">
+                    <!-- Icône caméra -->
+                    <label class="upload-label" for="profilePicInput">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" name="profile_pic" id="profilePicInput" accept="image/*" style="display:none" onchange="document.getElementById('profilePicForm').submit();">
+                </form>
+                
 
                 <h2 class="profile-name">
                     <%= utilisateur.prenom %>

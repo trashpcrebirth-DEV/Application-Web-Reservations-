@@ -31,7 +31,7 @@
                     </thead>
                     <tbody>
                         <% reservations.forEach(r => { %>
-                            <tr>
+                            <tr class="clickable-row" data-href="/reservation-information/<%= r.id_reservation %>">
                                 <td><%= r.id_reservation %></td>
                                 <td><%= r.nombreJoueur %></td>
                                 <td><%= r.statut %></td>
@@ -46,5 +46,12 @@
     </main>
 
     <%- include ("../partials/footer.ejs") %>
+    <script>
+        document.querySelectorAll(".clickable-row").forEach(row => {
+            row.addEventListener("click", () => {
+                window.location.href = row.dataset.href;
+            });
+        });
+    </script>
 </body>
 </html>
