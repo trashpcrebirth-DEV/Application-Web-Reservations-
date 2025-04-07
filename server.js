@@ -12,6 +12,8 @@ import dateFormat from "dateformat";
 import multer from "multer";
 import Stripe from "stripe";
 import mongoose from 'mongoose';
+import PDFDocument from "pdfkit";
+import fs from "fs";
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/mongodb', {
@@ -743,74 +745,58 @@ app.get('/confirmation', (req, res) => {
     res.render('pages/confirmation', { message: "Votre réservation a bien été confirmée !" });
 });
 
-
 app.get('/success', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
     }
-
+ 
     const userId = req.session.user.id;
-
+ 
+    // Récupérer les items associés à l'utilisateur dans le panier
     const [items] = await con.promise().query(
         "SELECT * FROM items WHERE id_utilisateur = ?",
         [userId]
     );
-
+ 
     if (items.length === 0) {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
-
+ 
+    // Stocker les réservations récentes en session
+    req.session.lastReservations = items;
+ 
+    // Promise array pour gérer toutes les requêtes d'insertion et de suppression
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
-            const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut) 
+            // Ajouter l'item dans la table utilisateurs_reservations
+            const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut)
                                   VALUES (?, ?, ?, ?, 'Réservé')`;
-
+ 
             con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur, item.prix], (err, result) => {
                 if (err) {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
-                } else {
+                } else if (result.affectedRows > 0) {
+                    // Supprimer l'item du panier après l'avoir sauvegardé
                     const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
                     con.query(deleteItemQuery, [item.id_item], (err, result) => {
                         if (err) {
+                            console.error('Erreur lors de la suppression de l\'item:', err);
                             reject("Erreur lors de la suppression de l'item.");
                         } else {
-                            const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
-
-                            con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
-                                if (err) return reject("Erreur lors de la récupération de la capacité.");
-
-                                if (results.length === 0) return reject("Réservation non trouvée.");
-
-                                const currentCapacity = results[0].capacite;
-                                const newCapacity = currentCapacity - item.nombreJoueur;
-
-                                const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
-
-                                con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
-                                    if (err) return reject("Erreur lors de la mise à jour de la réservation.");
-
-                                    // ➤ 🔔 Ajouter une notification pour l'utilisateur
-                                    const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
-                                    const messageNotif = `Votre réservation pour ${item.categorie_sport} a été confirmée. Rendez-vous à l'heure prévue !`;
-
-                                    con.query(notificationQuery, [userId, messageNotif], (err, result) => {
-                                        if (err) console.error("Erreur lors de l'ajout de la notification :", err);
-                                    });
-
-                                    resolve("Réservation mise à jour avec succès.");
-                                });
-                            });
+                            console.log("Item supprimé du panier:", item.id_item);
+                            resolve();
                         }
                     });
+                } else {
+                    reject("Réservation non trouvée ou déjà mise à jour.");
                 }
             });
         });
     });
-
+ 
     try {
         await Promise.all(promises);
-        req.session.user.cartCount = 0;
         return res.redirect("/confirmation");
     } catch (err) {
         res.status(500).send(err);
@@ -1042,21 +1028,40 @@ app.get('/historique', (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Route facture
+ 
+app.get('/facture', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send("Vous devez être connecté pour télécharger une facture.");
+    }
+ 
+    if (!req.session.lastReservations || req.session.lastReservations.length === 0) {
+        return res.status(400).send("Aucune réservation récente trouvée.");
+    }
+ 
+    const reservations = req.session.lastReservations;
+    const doc = new PDFDocument();
+ 
+    res.setHeader('Content-Disposition', 'attachment; filename="facture.pdf"');
+    res.setHeader('Content-Type', 'application/pdf');
+ 
+    doc.pipe(res);
+ 
+    doc.fontSize(20).text('Facture', { align: 'center' });
+    doc.moveDown();
+ 
+    reservations.forEach((resv, index) => {
+        doc.fontSize(14).text(`Réservation #${index + 1}`);
+        doc.text(`ID Réservation: ${resv.id_reservation}`);
+        doc.text(`Nombre de joueurs: ${resv.nombreJoueur}`);
+        const prix = parseFloat(resv.prix) || 0;  
+        doc.text(`Prix: ${prix.toFixed(2)} $`);
+        doc.text(`Statut: Réservé`);
+        doc.moveDown();
+    });
+ 
+    doc.end();
+ 
+    // Supprimer les réservations après génération de la facture
+    delete req.session.lastReservations;
+});
