@@ -52,9 +52,9 @@ function showReservationBox(day, month, year) {
           reserveButton.setAttribute("data-id", res.id_reservation);
 
           if (res.statut === "Pleine") {
-            reserveButton.disabled = true;
             reserveButton.style.backgroundColor = "red";
             reserveButton.textContent = "Remplis - Inaccessible";
+            reserveButton.onclick = () => reserver(res.id_reservation);
           } else {
             reserveButton.onclick = () => reserver(res.id_reservation);
           }

@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const isRempliInformartion = document.getElementById("isRempliInformartion");
     const nombreJoueursInput = document.getElementById("nombreJoueurs");
     const prixElement = document.getElementById("prix");
     const basePrice = parseInt(prixElement.textContent);
     const maxPlayers = parseInt(document.getElementById("placeMaximale").textContent);
 
     function updatePrice() {
+        if (isRempliInformartion) return;
+
         let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  
 
         if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
