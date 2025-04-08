@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8">
@@ -9,79 +9,114 @@
   <link rel="stylesheet" href="/CSS/paiement.css">
 </head>
 
-<body>
+<body style="background-image: linear-gradient(rgba(7, 7, 7, 0.75), rgba(94, 88, 88, 0.75)), url(../images/backgroundPaiement.jpg);">
   <%- include ("../partials/header.ejs") %>
 
-    <div class="row">
-      <!-- Conteneur des réservations -->
-      <div class="col-50">
-        <div class="containerListe">
-          <h3>Mon Panier</h3>
-          <p>Voici vos réservations :</p>
-          <div class="user-reservations">
-            <% if (reservations.length> 0) { %>
-              <ul>
-                <% reservations.forEach(function(reservation) { %>
-                  <li>
-                    <strong>
-                      <%= reservation.categorie_sport %> (<%= reservation.nombreJoueur %>x)
-                    </strong> -
-                    <span class="price">
-                      <%= reservation.prix %> $
-                    </span>
-                    <br>
-                    <span><strong>Date :</strong>
-                      <%= new Date(reservation.date_time).toLocaleDateString("fr-FR") %>
-                    </span>
-                    <br>
-                    <span><strong>Heure :</strong>
-                      <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", { hour: "2-digit" ,
-                        minute: "2-digit" }) %>
-                        <span>À
-                          <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", { hour: "2-digit" ,
-                            minute: "2-digit" }) %>
-                        </span>
-                    </span>
-                    <button class="remove-btn" onclick="removeReservation(<%= reservation.id_reservation %>)">x</button>
+  <div class="checkout-container">
+    <div class="checkout-header">
+      <h1 class="checkout-title">Mon Panier</h1>
+      <p class="checkout-subtitle">Vérifiez vos réservations avant de procéder au paiement</p>
+    </div>
 
-
-                  </li>
-                  <% }); %>
-              </ul>
-              <% } else { %>
-                <p>Aucune réservation trouvée.</p>
-                <% } %>
-          </div>
-          <br>
-          <button class="btn-checkout" onclick="window.location.href='/checkout'" <%= reservations.length === 0 ? 'disabled' : '' %>> Proceed to Checkout </button>   
-               </div>
+    <div class="checkout-card">
+      <div class="checkout-card-header">
+        <i class="fas fa-shopping-cart" style="color: #2563eb;"></i>
+        <h2 class="checkout-card-title">Mes Réservations</h2>
       </div>
+      
+      <div class="checkout-card-body">
+        <% if (reservations.length > 0) { %>
+          <div class="reservation-list">
+            <% let totalPrice = 0; %>
+            <% reservations.forEach(function(reservation) { %>
+              <% totalPrice += parseFloat(reservation.prix); %>
+              <div class="reservation-item">
+                <div class="reservation-info">
+                  <div class="reservation-title">
+                    <span><%= reservation.categorie_sport %> (<%= reservation.nombreJoueur %>x)</span>
+                    <span class="reservation-price"><%= reservation.prix %> $</span>
+                  </div>
+                  
+                  <div class="reservation-details">
+                    <div class="reservation-detail">
+                      <i class="fas fa-calendar-alt"></i>
+                      <span><%= new Date(reservation.date_time).toLocaleDateString("fr-FR") %></span>
+                    </div>
+                    <div class="reservation-detail">
+                      <i class="fas fa-clock"></i>
+                      <span>
+                        <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) %>
+                        à
+                        <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) %>
+                      </span>
+                    </div>
+                    <div class="reservation-detail">
+                      <i class="fas fa-users"></i>
+                      <span><%= reservation.nombreJoueur %> <%= reservation.nombreJoueur > 1 ? "joueurs" : "joueur" %></span>
+                    </div>
+                  </div>
+                </div>
+                
+                <button class="remove-button" onclick="removeReservation(<%= reservation.id_reservation %>)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            <% }); %>
+            
+            <div class="checkout-total">
+              <div class="checkout-total-row">
+                <p>Total</p>
+                <p><%= totalPrice.toFixed(2) %> $</p>
+              </div>
+              <p class="checkout-total-note">Taxes incluses si applicables</p>
+            </div>
+            
+            <button class="checkout-button" onclick="window.location.href='/checkout'">
+              <i class="fas fa-credit-card"></i>
+              Procéder au paiement
+            </button>
+          </div>
+        <% } else { %>
+          <div class="empty-cart">
+            <div class="empty-cart-icon">
+              <i class="fas fa-shopping-cart fa-4x"></i>
+            </div>
+            <h3 class="empty-cart-title">Votre panier est vide</h3>
+            <p class="empty-cart-text">Vous n'avez pas encore de réservations</p>
+            <button class="empty-cart-button" onclick="window.location.href='/'">
+              Continuer les réservations
+            </button>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    
+    <div class="checkout-footer">
+      <p>Besoin d'aide? Contactez notre service client au (514) 123-4567</p>
+    </div>
+  </div>
 
-
-</body>
-<script src="/js/Cart.js"></script>
-
-<script>
-  function removeReservation(reservationId) {
+  <script>
+    function removeReservation(reservationId) {
       fetch(`/api/items/${reservationId}`, {
-          method: 'DELETE',
-          headers: {
-              'Content-Type': 'application/json'
-          }
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
       .then(response => response.json())
       .then(data => {
-          if (data.success) {
-              // Rafraîchir la page pour mettre à jour la liste des réservations
-              location.reload();
-          } else {
-              alert(data.message);
-          }
+        if (data.success) {
+          location.reload();
+        } else {
+          alert(data.message);
+        }
       })
       .catch(err => {
-          console.error("Erreur lors de la suppression :", err);
-          alert("Erreur lors de la suppression de la réservation.");
+        console.error("Erreur lors de la suppression :", err);
+        alert("Erreur lors de la suppression de la réservation.");
       });
-  }
-</script>
+    }
+  </script>
+</body>
 </html>

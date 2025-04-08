@@ -52,7 +52,8 @@ function showReservationBox(day, month, year) {
           reserveButton.setAttribute("data-id", res.id_reservation);
 
           if (res.statut === "Pleine") {
-            reserveButton.style.backgroundColor = "red";
+            reserveButton.style.backgroundColor = "yellow";
+            reserveButton.style.color = "black";
             reserveButton.textContent = "Remplis - Liste d'attente possible";
             reserveButton.onclick = () => reserver(res.id_reservation);
           } else {
