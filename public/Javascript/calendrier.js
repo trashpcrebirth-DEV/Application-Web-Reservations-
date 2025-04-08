@@ -53,7 +53,7 @@ function showReservationBox(day, month, year) {
 
           if (res.statut === "Pleine") {
             reserveButton.style.backgroundColor = "red";
-            reserveButton.textContent = "Remplis - Inaccessible";
+            reserveButton.textContent = "Remplis - Liste d'attente possible";
             reserveButton.onclick = () => reserver(res.id_reservation);
           } else {
             reserveButton.onclick = () => reserver(res.id_reservation);

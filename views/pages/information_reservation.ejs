@@ -137,11 +137,11 @@
                         <% } else if (isDansListeAttente){ %> 
                             <span id="isRempliInformartion" value="<%= isRempli %>"></span>
                             <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
-                                <button type="submit" class="bouton-liste-attente" disabled>Rejoindre la liste d'attente</button>
+                                <button type="submit" class="bouton-liste-attente-reserve">Vous avez déja rejoint la liste d'attente.</button>
                             </form>  
                         <% } else if(isRempli) { %>
                             <span id="isRempliInformartion" value="<%= isRempli %>"></span>
-                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
+                            <form id="form-liste-attente" action="#" method="POST">
                                 <button type="submit" class="bouton-liste-attente">Rejoindre la liste d'attente avec (x<span id="listeNbJoueur"></span>)</button>
                             </form>
                         <% } %>

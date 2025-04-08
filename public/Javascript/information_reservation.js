@@ -44,10 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector('form');
+    const form = document.getElementById('form-liste-attente');
     const nombreJoueursInput = document.getElementById('nombreJoueurs');
     const prixInput = document.getElementById('prix');
-    const id_reservation = document.getElementById('isRempliInformartion').dataset.id; // Utilisation du dataset de l'élément span
+    const id_reservation = document.getElementById('id-reservation').dataset.id; // Utilisation du dataset de l'élément span
 
     const listeNbJoueur = document.getElementById('listeNbJoueur');
     listeNbJoueur.textContent = nombreJoueursInput.value;

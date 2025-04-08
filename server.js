@@ -240,7 +240,7 @@ app.post('/api/annuler/:id', async (req, res) => {
                 }
 
                 const currentCapacity = results[0].capacite;
-                const newCapacity = currentCapacity + nombreJoueurAnnule;
+                let newCapacity = currentCapacity + nombreJoueurAnnule;
 
                 const updateCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
 
@@ -285,9 +285,14 @@ app.post('/api/annuler/:id', async (req, res) => {
                                         });
                                     }
                                 }
+                                const updateFinalCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+                                con.query(updateFinalCapacityQuery, [newCapacity, reservationId], (err) => {
+                                    if (err) {
+                                        console.error('Erreur lors de la mise à jour finale de la capacité après gestion de la liste d’attente:', err);
+                                    }
+                                });
                             });
                         }
-
                         res.redirect(`/reservation-information/${reservationId}`);
                     });
                 });
@@ -821,25 +826,25 @@ app.get('/success', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Vous devez être connecté pour effectuer une réservation.");
     }
- 
+
     const userId = req.session.user.id;
- 
+
     const [items] = await con.promise().query(
         "SELECT * FROM items WHERE id_utilisateur = ?",
         [userId]
     );
- 
+
     if (items.length === 0) {
         return res.status(400).send("Aucun item trouvé pour le paiement.");
     }
- 
+
     req.session.lastReservations = items;
- 
+
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
             const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut)
                                   VALUES (?, ?, ?, ?, 'Réservé')`;
- 
+
             con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur, item.prix], (err, result) => {
                 if (err) {
                     console.error('Erreur SQL:', err);
@@ -872,7 +877,7 @@ app.get('/success', async (req, res) => {
             });
         });
     });
- 
+
     try {
         await Promise.all(promises);
         return res.redirect("/confirmation");
@@ -1087,8 +1092,8 @@ app.get('/historique', (req, res) => {
                 console.log("Résultats de la requête SQL :", results); // Affiche les résultats pour vérifier
 
                 // Vérifier si des réservations existent
-                const reservations = results && results.length > 0 
-                    ? results 
+                const reservations = results && results.length > 0
+                    ? results
                     : [{ message: "Aucune réservation trouvée" }];
 
                 // Rendre la page avec les résultats des réservations
@@ -1212,53 +1217,3 @@ app.get('/facture', (req, res) => {
     doc.end();
     delete req.session.lastReservations;
 });
-
-// Définir le stockage pour les photos de profil
-const profileStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'public/uploads'); // Dossier de destination
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.originalname); // ex: .jpg
-      cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Générer un nom de fichier unique
-    }
-  });
-
-  // Filtrage : n'accepter que les images
-  const profileFileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Seules les images sont autorisées.'), false);
-    }
-  };
-
-  // Initialiser Multer avec le stockage et le filtre
-  const profileUpload = multer({
-    storage: profileStorage,
-    fileFilter: profileFileFilter
-  });
-
-  app.post('/upload-profile-pic', profileUpload.single('profile_pic'), (req, res) => {
-    const userId = req.session.user.id; // Récupérer l'ID de l'utilisateur (assurez-vous que la session est configurée)
-
-    if (!req.file) {
-      return res.status(400).send('Aucun fichier reçu.');
-    }
-
-    // Construire l'URL relative de l'image
-    const imageUrl = '/uploads/' + req.file.filename;
-
-    // Met à jour la base de données avec le nouvel URL de la photo
-    const updateQuery = "UPDATE utilisateurs SET photo_url = ? WHERE id = ?";
-    con.query(updateQuery, [imageUrl, userId], (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
-      }
-
-      // Rediriger l'utilisateur vers sa page de profil (ou répondre avec l'URL de l'image)
-      res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
-    });
-  });
