@@ -250,6 +250,14 @@ app.post('/api/annuler/:id', async (req, res) => {
                         return res.status(500).json({ success: false, message: "Erreur lors de la mise à jour de la capacité de la réservation." });
                     }
 
+                    if (newCapacity > 0) {
+                        const updateStatusQuery = `UPDATE reservations SET statut = 'Disponible' WHERE id_reservation = ?`;
+                        con.query(updateStatusQuery, [reservationId], (err) => {
+                            if (err) {
+                                console.error('Erreur lors de la mise à jour du statut:', err);
+                            }
+                        });
+                    }
                     const deleteReservationQuery = `DELETE FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?`;
 
                     con.query(deleteReservationQuery, [reservationId, userId], (err, result) => {

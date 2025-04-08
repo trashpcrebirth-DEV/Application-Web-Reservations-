@@ -24,7 +24,7 @@
                     <span class="places-restantes">
                         <i class="fa-solid fa-address-book"></i> <span id="placeMaximale"><%= reservation.capacite %></span> places restantes
                     </span>
-                    <span class="statut <%= isDejaReserve ? 'reserve' : 'pasreserve' || isRempli ? 'reserve' : 'pasreserve'%>">
+                    <span class="statut <%= (isDejaReserve || isRempli) ? 'reserve' : 'pasreserve' %>">
                         <%= isDejaReserve ? 'Réservé' : reservation.statut %>
                     </span>
                 </div>
