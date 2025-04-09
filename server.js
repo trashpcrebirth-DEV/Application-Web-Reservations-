@@ -410,6 +410,9 @@ app.get("/reservation-information/:id", function (req, res) {
 
 // Route pour la page de profile
 app.get("/profile", (req, res) => {
+    if (!req.session.user) {
+        return res.redirect("/connexion"); // Redirige si l'utilisateur n'est pas connecté
+    }
     const userId = req.session.user.id; // ID de l'utilisateur connecté
 
     // Requête pour récupérer les informations de l'utilisateur
@@ -433,7 +436,7 @@ app.get("/profile", (req, res) => {
 
                 res.render("pages/profile", {
                     activePage: 'profile',
-                    user: req.session.user.id,
+                    user: req.session.user,
                     utilisateur: user,
                     nombreCommandes: nombreCommandes // Passer le nombre de commandes à la vue
                 });
