@@ -118,7 +118,6 @@ app.use(async (req, res, next) => {
     next();
 });
 
-
 // Route pour la page de réservation
 app.get("/reservation", (req, res) => {
     const dateReservation = req.query.date; // Date sélectionnée envoyée en paramètre
@@ -850,37 +849,47 @@ app.get('/success', async (req, res) => {
 
     const promises = items.map(item => {
         return new Promise((resolve, reject) => {
-            const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut)
+            const addItemQuery = `INSERT INTO utilisateurs_reservations (id_utilisateur, id_reservation, nombreJoueur, prix, statut) 
                                   VALUES (?, ?, ?, ?, 'Réservé')`;
 
             con.query(addItemQuery, [userId, item.id_reservation, item.nombreJoueur, item.prix], (err, result) => {
                 if (err) {
                     console.error('Erreur SQL:', err);
                     reject("Erreur lors de l'ajout de la réservation.");
-                } else if (result.affectedRows > 0) {
-                    // Mise à jour de la capacité de la réservation
-                    const updateCapacityQuery = `UPDATE reservations 
-                                                 SET capacite = capacite - ? 
-                                                 WHERE id_reservation = ?`;
-                    con.query(updateCapacityQuery, [item.nombreJoueur, item.id_reservation], (err, result) => {
+                } else {
+                    const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
+                    con.query(deleteItemQuery, [item.id_item], (err, result) => {
                         if (err) {
-                            console.error('Erreur SQL lors de la mise à jour de la capacité:', err);
-                            reject("Erreur lors de la mise à jour de la capacité.");
+                            reject("Erreur lors de la suppression de l'item.");
                         } else {
-                            const deleteItemQuery = "DELETE FROM items WHERE id_item = ?";
-                            con.query(deleteItemQuery, [item.id_item], (err, result) => {
-                                if (err) {
-                                    console.error('Erreur lors de la suppression de l\'item:', err);
-                                    reject("Erreur lors de la suppression de l'item.");
-                                } else {
-                                    console.log("Item supprimé du panier:", item.id_item);
-                                    resolve();
-                                }
+                            const getCurrentCapacityQuery = `SELECT capacite FROM reservations WHERE id_reservation = ?`;
+
+                            con.query(getCurrentCapacityQuery, [item.id_reservation], (err, results) => {
+                                if (err) return reject("Erreur lors de la récupération de la capacité.");
+
+                                if (results.length === 0) return reject("Réservation non trouvée.");
+
+                                const currentCapacity = results[0].capacite;
+                                const newCapacity = currentCapacity - item.nombreJoueur;
+
+                                const enleveNombreJoueurQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
+
+                                con.query(enleveNombreJoueurQuery, [newCapacity, item.id_reservation], (err, result) => {
+                                    if (err) return reject("Erreur lors de la mise à jour de la réservation.");
+
+                                    // ➤ 🔔 Ajouter une notification pour l'utilisateur
+                                    const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
+                                    const messageNotif = `Votre réservation pour ${item.categorie_sport} a été confirmée. Rendez-vous à l'heure prévue !`;
+
+                                    con.query(notificationQuery, [userId, messageNotif], (err, result) => {
+                                        if (err) console.error("Erreur lors de l'ajout de la notification :", err);
+                                    });
+
+                                    resolve("Réservation mise à jour avec succès.");
+                                });
                             });
                         }
                     });
-                } else {
-                    reject("Réservation non trouvée ou déjà mise à jour.");
                 }
             });
         });
@@ -888,12 +897,12 @@ app.get('/success', async (req, res) => {
 
     try {
         await Promise.all(promises);
+        req.session.user.cartCount = 0;
         return res.redirect("/confirmation");
     } catch (err) {
         res.status(500).send(err);
     }
 });
-
 
 // Remplacer toute la route /paiement existante par :
 app.get("/paiement", async (req, res) => {
