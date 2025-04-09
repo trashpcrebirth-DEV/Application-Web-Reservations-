@@ -793,26 +793,46 @@ app.get("/checkout", async (req, res) => {
         const itemsAvecReservation = items.map(item => {
             const reservation = reservations.find(res => res.id_reservation === item.id_reservation);
             const prixUnitaire = reservation ? reservation.prix : 0;
-            const nombreJoueur = item.nombreJoueur || 1; // Par défaut 1 joueur si non défini
+            const nombreJoueur = item.nombreJoueur || 1;
 
             return {
                 ...item,
-                prix: prixUnitaire * nombreJoueur, // Calcul du prix total pour ce nombre de joueurs
-                categorie_sport: reservation ? reservation.categorie_sport : "Sport inconnu"
+                prix: prixUnitaire * nombreJoueur,
+                categorie_sport: reservation ? reservation.categorie_sport : "Sport inconnu",
+                date_time: reservation ? reservation.date_time : null,
+                date_time_fin: reservation ? reservation.date_time_fin : null // 👈 ici
             };
         });
 
         // Créer les lignes de paiement avec le prix total multiplié par le nombre de joueurs
-        const line_items = itemsAvecReservation.map((item) => ({
-            price_data: {
-                currency: "cad",
-                product_data: {
-                    name: item.categorie_sport + "(" + item.nombreJoueur + "x)", // Nom du produit avec le nombre de joueurs
+        const line_items = itemsAvecReservation.map((item) => {
+            const dateDebut = item.date_time
+                ? new Date(item.date_time).toLocaleString('fr-FR', {
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                : "Date inconnue";
+            const dateFin = item.date_time_fin
+                ? new Date(item.date_time_fin).toLocaleString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                : "Heure de fin inconnue";
+
+            return {
+                price_data: {
+                    currency: "cad",
+                    product_data: {
+                        name: `${item.categorie_sport} (${item.nombreJoueur}x) - ${dateDebut} à ${dateFin}`, // 👈 Nom complet
+                    },
+                    unit_amount: Math.round(item.prix * 100),
                 },
-                unit_amount: Math.round(item.prix * 100), // prix total converti en centimes
-            },
-            quantity: 1, // Chaque ligne représente une réservation unique
-        }));
+                quantity: 1,
+            };
+        });
+
 
         // Créer la session de paiement avec Stripe
         const session = await stripe.checkout.sessions.create({
@@ -1308,35 +1328,35 @@ app.get('/facture', (req, res) => {
 // Définir le stockage pour les photos de profil
 const profileStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/uploads'); // Dossier de destination
+        cb(null, 'public/uploads'); // Dossier de destination
     },
     filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.originalname); // ex: .jpg
-      cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Générer un nom de fichier unique
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname); // ex: .jpg
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Générer un nom de fichier unique
     }
-  });
+});
 
-  // Filtrage : n'accepter que les images
-  const profileFileFilter = (req, file, cb) => {
+// Filtrage : n'accepter que les images
+const profileFileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(new Error('Seules les images sont autorisées.'), false);
+        cb(new Error('Seules les images sont autorisées.'), false);
     }
-  };
+};
 
-  // Initialiser Multer avec le stockage et le filtre
-  const profileUpload = multer({
+// Initialiser Multer avec le stockage et le filtre
+const profileUpload = multer({
     storage: profileStorage,
     fileFilter: profileFileFilter
-  });
+});
 
-  app.post('/upload-profile-pic', profileUpload.single('profile_pic'), (req, res) => {
+app.post('/upload-profile-pic', profileUpload.single('profile_pic'), (req, res) => {
     const userId = req.session.user.id; // Récupérer l'ID de l'utilisateur (assurez-vous que la session est configurée)
 
     if (!req.file) {
-      return res.status(400).send('Aucun fichier reçu.');
+        return res.status(400).send('Aucun fichier reçu.');
     }
 
     // Construire l'URL relative de l'image
@@ -1345,17 +1365,17 @@ const profileStorage = multer.diskStorage({
     // Met à jour la base de données avec le nouvel URL de la photo
     const updateQuery = "UPDATE utilisateurs SET photo_url = ? WHERE id = ?";
     con.query(updateQuery, [imageUrl, userId], (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
-      }
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
+        }
 
-      // Rediriger l'utilisateur vers sa page de profil (ou répondre avec l'URL de l'image)
-      res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
+        // Rediriger l'utilisateur vers sa page de profil (ou répondre avec l'URL de l'image)
+        res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
     });
-  });
+});
 
-  app.post('/revert-profile-pic', async (req, res) => {
+app.post('/revert-profile-pic', async (req, res) => {
     try {
         const userId = req.session.user.id;
 
