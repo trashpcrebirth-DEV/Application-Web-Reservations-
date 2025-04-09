@@ -3,44 +3,161 @@
 
 <head>
     <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/historique.css">
 </head>
 
-<body>
+<body style="background-image: linear-gradient(rgba(7, 7, 7, 0.75), rgba(94, 88, 88, 0.75)), url(../images/background-historique.jpg);">
     <%- include ("../partials/header.ejs") %>
 
-    <main class="container mt-5">
-        <div class="text-center">
-            <h1 class="page-title"><i class="fas fa-history"></i> <%= pageTitle %></h1>
+    <main class="history-container">
+        <div class="history-header">
+            <div class="header-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <h1 class="page-title"><%= pageTitle %></h1>
         </div>
 
         <% if (reservations.length === 1 && reservations[0].message) { %>
-            <div class="alert alert-info text-center">
-                <%= reservations[0].message %>
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-calendar-xmark"></i>
+                </div>
+                <h2 class="empty-title">Aucune réservation trouvée</h2>
+                <p class="empty-message"><%= reservations[0].message %></p>
+                <a href="/" class="action-button">
+                    <i class="fas fa-plus-circle"></i>
+                    Faire une réservation
+                </a>
             </div>
         <% } else { %>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID Réservation</th>
-                            <th>Nombre de Joueurs</th>
-                            <th>Statut</th>
-                            <th>Prix ($)</th> <!-- Nouvelle colonne Prix -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% reservations.forEach(r => { %>
-                            <tr class="clickable-row" data-href="/reservation-information/<%= r.id_reservation %>">
-                                <td><%= r.id_reservation %></td>
-                                <td><%= r.nombreJoueur %></td>
-                                <td><%= r.statut %></td>
-                                <td><%= r.prix ? parseFloat(r.prix).toFixed(2) : "N/A" %> $</td>
+            <div class="card">
+                <div class="card-header">
+                    <div class="header-left">
+                        <div class="card-icon">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <h2 class="card-title">Vos réservations</h2>
+                    </div>
+                    <div class="header-right">
+                        <div class="reservation-count">
+                            <span class="count-number"><%= reservations.length %></span>
+                            <span class="count-label">réservations</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-bar">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Rechercher une réservation..." class="search-input">
+                        <button id="clearSearch" class="clear-search-btn" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="search-results" id="searchResults">
+                        <i class="fas fa-filter"></i>
+                        <span id="resultCount"><%= reservations.length %></span> réservations trouvées
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-running"></i> Sport</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Terrain</th>
+                                <th><i class="fas fa-users"></i> Joueurs</th>
+                                <th><i class="fas fa-tag"></i> Statut</th>
+                                <th><i class="fas fa-dollar-sign"></i> Prix</th>
                             </tr>
-                        <% }); %>
-                    </tbody>
-                    
-                </table>
+                        </thead>
+                        <tbody>
+                            <% reservations.forEach(r => { %>
+                                <tr class="clickable-row" data-href="/reservation-information/<%= r.id_reservation %>">
+                                    <td>
+                                        <div class="id-cell">
+                                            <span class="id-badge">#<%= r.id_reservation %></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="sport-info">
+                                            <% if (r.categorie_sport) { %>
+                                                <% 
+                                                    let sportIcon = "fa-futbol";
+                                                    let sportClass = "football";
+                                                    if (r.categorie_sport.toLowerCase().includes("tennis")) {
+                                                        sportIcon = "fa-table-tennis-paddle-ball";
+                                                        sportClass = "tennis";
+                                                    } else if (r.categorie_sport.toLowerCase().includes("basket")) {
+                                                        sportIcon = "fa-basketball";
+                                                        sportClass = "basketball";
+                                                    } else if (r.categorie_sport.toLowerCase().includes("volley")) {
+                                                        sportIcon = "fa-volleyball";
+                                                        sportClass = "volleyball";
+                                                    }
+                                                %>
+                                                <div class="sport-icon-wrapper sport-<%= sportClass %>">
+                                                    <i class="fas <%= sportIcon %>"></i>
+                                                </div>
+                                                <span class="sport-name"><%= r.categorie_sport %></span>
+                                            <% } else { %>
+                                                <div class="sport-icon-wrapper sport-unknown">
+                                                    <i class="fas fa-question"></i>
+                                                </div>
+                                                <span class="sport-name">Non spécifié</span>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="terrain-info">
+                                            <% if (r.installation) { %>
+                                                <i class="fas fa-map-pin terrain-icon"></i>
+                                                <span><%= r.installation %></span>
+                                            <% } else { %>
+                                                <i class="fas fa-map-pin terrain-icon text-muted"></i>
+                                                <span class="text-muted">Non spécifié</span>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="player-count">
+                                            <div class="player-badge">
+                                                <i class="fas fa-user"></i>
+                                                <span><%= r.nombreJoueur %></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <% 
+                                            let statusIcon = "fa-clock";
+                                            if (r.statut.toLowerCase().includes("Réservé")) {
+                                                statusIcon = "fa-flag-checkered";                                                                                
+                                            }
+                                        %>
+                                        <span class="status-badge status-<%= r.statut.toLowerCase().replace(/\s+/g, '-') %>">
+                                            <i class="fas <%= statusIcon %>"></i>
+                                            <%= r.statut %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="price-container">
+                                            <span class="price-tag"><%= r.prix ? parseFloat(r.prix).toFixed(2) : "N/A" %> $</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-footer">
+                    <div class="footer-info">
+                        <i class="fas fa-info-circle"></i>
+                        <p class="table-info">Cliquez sur une ligne pour voir les détails de la réservation</p>
+                    </div>
+                </div>
             </div>
         <% } %>
     </main>
@@ -52,6 +169,50 @@
                 window.location.href = row.dataset.href;
             });
         });
+
+        // Fonction de recherche
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clearSearch');
+        const resultCount = document.getElementById('resultCount');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('.table tbody tr');
+                let visibleCount = 0;
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Mettre à jour le compteur de résultats
+                if (resultCount) {
+                    resultCount.textContent = visibleCount;
+                }
+                
+                // Afficher/masquer le bouton de suppression
+                if (clearSearch) {
+                    clearSearch.style.display = searchTerm ? 'flex' : 'none';
+                }
+            });
+        }
+        
+        // Effacer la recherche
+        if (clearSearch) {
+            clearSearch.addEventListener('click', function() {
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    searchInput.focus();
+                }
+            });
+        }
     </script>
 </body>
 </html>

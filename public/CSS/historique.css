@@ -1,38 +1,30 @@
 html, body {
     height: 100%;
     margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+body {
     display: flex;
     flex-direction: column;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police moderne */
+    min-height: 100vh;
 }
 
 main {
     flex: 1;
-}
-
-.container {
-    max-width: 900px;
-    margin: 30px auto;
-    background-color: #f9f9f9; /* Fond clair */
-    padding: 30px;
-    border-radius: 15px; /* Bords arrondis */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
-    background-color: white;
+    display: flex;
+    flex-direction: column;
 }
 
 .page-title {
-    font-size: 2.5rem;
-    color: #333;
+    font-size: 30px;
+    color: #175bed;
     font-weight: bold;
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 30px;
-}
-
-.page-title i {
-    margin-right: 10px;
+    margin: 0;
 }
 
 .alert-info {
@@ -40,42 +32,34 @@ main {
     color: #17a2b8;
     background: rgba(23, 162, 184, 0.1);
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 .table {
     width: 100%;
-    margin-top: 20px;
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre pour le tableau */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0;
 }
 
 .table th, .table td {
     padding: 15px;
     text-align: center;
     font-size: 1.1rem;
-    border-bottom: 1px solid #f1f1f1;
-}
-
-.table thead {
-    background-color: #007bff; /* Bleu principal */
-    color: white;
 }
 
 .table tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Couleur alternée pour les lignes */
+    background-color: #f9f9f9;
 }
 
-.table tbody tr:hover {
-    background-color: #eef2f7; /* Couleur au survol */
+.table-striped tbody tr:hover {
+    background-color: #e9ecef;
     cursor: pointer;
-    transform: scale(1.02); /* Légère mise en avant au survol */
-    transition: transform 0.3s ease;
 }
 
 .table td {
@@ -83,28 +67,534 @@ main {
     color: #555;
 }
 
-.table td i {
-    font-size: 1.2rem;
-    color: #007bff;
-}
-
 footer {
-    margin-top: 30px;
+    margin-top: auto;
     text-align: center;
     font-size: 0.9rem;
     color: #777;
+    padding: 15px 0;
+}
+
+:root {
+    --primary-color: #175bed;
+    --primary-light: #e6edff;
+    --primary-dark: #0d3bbd;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --neutral-color: #6b7280;
+}
+
+.history-container {
+    flex: 1;
+    padding: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.header-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(23, 91, 237, 0.3);
+}
+
+/* Card styles */
+.card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.card-header {
+    padding: 20px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.reservation-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 10px;
+}
+
+.count-number {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.count-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search-bar {
+    padding: 15px 20px;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-input-container {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 40px 12px 45px;
+    border: 2px solid #e5e7eb;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(23, 91, 237, 0.15);
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.search-results {
+    font-size: 0.95rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-results i {
+    color: var(--primary-color);
+}
+
+.search-results span {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Table styles */
+.table-responsive {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+}
+
+.table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th {
+    position: sticky;
+    top: 0;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 15px;
+    z-index: 10;
+}
+
+.table th i {
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.table td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: 1px solid #e5e7eb;
+}
+
+.clickable-row {
+    transition: all 0.2s ease;
+}
+
+.clickable-row:hover {
+    background-color: var(--primary-light) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.clickable-row:active {
+    transform: translateY(0);
+}
+
+/* ID cell */
+.id-cell {
+    display: flex;
+    justify-content: center;
+}
+
+.id-badge {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: monospace;
+}
+
+/* Sport cell */
+.sport-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.sport-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+}
+
+.sport-football {
+    background-color: #10b981;
+}
+
+.sport-tennis {
+    background-color: #f59e0b;
+}
+
+.sport-basketball {
+    background-color: #ef4444;
+}
+
+.sport-volleyball {
+    background-color: #8b5cf6;
+}
+
+.sport-unknown {
+    background-color: #9ca3af;
+}
+
+.sport-name {
+    font-weight: 500;
+}
+
+.terrain-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.terrain-icon {
+    color: var(--primary-color);
+}
+
+.player-count {
+    display: flex;
+    justify-content: center;
+}
+
+.player-badge {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 20px;
+    padding: 5px 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-confirmé, .status-confirme {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #065f46;
+}
+
+.status-en-attente {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #92400e;
+}
+
+.status-annulé, .status-annule {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #b91c1c;
+}
+
+.status-terminé, .status-termine {
+    background-color: rgba(107, 114, 128, 0.15);
+    color: #374151;
+}
+
+.price-container {
+    display: flex;
+    justify-content: center;
+}
+
+.price-tag {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #065f46;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.table-footer {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.footer-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.footer-info i {
+    color: var(--primary-color);
+}
+
+.table-info {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 10px 0;
+}
+
+.empty-message {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0 0 30px 0;
+    max-width: 500px;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(23, 91, 237, 0.3);
+}
+
+.action-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(23, 91, 237, 0.4);
+}
+
+.text-muted {
+    color: #9ca3af;
 }
 
 @media (max-width: 768px) {
-    .container {
+    .history-container {
         padding: 15px;
     }
-
-    .page-title {
-        font-size: 2rem;
+    
+    .history-header {
+        flex-direction: column;
+        text-align: center;
     }
-
+    
+    .card-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-input-container {
+        max-width: none;
+    }
+    
+    .search-results {
+        justify-content: center;
+    }
+    
     .table th, .table td {
-        font-size: 1rem;
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .table-responsive {
+        max-height: calc(100vh - 350px);
+    }
+    
+    .sport-name {
+        display: none;
+    }
+    
+    .status-badge {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .table {
+        min-width: 650px;
+    }
+    
+    .sport-icon-wrapper {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
     }
 }
