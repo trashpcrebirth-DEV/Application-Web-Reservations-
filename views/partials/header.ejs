@@ -52,7 +52,7 @@
 <script>
     let previousNotificationCount = 0;
 
-async function loadNotifications() {
+    async function loadNotifications() {
     try {
         const response = await fetch("/api/notifications");
         const data = await response.json();
@@ -85,20 +85,30 @@ async function loadNotifications() {
                 notificationCount.style.display = "none";
             }
 
-            data.notifications.forEach(notif => {
-                const notifItem = document.createElement("div");
-                notifItem.className = "notification-item";
-                notifItem.innerHTML = `
-                    <p>${notif.message}</p>
-                    <button class="btn-marquer-lu" onclick="markAsRead(${notif.id})">Marquer comme lu</button>
-                `;
-                notificationsContainer.appendChild(notifItem);
-            });
+            // Vérification si les notifications sont vides
+            if (currentCount === 0) {
+                const noNotificationMessage = document.createElement("div");
+                noNotificationMessage.className = "no-notification-message";
+                noNotificationMessage.innerHTML = "<p>Pas de notifications</p>";
+                notificationsContainer.appendChild(noNotificationMessage);
+            } else {
+                // Si des notifications existent, les afficher
+                data.notifications.forEach(notif => {
+                    const notifItem = document.createElement("div");
+                    notifItem.className = "notification-item";
+                    notifItem.innerHTML = `
+                        <p>${notif.message}</p>
+                        <button class="btn-marquer-lu" onclick="markAsRead(${notif.id})">Marquer comme lu</button>
+                    `;
+                    notificationsContainer.appendChild(notifItem);
+                });
+            }
         }
     } catch (error) {
         console.error("Erreur lors du chargement des notifications :", error);
     }
 }
+
 
     async function markAsRead(id) {
         await fetch(`/api/notifications/${id}/lire`, { method: "POST" });
