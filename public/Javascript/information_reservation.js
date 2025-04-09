@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             numberOfPlayers = 1;
         }
 
-        if (numberOfPlayers > maxPlayers && !isRempliInformartion) {
+        if (numberOfPlayers > maxPlayers && isRempliInformartion == false) {
             alert(`Le nombre de joueurs ne peut pas dépasser ${maxPlayers}.`);
             numberOfPlayers = maxPlayers; 
             nombreJoueursInput.value = maxPlayers; 
