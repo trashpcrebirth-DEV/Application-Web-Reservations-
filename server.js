@@ -805,7 +805,7 @@ app.get("/checkout", async (req, res) => {
         // Créer les lignes de paiement avec le prix total multiplié par le nombre de joueurs
         const line_items = itemsAvecReservation.map((item) => ({
             price_data: {
-                currency: "usd",
+                currency: "cad",
                 product_data: {
                     name: item.categorie_sport + "(" + item.nombreJoueur + "x)", // Nom du produit avec le nombre de joueurs
                 },
