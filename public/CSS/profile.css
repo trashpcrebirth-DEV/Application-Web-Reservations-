@@ -10,6 +10,10 @@ body {
     background-color: #f5f7fa;
     color: #333;
     line-height: 1.6;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    -webkit-background-clip: text;
 }
 
 /* Layout Principal */
