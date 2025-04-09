@@ -20,7 +20,7 @@
 }
 
 .banner {
-    width: 100;
+    width: 100vw;
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/background.gif);
     background-size: cover;
@@ -56,7 +56,7 @@
 
 }
 
-.bar-de-navigation ul li.bar-page-actuel{
+.bar-de-navigation ul li.bar-page-actuel {
     color: #175BED;
     font-weight: bold;
 }
@@ -94,9 +94,10 @@
     text-transform: uppercase;
 }
 
-i{
+i {
     color: white;
 }
+
 .cart-icon {
     position: relative;
     display: inline-block;
@@ -142,9 +143,11 @@ i{
     animation: pulse 1.5s forwards;
     border: 2px solid rgba(255, 77, 77, 0.5);
 }
+
 .notification-icon {
-    font-size: 25px; 
-    color: #333; /* Ajuste selon le design */
+    font-size: 25px;
+    color: #333;
+    /* Ajuste selon le design */
 }
 
 .notification-badge {
@@ -169,8 +172,8 @@ i{
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     padding: 10px;
     border-radius: 5px;
-    z-index: 1000; 
-    
+    z-index: 1000;
+
 
 
 }
@@ -178,9 +181,9 @@ i{
 .notification-item {
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    font-size: 12px; 
-    
-    
+    font-size: 12px;
+
+
 }
 
 .notification-item:last-child {
@@ -234,6 +237,7 @@ i{
         opacity: 0;
         transform: translateY(20px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -247,20 +251,46 @@ i{
         transform: scale(1);
         opacity: 1;
     }
+
     100% {
         transform: scale(1.5);
         opacity: 0;
     }
 }
+
 @keyframes ring {
-    0% { transform: rotate(0); }
-    10% { transform: rotate(15deg); }
-    20% { transform: rotate(-10deg); }
-    30% { transform: rotate(7deg); }
-    40% { transform: rotate(-5deg); }
-    50% { transform: rotate(3deg); }
-    60% { transform: rotate(-2deg); }
-    70%, 100% { transform: rotate(0); }
+    0% {
+        transform: rotate(0);
+    }
+
+    10% {
+        transform: rotate(15deg);
+    }
+
+    20% {
+        transform: rotate(-10deg);
+    }
+
+    30% {
+        transform: rotate(7deg);
+    }
+
+    40% {
+        transform: rotate(-5deg);
+    }
+
+    50% {
+        transform: rotate(3deg);
+    }
+
+    60% {
+        transform: rotate(-2deg);
+    }
+
+    70%,
+    100% {
+        transform: rotate(0);
+    }
 }
 
 .ring-animation {
