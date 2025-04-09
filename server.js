@@ -789,27 +789,32 @@ app.get("/checkout", async (req, res) => {
             [reservationIds]
         );
 
-        // Associer les réservations aux items
+        // Associer les réservations aux items et calculer le prix total
         const itemsAvecReservation = items.map(item => {
             const reservation = reservations.find(res => res.id_reservation === item.id_reservation);
+            const prixUnitaire = reservation ? reservation.prix : 0;
+            const nombreJoueur = item.nombreJoueur || 1; // Par défaut 1 joueur si non défini
+
             return {
                 ...item,
-                prix: reservation ? reservation.prix : 0,
+                prix: prixUnitaire * nombreJoueur, // Calcul du prix total pour ce nombre de joueurs
                 categorie_sport: reservation ? reservation.categorie_sport : "Sport inconnu"
             };
         });
 
+        // Créer les lignes de paiement avec le prix total multiplié par le nombre de joueurs
         const line_items = itemsAvecReservation.map((item) => ({
             price_data: {
                 currency: "usd",
                 product_data: {
-                    name: item.categorie_sport,
+                    name: item.categorie_sport + "(" + item.nombreJoueur + "x)", // Nom du produit avec le nombre de joueurs
                 },
-                unit_amount: Math.round(item.prix * 100),
+                unit_amount: Math.round(item.prix * 100), // prix total converti en centimes
             },
-            quantity: 1,
+            quantity: 1, // Chaque ligne représente une réservation unique
         }));
 
+        // Créer la session de paiement avec Stripe
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: line_items,
@@ -818,12 +823,14 @@ app.get("/checkout", async (req, res) => {
             cancel_url: "http://localhost:4000/paiement",
         });
 
+        // Rediriger l'utilisateur vers Stripe pour effectuer le paiement
         res.redirect(session.url);
     } catch (error) {
         console.error("Erreur lors de la création de la session Stripe :", error);
         res.status(500).send("Erreur serveur");
     }
 });
+
 
 app.get('/confirmation', (req, res) => {
     res.render('pages/confirmation', { message: "Votre réservation a bien été confirmée !" });
