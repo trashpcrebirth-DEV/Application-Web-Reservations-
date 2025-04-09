@@ -21,7 +21,7 @@
 
 .banner {
     width: 100vw;
-    height: 100vh;
+    height: 105vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../images/background.gif);
     background-size: cover;
     background-position: center;

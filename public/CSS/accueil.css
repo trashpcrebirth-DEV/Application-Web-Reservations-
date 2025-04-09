@@ -247,7 +247,7 @@ body {
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-text-fill-color*/
 .a-propos {
     position: relative;
-    margin-top: 31.5vw;
+    margin-top: 35vw;
     padding: 80px 40px;
     color: white;
     background: linear-gradient(180deg, rgba(23, 91, 237, 0.05) 0%, #1a1a1a 100%), url('../images/imageAccueil1.png');
