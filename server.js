@@ -1134,7 +1134,7 @@ app.get('/historique', (req, res) => {
 
         // Exécuter la requête pour obtenir les réservations de l'utilisateur
         con.query(
-            `SELECT * FROM utilisateurs_reservations WHERE id_utilisateur = ?`,
+            `SELECT r.id_reservation, r.categorie_sport, r.installation, ur.nombreJoueur, ur.statut, ur.prix FROM utilisateurs_reservations ur JOIN reservations r ON ur.id_reservation = r.id_reservation WHERE ur.id_utilisateur = ?`,
             [userId],
             (error, results) => {
                 if (error) {
