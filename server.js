@@ -1234,3 +1234,53 @@ app.get('/facture', (req, res) => {
     doc.end();
     delete req.session.lastReservations;
 });
+
+// Définir le stockage pour les photos de profil
+const profileStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads'); // Dossier de destination
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname); // ex: .jpg
+      cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Générer un nom de fichier unique
+    }
+  });
+
+  // Filtrage : n'accepter que les images
+  const profileFileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Seules les images sont autorisées.'), false);
+    }
+  };
+
+  // Initialiser Multer avec le stockage et le filtre
+  const profileUpload = multer({
+    storage: profileStorage,
+    fileFilter: profileFileFilter
+  });
+
+  app.post('/upload-profile-pic', profileUpload.single('profile_pic'), (req, res) => {
+    const userId = req.session.user.id; // Récupérer l'ID de l'utilisateur (assurez-vous que la session est configurée)
+
+    if (!req.file) {
+      return res.status(400).send('Aucun fichier reçu.');
+    }
+
+    // Construire l'URL relative de l'image
+    const imageUrl = '/uploads/' + req.file.filename;
+
+    // Met à jour la base de données avec le nouvel URL de la photo
+    const updateQuery = "UPDATE utilisateurs SET photo_url = ? WHERE id = ?";
+    con.query(updateQuery, [imageUrl, userId], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
+      }
+
+      // Rediriger l'utilisateur vers sa page de profil (ou répondre avec l'URL de l'image)
+      res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
+    });
+  });
