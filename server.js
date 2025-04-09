@@ -1284,3 +1284,17 @@ const profileStorage = multer.diskStorage({
       res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
     });
   });
+
+  app.post('/revert-profile-pic', async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+
+        con.promise().query('UPDATE utilisateurs SET photo_url = NULL WHERE id = ?', [userId]);
+        res.redirect('/profile');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur serveur.");
+    }
+});
+
+
