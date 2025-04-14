@@ -319,3 +319,15 @@ button.btn-warning:active {
 button.btn-warning i {
     margin-right: 6px; 
 }
+/* Animation fluide pour les champs de mot de passe */
+.animated-password {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Classe déclenchée dynamiquement */
+.slide-fade-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
