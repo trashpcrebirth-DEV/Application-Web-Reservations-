@@ -15,6 +15,9 @@ import mongoose from 'mongoose';
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import moment from "moment";
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
+
 
 // Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/mongodb', {
@@ -1404,7 +1407,83 @@ app.post('/revert-profile-pic', async (req, res) => {
 });
 
 
-
+const transporter = nodemailer.createTransport({
+    host: 'mail.smtp2go.com',
+    port: 587, // You can also use ports 25, 2525, 8025, or 80
+    secure: false, // Set to true if using port 465
+    auth: {
+      user: 'bdeb.qc.ca',
+      pass: 'F7IaLlYeAIkIxwKc'
+    }
+  });
+  
+  
+  // GET: affiche la page de mot de passe oublié
+  app.get("/mot_de_passe_oublie", (req, res) => {
+      res.render("pages/mot_de_passe_oublie", {
+          activePage: 'mot_de_passe_oublie',
+          user: req.session.user
+      });
+  });
+  
+  // POST: traite le formulaire de réinitialisation
+  app.post("/mot_de_passe_oublie", (req, res) => {
+      const email = req.body.email;
+  
+      con.query("SELECT * FROM utilisateurs WHERE email = ?", [email], (err, results) => {
+          if (err) throw err;
+  
+          if (results.length > 0) {
+              const token = crypto.randomBytes(32).toString('hex');
+  
+              con.query("UPDATE utilisateurs SET reset_token = ? WHERE email = ?", [token, email], (err) => {
+                  if (err) throw err;
+  
+                  const resetLink = `http://localhost:4000/reset_password?token=${token}`;
+  
+                  const mailOptions = {
+                      from: 'sportzone950@outlook.com',  // Adresse expéditeur
+                      to: email,
+                      subject: 'Réinitialisation du mot de passe',
+                      html: `<p>Voici votre lien pour réinitialiser votre mot de passe : <a href="${resetLink}">${resetLink}</a></p>`
+                  };
+  
+                  transporter.sendMail(mailOptions, (err, info) => {
+                      if (err) {
+                          console.error("Erreur lors de l'envoi du mail :", err);
+                          return res.status(500).send("Erreur d'envoi du courriel.");
+                      }
+  
+                      res.send("Un courriel a été envoyé avec un lien de réinitialisation.");
+                  });
+              });
+          } else {
+              res.send("Aucun compte associé à cette adresse.");
+          }
+      });
+  });
+  
+  app.get("/reset_password", (req, res) => {
+      const token = req.query.token;
+      if (!token) return res.status(400).send("Token manquant.");
+      res.render("pages/reset_password", { token });
+  });
+  
+  app.post("/reset_password", async (req, res) => {
+      const { token, password } = req.body;
+      con.query("SELECT * FROM utilisateurs WHERE reset_token = ?", [token], async (err, results) => {
+          if (err) throw err;
+          if (results.length === 0) {
+              return res.status(400).send("Lien invalide ou expiré.");
+          }
+          const user = results[0];
+          const hashedPassword = await bcrypt.hash(password, 10);
+          con.query("UPDATE utilisateurs SET mot_de_passe = ?, reset_token = NULL WHERE id = ?", [hashedPassword, user.id], (err) => {
+              if (err) throw err;
+              res.send("Mot de passe mis à jour avec succès. Vous pouvez maintenant vous reconnecter.");
+          });
+      });
+  });
 
 
 
