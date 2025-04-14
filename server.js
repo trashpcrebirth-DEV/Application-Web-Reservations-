@@ -1329,18 +1329,16 @@ app.get('/facture', (req, res) => {
 });
 
 // Définir le stockage pour les photos de profil
-const profileStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads'); // Dossier de destination
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname); // ex: .jpg
-        cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Générer un nom de fichier unique
-    }
+import cloudinaryModule from 'cloudinary';
+
+const cloudinary = cloudinaryModule.v2;
+cloudinary.config({
+    cloud_name: 'dkdxwcfso',
+    api_key: '779181997236279',
+    api_secret: 'OEhNwZxk4Hm1paeMGae-oCZE30I'
 });
 
-// Filtrage : n'accepter que les images
+// File filter for images only
 const profileFileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
         cb(null, true);
@@ -1349,45 +1347,66 @@ const profileFileFilter = (req, file, cb) => {
     }
 };
 
-// Initialiser Multer avec le stockage et le filtre
-const profileUpload = multer({
-    storage: profileStorage,
+// Initialize multer for handling file uploads (Only once) - renamed to `imageUpload`
+const imageUpload = multer({
+    dest: 'uploads/',  // Temporary directory for storing files before Cloudinary upload
     fileFilter: profileFileFilter
 });
 
-app.post('/upload-profile-pic', profileUpload.single('profile_pic'), (req, res) => {
-    const userId = req.session.user.id; // Récupérer l'ID de l'utilisateur (assurez-vous que la session est configurée)
+app.post('/upload-profile-pic', imageUpload.single('profile_pic'), (req, res) => {
+    console.log("Received file:", req.file);
+
+    const userId = req.session.user.id;
 
     if (!req.file) {
         return res.status(400).send('Aucun fichier reçu.');
     }
 
-    // Construire l'URL relative de l'image
-    const imageUrl = '/uploads/' + req.file.filename;
+    // Upload the image to Cloudinary
+    cloudinary.uploader.upload(req.file.path, { folder: 'avatars' })
+        .then((result) => {
+            console.log("Cloudinary upload result:", result);
 
-    // Met à jour la base de données avec le nouvel URL de la photo
-    const updateQuery = "UPDATE utilisateurs SET photo_url = ? WHERE id = ?";
-    con.query(updateQuery, [imageUrl, userId], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
-        }
+            // Get the URL of the uploaded image
+            const imageUrl = result.secure_url;
 
-        // Rediriger l'utilisateur vers sa page de profil (ou répondre avec l'URL de l'image)
-        res.redirect('/profile'); // Cela recharge le profil avec la nouvelle image
-    });
+            // Delete the file from the local storage after uploading to Cloudinary
+            fs.unlink(req.file.path, (err) => {
+                if (err) console.error("Failed to delete local file:", err);
+            });
+
+            // Update the user's profile with the image URL
+            const updateQuery = "UPDATE utilisateurs SET photo_url = ? WHERE id = ?";
+            con.query(updateQuery, [imageUrl, userId], (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Erreur lors de la mise à jour de la photo de profil.');
+                }
+                res.redirect('/profile');
+            });
+        })
+        .catch((err) => {
+            console.error("Error uploading image to Cloudinary:", err);
+            res.status(500).send("Erreur lors du téléchargement de l'image.");
+        });
 });
 
+// Revert profile picture
 app.post('/revert-profile-pic', async (req, res) => {
     try {
         const userId = req.session.user.id;
-
-        con.promise().query('UPDATE utilisateurs SET photo_url = NULL WHERE id = ?', [userId]);
+        await con.promise().query('UPDATE utilisateurs SET photo_url = NULL WHERE id = ?', [userId]);
         res.redirect('/profile');
     } catch (err) {
         console.error(err);
         res.status(500).send("Erreur serveur.");
     }
 });
+
+
+
+
+
+
 
 
