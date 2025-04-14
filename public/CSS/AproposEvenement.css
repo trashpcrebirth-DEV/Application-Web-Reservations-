@@ -644,3 +644,11 @@ a:hover {
 .cta-btn:hover::before {
     left: 100%;
 }
+
+.evenements-grid:has(> .evenement-card:nth-child(1):nth-last-child(1)) {
+    grid-template-columns: 1fr;
+}
+
+.evenements-grid:has(> .evenement-card:nth-child(2):nth-last-child(1)) {
+    grid-template-columns: repeat(2, 1fr);
+}
