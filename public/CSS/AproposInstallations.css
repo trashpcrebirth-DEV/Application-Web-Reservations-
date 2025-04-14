@@ -17,60 +17,74 @@ body {
     position: relative;
 }
 
-.banniere {
-    min-height: 60vh;
+.hero {
+    position: relative;
+    height: 60vh;
+    min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('/placeholder.svg?height=1080&width=1920');
+    background-image: url('../images/banniere.gif');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    color: #ffffff;
     overflow: hidden;
 }
 
-.banniere::before {
-    content: '';
+.hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #175bed, #0a3d9c);
-    opacity: 0.3;
-    animation: glissement 15s linear infinite;
-    background-size: 200% 200%;
+    background: linear-gradient(to bottom, rgba(18, 18, 18, 0.7), rgba(18, 18, 18, 0.9));
+    z-index: 1;
 }
 
-.banniere h2 {
-    font-size: 55px;
-    margin-bottom: 20px;
+.hero .conteneur {
     position: relative;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    background-image: linear-gradient(45deg, #175bed, #4287f5);
-    text-shadow:
-    0 0 10px #175bed,
-    0 0 20px #175bed,
-    0 0 30px #175bed;
-    animation: flottant 3s ease-in-out infinite;
-    text-transform: uppercase;
+    z-index: 2;
 }
 
-.banniere p {
-    font-size: 14.5px;
-    max-width: 800px;
-    margin: 0 auto;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 15px 30px;
-    border-radius: 30px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.hero h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
+
+.hero h1 span {
+    color: #3a86ff;
+    position: relative;
+    display: inline-block;
+}
+
+.hero h1 span::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #175bed;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.hero:hover h1 span::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
 
 .introduction {
     padding: 80px 0;

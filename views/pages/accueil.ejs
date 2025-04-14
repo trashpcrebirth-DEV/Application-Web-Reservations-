@@ -93,6 +93,34 @@
                 MAINTENANT!</a>
         </section>
 
+        <section class="stats">
+            <div class="conteneur">
+                <h3>Depuis le début</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-nombre" data-count="4255">0</div>
+                        <div class="stat-label">Réservations effectuées sur notre site</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-nombre" data-count="87532">0</div>
+                        <div class="stat-label">Participants total</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-nombre" data-count="2565">0</div>
+                        <div class="stat-label">Tournois organisés ici à SportZone</div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="services-complementaires">
             <div class="conteneur">
                 <h3>Services complémentaires</h3>
@@ -120,6 +148,39 @@
         <!--FIN DU BODY-->
         <%- include ("../partials/footer.ejs") %>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const statNombres = document.querySelectorAll('.stat-nombre');
+            
+            const observerOptions = {
+                threshold: 0.5
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const count = parseInt(target.getAttribute('data-count'));
+                        let current = 0;
+                        const increment = Math.ceil(count / 50);
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= count) {
+                                current = count;
+                                clearInterval(timer);
+                            }
+                            target.textContent = current.toLocaleString();
+                        }, 30);
+                        observer.unobserve(target);
+                    }
+                });
+            }, observerOptions);
+            
+            statNombres.forEach(nombre => {
+                observer.observe(nombre);
+            });
+        });
+        </script>
         <script>
             window.__ow = window.__ow || {};
             window.__ow.organizationId = "715832fd-47e3-45b9-830f-c2a1b5115487";

@@ -1,104 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nos évenements</title>
+    <title>Nos événements | SportZone</title>
     <link rel="stylesheet" href="/CSS/AProposEvenement.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <%- include ("../partials/header.ejs") %>
-    <section class="banniere">
+    
+    <!-- Bannière -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
         <div class="conteneur">
-            <h2>Nos Événements de 2025</h1>
-            <p>Découvrez les événements sportifs que nous organisons tout au long de l'année</p>
+            <h1>Événements <span>SportZone</span></h1>
+            <p>Découvrez nos événements sportifs et rejoignez la communauté</p>
         </div>
     </section>
-
-    <main class="lineTemps-container">
-        <% evenementsParMois.forEach((mois) => { %>
-            <div class="mois-section">
-                <div class="mois-marker">
-                    <span><%= mois.month %></span>
-                </div>
     
-                <div class="evenements-list">
-                    <% if (mois.items.length > 0) { %>
-                        <% mois.items.forEach((evenement) => { %>
-                            <div class="evenement-card">
-                                <div class="evenement-content">
-                                    <div class="evenement-image">
-                                        <img src="<%= evenement.image %>" alt="<%= evenement.titre %>">
-                                    </div>
-                                    <h3><%= evenement.titre %></h3>
-                                    <div class="evenement-details">
-                                        <div class="detail">
-                                            <i class="icon-calendar"></i>
-                                            <%= evenement.date %>
-                                        </div>
-                                        <div class="detail">
-                                            <i class="icon-location"></i>
-                                            <%= evenement.lieu %>
-                                        </div>
-                                        <div class="detail">
-                                            <i class="icon-users"></i>
-                                            <%= evenement.participants %>
-                                        </div>
-                                    </div>
-                                    <p class="evenement-description"><%= evenement.description %></p>
-                                </div>
-                            </div>
-                        <% }); %>
-                    <% } else { %>
-                        <p class="pas-evenement">Aucun événement prévu ce mois-ci.</p>
-                    <% } %>
-                </div>
-            </div>
-        <% }); %>
-    </main>
-    
-    <section class="services-complementaires">
+    <!-- Filtres -->
+    <div class="filtres">
         <div class="conteneur">
-            <h3>Services complémentaires</h3>
-            <div class="grille-services">
-                <div class="carte-service">
-                    <div class="icone-service vestiaires"><i class="fa-regular fa-circle-user"></i></div>
-                    <h5>Vestiaires modernes</h5>
+            <div class="filtres-titre">
+                <h2>Calendrier des événements</h2>
+                <p>Explorez notre programmation sportive</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Timeline des événements -->
+    <div class="timeline">
+        <div class="conteneur">
+            <% evenementsParMois.forEach((mois) => { %>
+                <div class="mois-bloc">
+                    <div class="mois-titre">
+                        <span><%= mois.month %></span>
+                    </div>
+                    
+                    <div class="evenements-grid">
+                        <% if (mois.items.length > 0) { %>
+                            <% mois.items.forEach((evenement) => { %>
+                                <div class="evenement-card">
+                                    <div class="evenement-date">
+                                        <span class="jour"><%= new Date(evenement.date).getDate() %></span>
+                                        <span class="mois"><%= new Date(evenement.date).toLocaleString('fr-FR', {month: 'short'}) %></span>
+                                    </div>
+                                    
+                                    <div class="evenement-image">
+                                        <img src="<%= evenement.image || '/images/default-event.jpg' %>" alt="<%= evenement.titre %>">
+                                        <div class="evenement-type"><%= evenement.type || 'Événement' %></div>
+                                    </div>
+                                    
+                                    <div class="evenement-contenu">
+                                        <h3><%= evenement.titre %></h3>
+                                        
+                                        <div class="evenement-infos">
+                                            <div class="info">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <span><%= evenement.lieu %></span>
+                                            </div>
+                                            <div class="info">
+                                                <i class="fas fa-users"></i>
+                                                <span><%= evenement.participants %> participants</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="evenement-description"><%= evenement.description %></p>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="pas-evenement">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-calendar-times"></i>
+                                </div>
+                                <h4>Aucun événement prévu</h4>
+                                <p>Revenez bientôt pour découvrir nos prochains événements</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div> 
+    
+    <section class="services">
+        <div class="conteneur">
+            <div class="section-titre">
+                <h2>Nos services</h2>
+                <p>Pour une expérience sportive complète</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3>Vestiaires modernes</h3>
                     <p>Vestiaires spacieux avec casiers sécurisés et douches individuelles.</p>
                 </div>
-                <div class="carte-service">
-                    <div class="icone-service parking"><i class="fa-solid fa-car"></i></div>
-                    <h5>Parking gratuit</h5>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Parking gratuit</h3>
                     <p>Plus de 200 places de stationnement pour nos membres et visiteurs.</p>
                 </div>
-                <div class="carte-service">
-                    <div class="icone-service cafeteria"><i class="fa-solid fa-utensils"></i></div>
-                    <h5>Cafétéria sportive</h5>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Cafétéria sportive</h3>
                     <p>Espace de restauration proposant des repas équilibrés et boissons énergisantes.</p>
                 </div>
             </div>
         </div>
     </section>
     
-    <section class="contacter-section">
+    <section class="cta">
         <div class="conteneur">
-            <h3>Prêt à organiser un évenement?</h3>
-            <p>Venez nous contact pour organiser un évenement ici à SportZone et découvrez par vous-même la qualité de notre service.</p>
-            <div class="boutons">
-                <a href="/contact" class="bouton-contacter"><i class="fa-solid fa-calendar"></i> CONTACTER NOUS!</a> 
-            </div>
+            <h2>Prêt à rejoindre un événement?</h2>
+            <p>Contactez-nous pour plus d'informations ou pour organiser votre propre événement sportif</p>
+            <a href="/contact" class="cta-btn"><i class="fa-solid fa-calendar"></i> Contactez-nous</a>
         </div>
     </section>
+    
     <%- include ("../partials/footer.ejs") %>
 
     <script>
-        window.__ow = window.__ow || {};
-        window.__ow.organizationId = "715832fd-47e3-45b9-830f-c2a1b5115487";
-        window.__ow.template_id = "4ca5c965-dab7-4659-a17c-3c376b484df5";
-        window.__ow.integration_name = "manual_settings";
-        window.__ow.product_name = "chatbot";   
-        ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[OpenWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.openwidget.com/openwidget.js",t.head.appendChild(n)}};!n.__ow.asyncInit&&e.init(),n.OpenWidget=n.OpenWidget||e}(window,document,[].slice))
+        document.addEventListener('DOMContentLoaded', function() {       
+            const eventCards = document.querySelectorAll('.evenement-card');
+            
+            const cardObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        cardObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            eventCards.forEach(card => {
+                cardObserver.observe(card);
+            });
+        });
     </script>
-    <noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
 </body>
 </html>
