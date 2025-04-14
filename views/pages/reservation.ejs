@@ -3,103 +3,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réservation</title>
+  <title>Réservation | SportZone</title>
   <link rel="stylesheet" href="/CSS/Reservation.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="banner">
+<body>
+  <div class="particles-container">
+    <div id="particles"></div>
+  </div>
+  
   <%- include ("../partials/header.ejs") %>
-  <div class="bar">
-    <label>Catégorie:</label>
-    <select id="sportFilter">
-      <option value="">Tous les sports</option> 
-      <option value="Athlétisme">Athlétisme</option>
-      <option value="Arts Martiaux">Arts Martiaux</option>
-      <option value="Basketball">Basketball</option>
-      <option value="Badminton">Badminton</option>
-      <option value="Cricket">Cricket</option>
-      <option value="Cours Collectifs">Cours Collectifs</option>
-      <option value="Escalade">Escalade</option>
-      <option value="Golf">Golf</option>
-      <option value="Handball">Handball</option>
-      <option value="Hockey">Hockey</option>
-      <option value="Natation">Natation</option>
-      <option value="Musculation">Musculation</option>
-      <option value="Tennis">Tennis</option>
-      <option value="Volleyball">Volleyball</option>
-      <option value="Soccer">Soccer</option>
-      <option value="Squash">Squash</option>
-      <option value="Skating">Skating</option>
-    </select>
-    <label>Installation</label>
-    <select id="installationFilter">
-      <option value="">Toutes les installations</option>
-      <option value="Arena de Hockey">Arena de Hockey</option>
-      <option value="Bassin Olympique">Bassin Olympique</option>
-      <option value="Bassin d'apprentissage">Bassin d'apprentissage</option>
-      <option value="Pisicine de Loisir">Pisicine de Loisir</option>
-      <option value="Terrain de Badminton Double">Terrain de Badminton Double</option>
-      <option value="Terrain de Badminton Single">Terrain de Badminton Single</option>
-      <option value="Terrain de Basketball A - Intérieur">Terrain de Basketball A - Intérieur</option>
-      <option value="Terrain de Basketball B - Extérieur">Terrain de Basketball B - Extérieur</option>
-      <option value="Terrain de Basketball C - Extérieur">Terrain de Basketball C - Extérieur</option>
-      <option value="Terrain de Cricket">Terrain de Cricket</option>
-      <option value="Terrain de Handball A">Terrain de Handball A</option>
-      <option value="Terrain de Handball B">Terrain de Handball B</option>
-      <option value="Terrain de Handball C">Terrain de Handball C</option>
-      <option value="Terrain de Tennis Double">Terrain de Tennis Double</option>
-      <option value="Terrain de Tennis Single">Terrain de Tennis Single</option>
-      <option value="Terrain de Soccer A">Terrain de Soccer A</option>
-      <option value="Terrain de Soccer B">Terrain de Soccer B</option>
-      <option value="Terrain de Soccer C">Terrain de Soccer C</option>
-      <option value="Terrain de Squash Double">Terrain de Squash Double</option>
-      <option value="Terrain de Squash Single">Terrain de Squash Single</option>
-      <option value="Terrain de Volleyball A">Terrain de Volleyball A</option>
-      <option value="Terrain de Volleyball B">Terrain de Volleyball B</option>
-      <option value="Terrain de Volleyball C">Terrain de Volleyball C</option>
-      <option value="Salle de Musculation 1">Salle de Musculation 1</option>
-      <option value="Salle de Musculation 2">Salle de Musculation 2</option>
-      <option value="Studio 1">Studio 1</option>
-      <option value="Studio 2">Studio 2</option>
-      <option value="Studio 3">Studio 3</option>
-    </select>
-    <div class="legende">
-      <h3>Légende:</h3>
-      <span></span>
-      <span class="color-box blanc"></span>- Pas de réservation
-      <span></span>
-      <span class="color-box blue"></span>- Disponible
-      <span></span>
-      <span class="color-box gray"></span>- Pleine
+  
+  <div class="page-title">
+    <h1>Réservez votre <span>terrain</span>!</h1>
+    <p>Trouvez et réservez facilement votre créneau sportif idéal</p>
+  </div>
+  
+  <div class="filter-container">
+    <div class="filter-card">
+      <div class="filter-header">
+        <i class="fas fa-filter"></i>
+        <h3>Filtres</h3>
+      </div>
+      
+      <div class="filter-body">
+        <div class="filter-group">
+          <label for="sportFilter"><i class="fas fa-running"></i> Sport:</label>
+          <select id="sportFilter">
+            <option value="">Tous les sports</option> 
+            <option value="Athlétisme">Athlétisme</option>
+            <option value="Arts Martiaux">Arts Martiaux</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Badminton">Badminton</option>
+            <option value="Cricket">Cricket</option>
+            <option value="Cours Collectifs">Cours Collectifs</option>
+            <option value="Escalade">Escalade</option>
+            <option value="Golf">Golf</option>
+            <option value="Handball">Handball</option>
+            <option value="Hockey">Hockey</option>
+            <option value="Natation">Natation</option>
+            <option value="Musculation">Musculation</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Volleyball">Volleyball</option>
+            <option value="Soccer">Soccer</option>
+            <option value="Squash">Squash</option>
+            <option value="Skating">Skating</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="installationFilter"><i class="fas fa-map-marker-alt"></i> Installation:</label>
+          <select id="installationFilter">
+            <option value="">Toutes les installations</option>
+            <option value="Arena de Hockey">Arena de Hockey</option>
+            <option value="Bassin Olympique">Bassin Olympique</option>
+            <option value="Bassin d'apprentissage">Bassin d'apprentissage</option>
+            <option value="Pisicine de Loisir">Pisicine de Loisir</option>
+            <option value="Terrain de Badminton Double">Terrain de Badminton Double</option>
+            <option value="Terrain de Badminton Single">Terrain de Badminton Single</option>
+            <option value="Terrain de Basketball A - Intérieur">Terrain de Basketball A - Intérieur</option>
+            <option value="Terrain de Basketball B - Extérieur">Terrain de Basketball B - Extérieur</option>
+            <option value="Terrain de Basketball C - Extérieur">Terrain de Basketball C - Extérieur</option>
+            <option value="Terrain de Cricket">Terrain de Cricket</option>
+            <option value="Terrain de Handball A">Terrain de Handball A</option>
+            <option value="Terrain de Handball B">Terrain de Handball B</option>
+            <option value="Terrain de Handball C">Terrain de Handball C</option>
+            <option value="Terrain de Tennis Double">Terrain de Tennis Double</option>
+            <option value="Terrain de Tennis Single">Terrain de Tennis Single</option>
+            <option value="Terrain de Soccer A">Terrain de Soccer A</option>
+            <option value="Terrain de Soccer B">Terrain de Soccer B</option>
+            <option value="Terrain de Soccer C">Terrain de Soccer C</option>
+            <option value="Terrain de Squash Double">Terrain de Squash Double</option>
+            <option value="Terrain de Squash Single">Terrain de Squash Single</option>
+            <option value="Terrain de Volleyball A">Terrain de Volleyball A</option>
+            <option value="Terrain de Volleyball B">Terrain de Volleyball B</option>
+            <option value="Terrain de Volleyball C">Terrain de Volleyball C</option>
+            <option value="Salle de Musculation 1">Salle de Musculation 1</option>
+            <option value="Salle de Musculation 2">Salle de Musculation 2</option>
+            <option value="Studio 1">Studio 1</option>
+            <option value="Studio 2">Studio 2</option>
+            <option value="Studio 3">Studio 3</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="legend-container">
+        <h4><i class="fas fa-info-circle"></i> Légende</h4>
+        <div class="legend-items">
+          <div class="legend-item">
+            <span class="legend-color blanc"></span>
+            <span class="legend-text">Pas de réservation (Vide)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color blue"></span>
+            <span class="legend-text">Disponible</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color gray"></span>
+            <span class="legend-text">Pleine</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="calendrier-container">
-      <h1>Calendrier</h1>
-      <div class="calendrier">
-        <div class="calendrier-header">
-          <button class="avant" id="prevMonth">&lt;</button>
-          <span class="month-year" id="monthYear">Janvier 2025</span>
-          <button class="apres" id="nextMonth">&gt;</button>
+  <div class="main-container">
+    <div class="calendar-wrapper">
+      <div class="calendar-card">
+        <div class="calendar-header">
+          <h2><i class="fas fa-calendar-alt"></i> Calendrier</h2>
+          <div class="month-navigation">
+            <button class="nav-btn" id="prevMonth">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="month-year" id="monthYear">Janvier 2025</span>
+            <button class="nav-btn" id="nextMonth">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
-        <div class="calendrier-grid">
-          <div class="day-header">Dim</div>
-          <div class="day-header">Lun</div>
-          <div class="day-header">Mar</div>
-          <div class="day-header">Mer</div>
-          <div class="day-header">Jeu</div>
-          <div class="day-header">Ven</div>
-          <div class="day-header">Sam</div>
+        
+        <div class="calendar-body">
+          <div class="weekdays-header">
+            <div class="weekday">Dim</div>
+            <div class="weekday">Lun</div>
+            <div class="weekday">Mar</div>
+            <div class="weekday">Mer</div>
+            <div class="weekday">Jeu</div>
+            <div class="weekday">Ven</div>
+            <div class="weekday">Sam</div>
+          </div>
+          
+          <div id="daysGrid" class="days-grid"></div>
         </div>
-        <div id="daysGrid" class="calendrier-grid"></div>
       </div>
     </div>
     
-    <div id="listeReservations" class="liste-reservations">
-      <h2>Réservations</h2>
-      <p id="dateSelectionnee" class="date-selectionnee">Sélectionnez une date</p>
-      <div id="reservationList">
-        <p class="aucune-reservation">Aucune réservation sélectionnée</p>
+    <div class="reservations-wrapper">
+      <div class="reservations-card" id="listeReservations">
+        <div class="reservations-header">
+          <h2><i class="fas fa-list-alt"></i> Réservations</h2>
+          <p id="dateSelectionnee" class="selected-date">Sélectionnez une date</p>
+        </div>
+        
+        <div class="reservations-body" id="reservationList">
+          <div class="empty-state">
+            <i class="fas fa-calendar-day"></i>
+            <p>Aucune réservation sélectionnée</p>
+            <span>Cliquez sur une date pour voir les disponibilités</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -112,9 +165,82 @@
     window.__ow.integration_name = "manual_settings";
     window.__ow.product_name = "chatbot";   
     ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[OpenWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.openwidget.com/openwidget.js",t.head.appendChild(n)}};!n.__ow.asyncInit&&e.init(),n.OpenWidget=n.OpenWidget||e}(window,document,[].slice))
-</script>
-<noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
+  </script>
+  <noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
+  
+  <!-- Particles Animation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const particlesContainer = document.getElementById('particles');
+      
+      function createParticle() {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Position aléatoire
+        const posX = Math.random() * window.innerWidth;
+        const posY = Math.random() * window.innerHeight;
+        
+        // Taille aléatoire
+        const size = Math.random() * 5 + 2;
+        
+        // Vitesse aléatoire
+        const speedX = (Math.random() - 0.5) * 2;
+        const speedY = (Math.random() - 0.5) * 2;
+        
+        // Appliquer les styles
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}px`;
+        particle.style.top = `${posY}px`;
+        particle.style.opacity = Math.random() * 0.5 + 0.2;
+        
+        particlesContainer.appendChild(particle);
+        
+        // Animation
+        let x = posX;
+        let y = posY;
+        
+        function animate() {
+          x += speedX;
+          y += speedY;
+          
+          // Rebondir sur les bords
+          if (x < 0 || x > window.innerWidth) {
+            x = Math.max(0, Math.min(x, window.innerWidth));
+          }
+          if (y < 0 || y > window.innerHeight) {
+            y = Math.max(0, Math.min(y, window.innerHeight));
+          }
+          
+          particle.style.left = `${x}px`;
+          particle.style.top = `${y}px`;
+          
+          // Continuer l'animation ou supprimer la particule
+          if (Math.random() < 0.002 || x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight) {
+            particle.remove();
+          } else {
+            requestAnimationFrame(animate);
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      // Créer des particules initiales
+      for (let i = 0; i < 50; i++) {
+        createParticle();
+      }
+      
+      // Créer de nouvelles particules périodiquement
+      setInterval(() => {
+        if (particlesContainer.children.length < 100) {
+          createParticle();
+        }
+      }, 300);
+    });
+  </script>
+  
   <%- include ("../partials/footer.ejs") %>
 </body>
 </html>
-

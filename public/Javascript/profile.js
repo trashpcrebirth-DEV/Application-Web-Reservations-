@@ -1,54 +1,97 @@
 function enableEdit() {
-    console.log("Activation du mode édition");
     const editables = document.querySelectorAll('.editable');
+    editables.forEach(input => input.disabled = false);
 
-    editables.forEach(function(element) {
-        element.disabled = false;
-        element.style.backgroundColor = "#fff";
-        element.style.borderColor = "#4361ee";
-    });
+    // Masquer le bouton "Modifier" et afficher le bouton "Sauvegarder"
+    document.querySelector('.btn.btn-primary').style.display = 'none'; // Masque le bouton "Modifier"
+    document.getElementById('saveButton').style.display = 'inline-block'; // Affiche le bouton "Sauvegarder"
 
-    document.getElementById('saveButton').style.display = 'inline-flex';
-    document.querySelector('[onclick="enableEdit()"]').style.display = 'none';
+    // Affiche les champs pour l'ancien et la confirmation du mot de passe
+    document.getElementById('currentPasswordGroup').style.display = 'block';
+    document.getElementById('confirmPasswordGroup').style.display = 'block';
+}
+
+
+function togglePasswordVisibility(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        icon.classList.toggle('fa-eye-slash', isPassword);
+    }
 }
 
 function validateForm() {
-    console.log("Validation du formulaire");
-    const nom = document.getElementsByName('nom')[0].value;
-    const prenom = document.getElementsByName('prenom')[0].value;
-    const email = document.getElementsByName('email')[0].value;
-    const phone = document.getElementById('phoneInput').value;
+    const newPassword = document.getElementById('passwordField').value;
+    const currentPassword = document.querySelector('[name="ancien_mot_de_passe"]').value;
+    const confirmPassword = document.querySelector('[name="confirmation_mot_de_passe"]').value;
 
-    if (!nom || !prenom || !email) {
-        alert('Veuillez remplir tous les champs obligatoires (Nom, Prénom, Email)');
-        return false;
+    // Vérifie si tous les champs sont remplis
+    if (newPassword || currentPassword || confirmPassword) {
+        if (!newPassword || !currentPassword || !confirmPassword) {
+            alert("Tous les champs de mot de passe doivent être remplis.");
+            return false;
+        }
+        // Vérifie si les nouveaux mots de passe correspondent
+        if (newPassword !== confirmPassword) {
+            alert("Les nouveaux mots de passe ne correspondent pas.");
+            return false;
+        }
     }
-
-    if (!email.includes('@')) {
-        alert('Veuillez entrer une adresse email valide');
-        return false;
-    }
-
-    if (phone && !/^\d{3}-\d{3}-\d{4}$/.test(phone)) {
-        alert('Veuillez entrer un numéro de téléphone valide (format: 514-111-1111)');
-        return false;
-    }
-
     return true;
 }
 
-function togglePasswordVisibility() {
-    const passwordField = document.getElementById('passwordField');
-    const icon = document.querySelector('.toggle-password');
+const passwordField = document.getElementById('passwordField');
+const strengthBar = document.getElementById('passwordStrengthBar');
+const strengthMessage = document.getElementById('passwordStrengthMessage');
+
+if (passwordField) {
+    passwordField.addEventListener('input', function () {
+        const password = passwordField.value;
+        let strength = 0;
     
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        // Affiche la barre uniquement quand il y a du texte
+        const container = document.getElementById('passwordStrengthContainer');
+        container.style.display = password.length > 0 ? 'block' : 'none';
+    
+        // Calcul de la force du mot de passe
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+        // Met à jour la barre de force du mot de passe
+        strengthBar.style.width = `${(strength / 5) * 100}%`;
+    
+        const colors = ['#ff4d4d', '#ff944d', '#ffff4d', '#99e600', '#33cc33'];
+        strengthBar.style.backgroundColor = colors[strength - 1] || 'transparent';
+    
+        const messages = ['Très faible', 'Faible', 'Moyenne', 'Bonne', 'Excellente'];
+        strengthMessage.textContent = messages[strength - 1] || '';
+        
+        // Empêcher l'envoi du formulaire si le mot de passe est trop faible
+        if (strength < 3) {
+            document.getElementById('saveButton').disabled = true;
+            
+        } else {
+            document.getElementById('saveButton').disabled = false;
+        }
+ 
+    });
+}
+
+function togglePasswordVisibility(fieldId, iconElement) {
+    const passwordInput = document.getElementById(fieldId);
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        iconElement.classList.remove('fa-eye');
+        iconElement.classList.add('fa-eye-slash');
     } else {
-        passwordField.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        passwordInput.type = 'password';
+        iconElement.classList.remove('fa-eye-slash');
+        iconElement.classList.add('fa-eye');
     }
 }
 
