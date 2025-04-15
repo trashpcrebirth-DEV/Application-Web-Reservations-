@@ -8,66 +8,96 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="particles-container">
+        <div id="particles"></div>
+    </div>
+    
     <main class="page-connexion">
         <section class="section-formulaire">
             <div class="logo-conteneur">
-                <a href="/">
+                <a href="/" class="logo-link">
                     <img class="logo" src="/Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="SportZone Logo">
                 </a>
             </div>
             
             <div class="carte-formulaire">
                 <div class="entete-carte">
-                    <h1 class="titre-connexion">Connexion</h1>
+                    <div class="titre-animation">
+                        <h1 class="titre-connexion">Connexion</h1>
+                        <div class="underline-animation"></div>
+                    </div>
                 </div>
                 
                 <div class="corps-carte">
                     <form id="connexionForm" class="formulaire-connexion" action="/connexion" method="POST">
                         <div class="groupe-champ">
-                            <label class="etiquette" for="email">Adresse courriel</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                class="champ" 
-                                placeholder="Entrez votre adresse courriel" 
-                                required
-                                autocomplete="email"
-                            >
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    class="champ" 
+                                    placeholder="Adresse courriel" 
+                                    required
+                                    autocomplete="email"
+                                >
+                                <label class="floating-label" for="email">Adresse courriel</label>
+                            </div>
                         </div>
                         
                         <div class="groupe-champ">
-                            <label class="etiquette" for="mot_de_passe">Mot de passe</label>
-                            <div class="password-container conteneur-mot-de-passe">
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
                                 <input 
                                     type="password" 
                                     id="mot_de_passe" 
                                     name="mot_de_passe" 
                                     class="champ" 
-                                    placeholder="Entrez votre mot de passe" 
+                                    placeholder="Mot de passe" 
                                     required
                                     autocomplete="current-password"
                                 >
-                                <i class="fa fa-eye" id="togglePassword" aria-hidden="true"></i>
+                                <label class="floating-label" for="mot_de_passe">Mot de passe</label>
+                                <i class="fa fa-eye toggle-password" id="togglePassword" aria-hidden="true"></i>
                             </div>
                         </div>
                         
-                        <div id="loginError" class="error-message message-erreur" role="alert">
-                            Adresse courriel ou mot de passe invalide
+                        <div id="loginError" class="message-erreur" role="alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Adresse courriel ou mot de passe invalide</span>
                         </div>
                         
                         <button type="submit" class="bouton-connexion">
-                            Se connecter
+                            <span class="bouton-texte">Se connecter</span>
+                            <i class="fas fa-arrow-right bouton-icone"></i>
                         </button>
                         
+                        <div class="separateur">
+                            <span>ou</span>
+                        </div>
+                        
+                        <div class="social-login">
+                            <button type="button" class="social-btn google">
+                                <i class="fab fa-google"></i>
+                                <span>Google</span>
+                            </button>
+                            <button type="button" class="social-btn facebook">
+                                <i class="fab fa-facebook-f"></i>
+                                <span>Facebook</span>
+                            </button>
+                        </div>
+                        
                         <div class="liens-supplementaires">
-                            <a href="mot_de_passe_oublie" class="lien">Mot de passe oublié ?</a>
-                            <p>Pas de compte ? <a href="/inscription" class="lien">Inscrivez-vous</a></p>
+                            <a href="mot_de_passe_oublie" class="lien">
+                                <i class="fas fa-key"></i> Mot de passe oublié ?
+                            </a>
+                            <p>Pas de compte ? <a href="/inscription" class="lien inscription-link">Inscrivez-vous <i class="fas fa-user-plus"></i></a></p>
                         </div>
 
                         <div class="politique-paragraphe">
-                            <p>En vous inscrivant ou en vous connectant à notre site, vous acceptez la politique de l'utilisateur.</p>
-                            <p><b>Copyrights @ SportZone, LLC.</b></p>
+                            <p>En vous connectant, vous acceptez la <a href="#" class="terms-link">politique de l'utilisateur</a>.</p>
+                            <p><b>© SportZone, LLC.</b></p>
                         </div>
                     </form>
                 </div>
@@ -77,21 +107,162 @@
         <section class="section-image">
             <div class="overlay-image"></div>
             
-            <div class="texte-image">
-                <h2 class="titre-image">Bienvenue sur SportZone</h2>
-                <p class="sous-titre-image">Votre destination pour tous vos besoins sportifs</p>
-            </div>
-            
-            <div class="diaporama-conteneur image-container">
-                <img class="diaporama-image slideshow-image show" src="/images/images-connexion/Equipe_Soccer.jpg" alt="Équipe de soccer">
-                <img class="slideshow-image" src="public/images/images-connexion/Equipe_Soccer.jpg" alt="Image non trouvée">
+            <div class="image-content">
+                <div class="texte-image">
+                    <h2 class="titre-image">Bienvenue sur <span>SportZone</span></h2>
+                    <p class="sous-titre-image">Votre destination pour tous vos besoins sportifs</p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Réservez facilement des terrains</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <span>Rejoignez une communauté de sportifs</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-medal"></i>
+                            <span>Participez à des événements exclusifs</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-slider">
+                    <div class="slider-container">
+                        <img class="slider-image active" src="/images/images-connexion/Equipe_Soccer.jpg" alt="Équipe de soccer">
+                        <img class="slider-image" src="/images/images-connexion/Badminton.jpg" alt="Image sportive">
+                        <img class="slider-image" src="/images/images-connexion/Hockey.jpg" alt="Image sportive">
+                        <img class="slider-image" src="/images/images-connexion/Piscine.jpg" alt="Image sportive">
+                        <img class="slider-image" src="/images/images-connexion/salle-musculation.png" alt="Image sportive">
+                        <div class="slider-controls">
+                            <span class="slider-dot active" data-index="0"></span>
+                            <span class="slider-dot" data-index="1"></span>
+                            <span class="slider-dot" data-index="2"></span>
+                            <span class="slider-dot" data-index="3"></span>
+                            <span class="slider-dot" data-index="4"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
     
-    <%- include('../partials/footer') %>
-
     <script src="/Javascript/connexion.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                
+                const size = Math.random() * 4 + 1;
+                
+                const speedX = (Math.random() - 0.5) * 1;
+                const speedY = (Math.random() - 0.5) * 1;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+                
+                particlesContainer.appendChild(particle);
+                
+                let x = posX;
+                let y = posY;
+                
+                function animate() {
+                    x += speedX;
+                    y += speedY;
+                    
+                    if (x < 0 || x > window.innerWidth) {
+                        x = Math.max(0, Math.min(x, window.innerWidth));
+                    }
+                    if (y < 0 || y > window.innerHeight) {
+                        y = Math.max(0, Math.min(y, window.innerHeight));
+                    }
+                    
+                    particle.style.left = `${x}px`;
+                    particle.style.top = `${y}px`;
+                    
+                    if (Math.random() < 0.002 || x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight) {
+                        particle.remove();
+                    } else {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            for (let i = 0; i < 40; i++) {
+                createParticle();
+            }
+            
+            setInterval(() => {
+                if (particlesContainer.children.length < 80) {
+                    createParticle();
+                }
+            }, 500);
+            
+            const sliderImages = document.querySelectorAll('.slider-image');
+            const sliderDots = document.querySelectorAll('.slider-dot');
+            let currentIndex = 0;
+            
+            function showImage(index) {
+                sliderImages.forEach(img => img.classList.remove('active'));
+                sliderDots.forEach(dot => dot.classList.remove('active'));
+                
+                sliderImages[index].classList.add('active');
+                sliderDots[index].classList.add('active');
+                currentIndex = index;
+            }
+            
+            setInterval(() => {
+                let nextIndex = (currentIndex + 1) % sliderImages.length;
+                showImage(nextIndex);
+            }, 5000);
+            
+            sliderDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.getAttribute('data-index'));
+                    showImage(index);
+                });
+            });
+            
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('mot_de_passe');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            const inputFields = document.querySelectorAll('.champ');
+            
+            inputFields.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', () => {
+                    if (input.value === '') {
+                        input.parentElement.classList.remove('focused');
+                    }
+                });
+                
+                if (input.value !== '') {
+                    input.parentElement.classList.add('focused');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-

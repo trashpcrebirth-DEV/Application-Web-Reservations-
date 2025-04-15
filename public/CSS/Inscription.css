@@ -1,164 +1,898 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #121212;
+    background-color: #0a0e17;
     color: #e0e0e0;
-}
-
-.container {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+    background-image: linear-gradient(rgba(15, 14, 14, 0.293), rgba(18, 17, 17, 0.342)), url(../images/images-connexion/background-inscription.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
-.form-logo-container {
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+#particles {
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    position: absolute;
+    background: #175bed;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 10px 2px rgba(23, 91, 237, 0.3);
+}
+
+.page-inscription {
+    display: flex;
+    min-height: calc(100vh - 100px);
+    width: 100%;
+    padding: 2rem;
+}
+
+.inscription-container {
+    flex: 1.2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 47%;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+    margin-top: -3.5%;
 }
 
-.form-container {
-    width: 100%;
-    height: auto;
-    padding: 20px;
-    background-color: #2c2c2c;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+.logo-section {
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .logo-link {
-    display: block;
-    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.logo {
+    max-width: 220px;
     height: auto;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(23, 91, 237, 0.5));
 }
 
-
-
-label[for="nom"],
-label[for="prenom"],
-label[for="email"],
-label[for="password"],
-label[for="confirm_password"] {
-    font-weight: bolder;
-    margin-left: 10%;
-    color: #e0e0e0;
+.logo-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    width: 70%;
-    padding: 10px 20px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    margin-left: 10%;
-    border: 1px solid #555;
-    background-color: #3c3c3c;
-    color: #e0e0e0;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+.logo-text span {
+    color: #175bed;
 }
 
-.password-container {
+.logo-link:hover .logo {
+    transform: scale(1.05) rotate(-5deg);
+}
+
+/* Card Container */
+.card-container {
+    width: 100%;
+    max-width: 800px;
+    background: rgba(25, 29, 43, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.card-container:hover {
+    box-shadow: 0 15px 40px rgba(23, 91, 237, 0.2);
+    transform: translateY(-5px);
+}
+
+/* Card Header */
+.card-header {
+    padding: 1.8rem 2rem 1rem;
+    text-align: center;
     position: relative;
+}
+
+.title-animation {
+    position: relative;
+    display: inline-block;
+}
+
+.inscription-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #175bed, #0099ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.underline-animation {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(to right, #175bed, #0099ff);
+    border-radius: 3px;
+    transition: width 0.8s ease;
+}
+
+.title-animation:hover .underline-animation {
     width: 100%;
 }
 
-.password-container input {
-    width: 70%;
-    padding: 10px 20px;
-    margin-bottom: 5px;
-    margin-left: 10%;
-    background-color: #3c3c3c;
-    color: #e0e0e0;
-    border: 1px solid #555;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+.inscription-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
 }
 
-.password-container .fa-eye {
+/* Card Body */
+.card-body {
+    padding: 1.5rem 2rem 2rem;
+}
+
+.inscription-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Row (for side-by-side inputs) */
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Form Group */
+.form-group {
+    position: relative;
+}
+
+/* Input Fields */
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
     position: absolute;
-    left: 37vw;
-    right: 5vw;
-    
-    top: 1vw;
+    left: 15px;
+    color: #175bed;
+    font-size: 1.1rem;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 45px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #175bed;
+    box-shadow: 0 0 0 3px rgba(23, 91, 237, 0.2);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.floating-label {
+    position: absolute;
+    left: 45px;
+    top: 50%;
     transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.input-icon-wrapper.focused .floating-label {
+    top: 0;
+    left: 15px;
+    font-size: 0.8rem;
+    color: #175bed;
+    background-color: rgba(25, 29, 43, 0.9);
+    padding: 0 5px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
-    color: #e0e0e0;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
 }
 
-#passwordStrength {
-    width: 70%;
-    margin-left: 10%;
-    margin-top: 10px;
-    height: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
-    margin-bottom: 5px;
-   
+.toggle-password:hover {
+    color: #175bed;
 }
 
-#passwordStrengthBar {
+/* Password Strength */
+.password-strength-container {
+    margin-top: 0.5rem;
+}
+
+.password-strength {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.password-strength-bar {
     height: 100%;
     width: 0;
-    background-color: red;
-    border-radius: 5px;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease, background-color 0.3s ease;
 }
 
 .strength-message {
-    width: 70%;
-    margin-left: 10%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    color: #e0e0e0;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-input[type="submit"] {
-    background-color: #175bed;
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
-    width: 75%;
-    margin-left: 10%;
-    font-weight: bolder;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-input[type="submit"]:hover {
-    background-color: #0d3bbd;
-}
-
-.link {
-    margin-top: 10px;
-    text-align: center;
-}
-
-.link a {
-    color: #175bed;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.link a:hover {
-    color: #0d3bbd;
-}
-
-.centrer {
-    text-align: center;
-    color: #e0e0e0;
-}
-
-
+/* Error Messages */
 .error-message {
-    text-align: center;
-    color: red;
-    font-size: 0.8em;
+    display: none;
+    color: #ff5252;
+    background-color: rgba(255, 82, 82, 0.1);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    border-left: 3px solid #ff5252;
+    animation: shake 0.5s ease-in-out;
+}
+
+.error-message i {
+    margin-right: 8px;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Terms Checkbox */
+.terms-container {
+    margin-top: 0.5rem;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    user-select: none;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #175bed;
+    border-color: #175bed;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
     display: none;
 }
 
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
 
+.checkbox-container .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.terms-text {
+    line-height: 1.4;
+}
+
+.terms-link {
+    color: #175bed;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+/* Inscription Button */
+.inscription-button {
+    background: linear-gradient(135deg, #175bed, #0099ff);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1rem;
+}
+
+.inscription-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+}
+
+.inscription-button:hover:before {
+    left: 100%;
+}
+
+.inscription-button:hover {
+    box-shadow: 0 5px 15px rgba(23, 91, 237, 0.4);
+    transform: translateY(-2px);
+}
+
+.inscription-button:active {
+    transform: translateY(0);
+}
+
+.button-icon {
+    transition: all 0.3s ease;
+}
+
+.inscription-button:hover .button-icon {
+    transform: translateX(5px);
+}
+
+/* Separator */
+.separateur {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+}
+
+.separateur::before,
+.separateur::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.separateur::before {
+    margin-right: 1rem;
+}
+
+.separateur::after {
+    margin-left: 1rem;
+}
+
+/* Social Signup */
+.social-signup {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+}
+
+.social-btn.google {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-btn.google:hover {
+    background-color: rgba(219, 68, 55, 0.1);
+    border-color: rgba(219, 68, 55, 0.3);
+}
+
+.social-btn.google i {
+    color: #db4437;
+}
+
+.social-btn.facebook {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-btn.facebook:hover {
+    background-color: rgba(66, 103, 178, 0.1);
+    border-color: rgba(66, 103, 178, 0.3);
+}
+
+.social-btn.facebook i {
+    color: #4267B2;
+}
+
+/* Additional Links */
+.additional-links {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.link:hover {
+    color: #175bed;
+}
+
+.link i {
+    font-size: 0.9rem;
+}
+
+.login-link {
+    font-weight: 600;
+    color: #175bed;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* Policy Text */
+.policy-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 1rem;
+}
+
+/* Benefits Section */
+.benefits-section {
+    flex: 0.8;
+    background: linear-gradient(135deg, #0d1219, #121a26);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-left: 2rem;
+    position: relative;
+    display: none;
+}
+
+.benefits-content {
+    padding: 2.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.benefits-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #ffffff;
+}
+
+.benefits-title span {
+    color: #175bed;
+    position: relative;
+}
+
+.benefits-title span::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #175bed;
+    border-radius: 2px;
+}
+
+/* Benefits List */
+.benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.benefit-item:hover {
+    transform: translateX(5px);
+    background-color: rgba(23, 91, 237, 0.05);
+    border-color: rgba(23, 91, 237, 0.2);
+}
+
+.benefit-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(23, 91, 237, 0.1);
+    border-radius: 50%;
+    color: #175bed;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover .benefit-icon {
+    background: #175bed;
+    color: #ffffff;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.benefit-text {
+    flex: 1;
+}
+
+.benefit-text h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.benefit-text p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+/* Testimonial */
+.testimonial {
+    background: rgba(23, 91, 237, 0.05);
+    border: 1px solid rgba(23, 91, 237, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    margin-top: 2rem;
+}
+
+.quote-icon {
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #175bed;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 1rem;
+}
+
+.testimonial-text {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.author-info {
+    flex: 1;
+}
+
+.author-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.author-title {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.card-container {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+.logo-section {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Responsive Styles */
+@media (min-width: 1200px) {
+    .benefits-section {
+        display: block;
+    }
+}
+
+@media (max-width: 1199px) {
+    .page-inscription {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .inscription-container {
+        padding: 1rem 0;
+    }
+    
+    .benefits-section {
+        margin-left: 0;
+        margin-top: 2rem;
+        display: block;
+    }
+    
+    .benefits-content {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .card-header {
+        padding: 1.5rem 1.5rem 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem 1.5rem 1.5rem;
+    }
+    
+    .inscription-title {
+        font-size: 1.8rem;
+    }
+    
+    .inscription-subtitle {
+        font-size: 1rem;
+    }
+    
+    .social-signup {
+        flex-direction: column;
+    }
+    
+    .benefits-title {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .page-inscription {
+        padding: 0.5rem;
+    }
+    
+    .card-header {
+        padding: 1.25rem 1.25rem 0.5rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem 1.25rem 1.25rem;
+    }
+    
+    .inscription-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-input {
+        padding: 0.9rem 0.9rem 0.9rem 40px;
+    }
+    
+    .input-icon {
+        left: 12px;
+    }
+    
+    .floating-label {
+        left: 40px;
+    }
+    
+    .benefits-content {
+        padding: 1.5rem;
+    }
+    
+    .benefits-title {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .benefit-item {
+        padding: 0.75rem;
+    }
+    
+    .benefit-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .benefit-text h3 {
+        font-size: 1rem;
+    }
+    
+    .benefit-text p {
+        font-size: 0.85rem;
+    }
+}

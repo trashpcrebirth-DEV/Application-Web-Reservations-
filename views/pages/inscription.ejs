@@ -1,86 +1,308 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription</title>
+    <title>Inscription - SportZone</title>
     <link rel="stylesheet" href="/CSS/Inscription.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
-<body style="font-family:Arial, Helvetica, sans-serif;">
-
-    <div class="container">
-        <div class="form-logo-container">
-            <a href="/">
-                <img class="logo-link" src="Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="Sportzone_Logo">
-            </a>
-            <div class="form-container">
-                <h2 class="centrer" style="margin-top: 5%; margin-bottom: 5%;">INSCRIPTION</h2>
-
-                <form id="inscriptionForm" action="/inscription" method="POST">
-                    <label for="nom">Nom</label>
-                    <br>
-                    <input type="text" id="nom" name="nom" required>
-                    <br>
-                    <label for="prenom">Prénom</label>
-                    <br>
-                    <input type="text" id="prenom" name="prenom" required>
-                    <br>
-                    <label for="email">Adresse courriel</label>
-                    <br>
-                    <input type="email" id="email" name="email" required>
-                    <div id="emailError" class="error-message">Adresse courriel existe déjà</div>
-                    <br>
-                    <label for="password">Mot de passe</label>
-                    
-                    <div id="passwordStrengthMessage" class="strength-message"></div>
-                    <div id="passwordStrength">
-                        <div id="passwordStrengthBar"></div>
-                    </div>
-
-                    <div class="password-container">
-                        <input type="password" id="mot_de_passe" name="mot_de_passe" required>
-                        <i class="fa fa-eye" id="togglePassword"></i>
-                    </div>
-                    
-                    <div id="passwordWeakError" class="error-message">Mot de passe trop faible</div>
-
-                    
-                    <br>
-
-                    <label for="confirm_password">Confirmation de mot de passe</label>
-                    <br>
-                    <div class="password-container">
-                        <input type="password" id="confirm_password" name="confirm_password" required>
-                        <i class="fa fa-eye" id="toggleConfirmPassword"></i>
-                    </div>
-                    <br>
-                    
-                    <div id="passwordError" class="error-message">Les mots de passe ne correspondent pas.</div>
-                    <br>
-                    <input type="submit" value="S'INSCRIRE"> 
-                    <div class="link">
-                    
-                </div>
-                <p class="centrer" ><a href="Mot_de_passe_oublie.html" style="color: rgb(0, 89, 255)">Mot de passe oublié ?</a></p>
-                    <p class="centrer"> Déjà un compte ? <a href="/connexion" style="color: rgb(0, 89, 255)">Connexion</a></p>
-                </form>
-
-               
-            </div>
-
-
-        </div>
-       
-
+<body>
+    <div class="particles-container">
+        <div id="particles"></div>
     </div>
-    <%- include ("../partials/footer.ejs") %>
-
-
+    
+    <main class="page-inscription">
+        <div class="inscription-container">
+            <div class="logo-section">
+                <a href="/" class="logo-link">
+                    <img class="logo" src="/Images/0a66564e-598c-4af2-a6ba-d4a4283ed573d.png" alt="SportZone Logo">
+                </a>
+            </div>
+            
+            <div class="card-container">
+                <div class="card-header">
+                    <div class="title-animation">
+                        <h1 class="inscription-title">Inscription</h1>
+                        <div class="underline-animation"></div>
+                    </div>
+                    <p class="inscription-subtitle">Rejoignez notre communauté sportive</p>
+                </div>
+                
+                <div class="card-body">
+                    <form id="inscriptionForm" class="inscription-form" action="/inscription" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <div class="input-icon-wrapper">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="nom" name="nom" class="form-input" placeholder="Nom" required>
+                                    <label class="floating-label" for="nom">Nom</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="input-icon-wrapper">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="prenom" name="prenom" class="form-input" placeholder="Prénom" required>
+                                    <label class="floating-label" for="prenom">Prénom</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="email" name="email" class="form-input" placeholder="Adresse courriel" required>
+                                <label class="floating-label" for="email">Adresse courriel</label>
+                            </div>
+                            <div id="emailError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Cette adresse courriel existe déjà</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="mot_de_passe" name="mot_de_passe" class="form-input" placeholder="Mot de passe" required>
+                                <label class="floating-label" for="mot_de_passe">Mot de passe</label>
+                                <i class="fa fa-eye toggle-password" id="togglePassword" aria-hidden="true"></i>
+                            </div>
+                            
+                            <div class="password-strength-container">
+                                <div id="passwordStrength" class="password-strength">
+                                    <div id="passwordStrengthBar" class="password-strength-bar"></div>
+                                </div>
+                                <div id="passwordStrengthMessage" class="strength-message"></div>
+                            </div>
+                            
+                            <div id="passwordWeakError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Mot de passe trop faible</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="Confirmation du mot de passe" required>
+                                <label class="floating-label" for="confirm_password">Confirmation du mot de passe</label>
+                                <i class="fa fa-eye toggle-password" id="toggleConfirmPassword" aria-hidden="true"></i>
+                            </div>
+                            <div id="passwordError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Les mots de passe ne correspondent pas</span>
+                            </div>
+                        </div>
+                        
+                        <div class="terms-container">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <span class="checkmark"></span>
+                                <span class="terms-text">J'accepte les <a href="#" class="terms-link">conditions d'utilisation</a> et la <a href="#" class="terms-link">politique de confidentialité</a></span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="inscription-button">
+                            <span class="button-text">S'inscrire</span>
+                            <i class="fas fa-user-plus button-icon"></i>
+                        </button>
+                        
+                        <div class="separateur">
+                            <span>ou</span>
+                        </div>
+                        
+                        <div class="social-signup">
+                            <button type="button" class="social-btn google">
+                                <i class="fab fa-google"></i>
+                                <span>S'inscrire avec Google</span>
+                            </button>
+                            <button type="button" class="social-btn facebook">
+                                <i class="fab fa-facebook-f"></i>
+                                <span>S'inscrire avec Facebook</span>
+                            </button>
+                        </div>
+                        
+                        <div class="additional-links">
+                            <a href="mot_de_passe_oublie" class="link">
+                                <i class="fas fa-key"></i> Mot de passe oublié ?
+                            </a>
+                            <p>Déjà un compte ? <a href="/connexion" class="link login-link">Se connecter <i class="fas fa-sign-in-alt"></i></a></p>
+                        </div>
+                        
+                        <div class="policy-text">
+                            <p>© SportZone, LLC. Tous droits réservés.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefits-content">
+                <h2 class="benefits-title">Pourquoi rejoindre <span>SportZone</span> ?</h2>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Réservations Faciles</h3>
+                            <p>Réservez des terrains de sport en quelques clics selon votre disponibilité</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Communauté Active</h3>
+                            <p>Rejoignez une communauté de passionnés de sport et participez à des événements</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Événements Exclusifs</h3>
+                            <p>Accédez à des tournois et événements sportifs exclusifs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Offres Spéciales</h3>
+                            <p>Profitez de réductions et d'offres spéciales sur les réservations</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">SportZone a complètement transformé ma façon de pratiquer le sport. Réserver un terrain n'a jamais été aussi simple !</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="author-info">
+                            <p class="author-name">Marie Dupont</p>
+                            <p class="author-title">Membre depuis 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
     <script src="/Javascript/Inscription.js"></script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                
+                const size = Math.random() * 4 + 1;
+                
+                const speedX = (Math.random() - 0.5) * 1;
+                const speedY = (Math.random() - 0.5) * 1;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+                
+                particlesContainer.appendChild(particle);
+                
+                let x = posX;
+                let y = posY;
+                
+                function animate() {
+                    x += speedX;
+                    y += speedY;
+                    
+                    if (x < 0 || x > window.innerWidth) {
+                        x = Math.max(0, Math.min(x, window.innerWidth));
+                    }
+                    if (y < 0 || y > window.innerHeight) {
+                        y = Math.max(0, Math.min(y, window.innerHeight));
+                    }
+                    
+                    particle.style.left = `${x}px`;
+                    particle.style.top = `${y}px`;
+                    
+                    if (Math.random() < 0.002 || x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight) {
+                        particle.remove();
+                    } else {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            for (let i = 0; i < 40; i++) {
+                createParticle();
+            }
+            
+            setInterval(() => {
+                if (particlesContainer.children.length < 80) {
+                    createParticle();
+                }
+            }, 500);
+            
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('mot_de_passe');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            const inputFields = document.querySelectorAll('.form-input');
+            
+            inputFields.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', () => {
+                    if (input.value === '') {
+                        input.parentElement.classList.remove('focused');
+                    }
+                });
+                
+                if (input.value !== '') {
+                    input.parentElement.classList.add('focused');
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
