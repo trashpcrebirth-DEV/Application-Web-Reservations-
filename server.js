@@ -260,6 +260,7 @@ app.post('/api/annuler/:id', async (req, res) => {
                             }
                         });
                     }
+
                     const deleteReservationQuery = `DELETE FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?`;
 
                     con.query(deleteReservationQuery, [reservationId, userId], (err, result) => {
@@ -277,24 +278,30 @@ app.post('/api/annuler/:id', async (req, res) => {
                                     return res.status(500).json({ success: false, message: "Erreur lors de la récupération de la liste d'attente." });
                                 }
 
-                                for (let i = 0; i < attenteList.length && newCapacity > 0; i++) {
-                                    const utilisateur = attenteList[i];
+                                if (attenteList.length > 0) {
+                                    const utilisateur = attenteList[0];
 
                                     if (utilisateur.nombreJoueur <= newCapacity) {
-                                        const addUserToReservationQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur, prix) VALUES (?, ?, ?, ?)`;
+                                        // Ajouter une notification pour l'utilisateur
+                                        const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
+                                        const message = `Une place est disponible pour la réservation ${reservationId}. Êtes-vous toujours intéressé ?`;
 
-                                        con.query(addUserToReservationQuery, [utilisateur.id_utilisateur, reservationId, utilisateur.nombreJoueur, utilisateur.prix], (err) => {
+                                        con.query(notificationQuery, [utilisateur.id_utilisateur, message], (err) => {
                                             if (err) {
-                                                console.error('Erreur SQL lors de l’ajout de l’utilisateur de la liste d’attente à la réservation:', err);
+                                                console.error('Erreur lors de l\'ajout de la notification :', err);
                                             } else {
-                                                newCapacity -= utilisateur.nombreJoueur;
-
-                                                const deleteFromAttenteQuery = `DELETE FROM liste_attente WHERE id_attente = ?`;
-                                                con.query(deleteFromAttenteQuery, [utilisateur.id_attente]);
+                                                // Marquer l'utilisateur comme notifié
+                                                const updateListeAttenteQuery = `UPDATE liste_attente SET is_notified = TRUE WHERE id_attente = ?`;
+                                                con.query(updateListeAttenteQuery, [utilisateur.id_attente], (err) => {
+                                                    if (err) {
+                                                        console.error('Erreur lors de la mise à jour de la liste d\'attente :', err);
+                                                    }
+                                                });
                                             }
                                         });
                                     }
                                 }
+
                                 const updateFinalCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
                                 con.query(updateFinalCapacityQuery, [newCapacity, reservationId], (err) => {
                                     if (err) {
@@ -313,7 +320,6 @@ app.post('/api/annuler/:id', async (req, res) => {
         res.status(500).json({ success: false, message: "Erreur serveur." });
     }
 });
-
 
 app.post('/ajouter-liste-attente/:id_reservation/:nombreJoueurs/:prix', (req, res) => {
     if (!req.session.user) {
@@ -1100,7 +1106,76 @@ app.post("/api/notifications/:id/lire", async (req, res) => {
         res.status(500).json({ success: false, message: "Erreur serveur" });
     }
 });
+app.post('/api/notifications/:id/reponse', (req, res) => {
+    const notificationId = req.params.id;
+    const { reponse } = req.body; // "oui" ou "non"
 
+    // Récupérer la notification
+    const getNotificationQuery = `SELECT * FROM notifications WHERE id = ?`;
+    con.query(getNotificationQuery, [notificationId], (err, notifications) => {
+        if (err || notifications.length === 0) {
+            console.error('Erreur lors de la récupération de la notification :', err);
+            return res.status(500).json({ success: false, message: "Erreur serveur." });
+        }
+
+        const notification = notifications[0];
+        const utilisateurId = notification.id_utilisateur;
+
+        if (reponse === "oui") {
+            // Ajouter la réservation au panier de l'utilisateur
+            const addToCartQuery = `INSERT INTO items (id_utilisateur, id_reservation, nombreJoueur, prix) SELECT id_utilisateur, id_reservation, nombreJoueur, prix FROM liste_attente WHERE id_utilisateur = ? AND id_reservation = ?`;
+            con.query(addToCartQuery, [utilisateurId, notification.id_reservation], (err) => {
+                if (err) {
+                    console.error('Erreur lors de l\'ajout au panier :', err);
+                    return res.status(500).json({ success: false, message: "Erreur serveur." });
+                }
+
+                // Supprimer l'utilisateur de la liste d'attente
+                const deleteFromListeAttenteQuery = `DELETE FROM liste_attente WHERE id_utilisateur = ? AND id_reservation = ?`;
+                con.query(deleteFromListeAttenteQuery, [utilisateurId, notification.id_reservation], (err) => {
+                    if (err) {
+                        console.error('Erreur lors de la suppression de la liste d\'attente :', err);
+                    }
+                });
+
+                res.redirect('/paiement'); // Rediriger vers la page de paiement
+            });
+        } else {
+            // Supprimer la notification et passer au prochain utilisateur
+            const deleteNotificationQuery = `DELETE FROM notifications WHERE id = ?`;
+            con.query(deleteNotificationQuery, [notificationId], (err) => {
+                if (err) {
+                    console.error('Erreur lors de la suppression de la notification :', err);
+                }
+
+                // Notifier le prochain utilisateur dans la liste d'attente
+                const getNextUserQuery = `SELECT * FROM liste_attente WHERE id_reservation = ? AND is_notified = FALSE ORDER BY date_ajout ASC LIMIT 1`;
+                con.query(getNextUserQuery, [notification.id_reservation], (err, nextUsers) => {
+                    if (err || nextUsers.length === 0) {
+                        console.error('Erreur lors de la récupération du prochain utilisateur :', err);
+                        return;
+                    }
+
+                    const nextUser = nextUsers[0];
+                    const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
+                    const message = `Une place est disponible pour la réservation ${notification.id_reservation}. Êtes-vous toujours intéressé ?`;
+                    con.query(notificationQuery, [nextUser.id_utilisateur, message], (err) => {
+                        if (err) {
+                            console.error('Erreur lors de l\'ajout de la notification :', err);
+                        }
+
+                        const updateListeAttenteQuery = `UPDATE liste_attente SET is_notified = TRUE WHERE id_attente = ?`;
+                        con.query(updateListeAttenteQuery, [nextUser.id_attente], (err) => {
+                            if (err) {
+                                console.error('Erreur lors de la mise à jour de la liste d\'attente :', err);
+                            }
+                        });
+                    });
+                });
+            });
+        }
+    });
+});
 
 app.get("/event/add", function (req, res) {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function (err,
