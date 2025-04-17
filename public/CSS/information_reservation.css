@@ -782,7 +782,7 @@ a:hover {
 .reservations-similaires h2 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: #2c3e50;
+    color: #adc3ff;
 }
 
 .similaires-grid {
@@ -918,12 +918,8 @@ a:hover {
     margin-right: 0.5rem;
 }
 
-.option-partage.facebook {
+.option-partage.face {
     background-color: #1877f2;
-}
-
-.option-partage.twitter {
-    background-color: #1da1f2;
 }
 
 .option-partage.whatsapp {

@@ -1,5 +1,16 @@
 // ...existing code...
-
+function togglePasswordVisibility(element) {
+    const input = element.previousElementSibling.previousElementSibling;
+    if (input.type === "password") {
+      input.type = "text";
+      element.classList.remove("fa-eye");
+      element.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      element.classList.remove("fa-eye-slash");
+      element.classList.add("fa-eye");
+    }
+  }
 document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('togglePassword');
     const password = document.getElementById('mot_de_passe');
