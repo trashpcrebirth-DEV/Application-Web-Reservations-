@@ -1,63 +1,154 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const isRempliInformartion = document.getElementById("isRempliInformartion");
     const nombreJoueursInput = document.getElementById("nombreJoueurs");
+    const btnMoins = document.getElementById("btn-moins");
+    const btnPlus = document.getElementById("btn-plus");
+    const nombreParticipantsDisplay = document.getElementById("nombre-participants");
+    const prixTotalDisplay = document.getElementById("prix-total");
+    const listeDisplay = document.getElementById("liste-display");
+    const bookingCountInput = document.getElementById("booking-count");
     const listeNbJoueur = document.getElementById("listeNbJoueur");
-    const prixElement = document.getElementById("prix");
-    const basePrice = parseInt(prixElement.textContent);
-    const maxPlayers = parseInt(document.getElementById("placeMaximale").textContent);
+    const capaciteMaxElement = document.getElementById("capacite-max");
+    const prixBaseElement = document.getElementById("prix-base");
+    const idReservationElement = document.getElementById("id-reservation");
+    const formReserver = document.getElementById("form-reserver");
+    const formListeAttente = document.getElementById("form-liste-attente");
 
-    function updatePrice() {
-        let numberOfPlayers = parseInt(nombreJoueursInput.value, 10);  
+    const progressBar = document.getElementById("progressBar");
+    const capaciteRestante = document.getElementById("capaciteRestante");
 
-        if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
-            numberOfPlayers = 1;
+    const capaciteMax = capaciteMaxElement ? parseInt(capaciteMaxElement.value) || 10 : 10;
+    const prixBase = prixBaseElement ? parseInt(prixBaseElement.value) || 0 : 0;
+    const idReservation = idReservationElement ? idReservationElement.value : null;
+
+    function updatePlayerCount() {
+        if (!nombreJoueursInput) return;
+
+        let count = parseInt(nombreJoueursInput.value);
+        if (isNaN(count) || count < 1) {
+            count = 1;
+            nombreJoueursInput.value = 1;
+        }
+        if (count > capaciteMax) {
+            count = capaciteMax;
+            nombreJoueursInput.value = capaciteMax;
         }
 
-        if (numberOfPlayers > maxPlayers && !isRempliInformartion) {
-            alert(`Le nombre de joueurs ne peut pas dépasser ${maxPlayers}.`);
-            numberOfPlayers = maxPlayers; 
-            nombreJoueursInput.value = maxPlayers; 
-        }
+        if (nombreParticipantsDisplay) nombreParticipantsDisplay.textContent = count;
+        if (prixTotalDisplay) prixTotalDisplay.textContent = `${count * prixBase}$`;
+        if (bookingCountInput) bookingCountInput.value = count;
+        if (listeNbJoueur) listeNbJoueur.value = count;
+        if (listeDisplay) listeDisplay.textContent = count;
 
-        const updatedPrice = basePrice * numberOfPlayers;
+        updateFormUrls(count);
 
-        prixElement.textContent = `${updatedPrice} $`;
-        listeNbJoueur.textContent = `${numberOfPlayers}`;
+        const percent = (count / capaciteMax) * 100;
+        if (progressBar) progressBar.style.width = `${percent}%`;
+        if (capaciteRestante) capaciteRestante.textContent = capaciteMax - count;
     }
 
-    nombreJoueursInput.addEventListener("input", updatePrice);
+    function updateFormUrls(count) {
+        if (!idReservation) return;
 
-    updatePrice();
-});
+        const prixTotal = parseFloat(prixTotalDisplay.textContent) || 0;
 
-document.addEventListener("DOMContentLoaded", function () { 
-    const form = document.querySelector('form');
-    const nombreJoueursInput = document.getElementById('nombreJoueurs');
-    const prixInput = document.getElementById('prix');
-    const id_reservation = document.getElementById('id-reservation').dataset.id;
+        if (formReserver) {
+            formReserver.action = `/reserver/${idReservation}/${count}/${prixTotal}`;
+        }
 
-    form.addEventListener('submit', function (event) {
-        const nombreJoueurs = nombreJoueursInput.value;
-        const prixValeur = prixInput.textContent.replace(/[^\d.]/g, '');
-        form.action = `/reserver/${id_reservation}/${nombreJoueurs}/${prixValeur}`;
+        if (formListeAttente) {
+            formListeAttente.action = `/ajouter-liste-attente/${idReservation}/${count}/${prixTotal}`;
+        }
+    }
+
+    if (nombreJoueursInput) {
+        nombreJoueursInput.addEventListener("input", updatePlayerCount);
+        nombreJoueursInput.addEventListener("change", updatePlayerCount);
+    }
+
+    if (btnMoins) {
+        btnMoins.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (nombreJoueursInput) {
+                nombreJoueursInput.stepDown();
+                updatePlayerCount();
+            }
+        });
+    }
+
+    if (btnPlus) {
+        btnPlus.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (nombreJoueursInput) {
+                nombreJoueursInput.stepUp();
+                updatePlayerCount();
+            }
+        });
+    }
+
+    updatePlayerCount();
+
+    const onglets = document.querySelectorAll('.onglet');
+    const panneaux = document.querySelectorAll('.panneau-onglet');
+    onglets.forEach(onglet => {
+        onglet.addEventListener('click', () => {
+            onglets.forEach(o => o.classList.remove('actif'));
+            panneaux.forEach(p => p.classList.remove('actif'));
+            onglet.classList.add('actif');
+            const ongletId = onglet.getAttribute('data-onglet');
+            const panneau = document.getElementById(`${ongletId}-panneau`);
+            if (panneau) panneau.classList.add('actif');
+        });
+    });
+
+    const btnPartage = document.getElementById('btn-partage');
+    const modalPartage = document.getElementById('modal-partage');
+    const fermerModal = document.querySelector('.fermer-modal');
+    const copierLienBtn = document.querySelector('.copier-lien');
+
+    if (btnPartage && modalPartage) {
+        btnPartage.addEventListener('click', () => modalPartage.style.display = 'flex');
+    }
+
+    if (fermerModal && modalPartage) {
+        fermerModal.addEventListener('click', () => modalPartage.style.display = 'none');
+    }
+
+    if (modalPartage) {
+        window.addEventListener('click', (e) => {
+            if (e.target === modalPartage) {
+                modalPartage.style.display = 'none';
+            }
+        });
+    }
+
+    if (copierLienBtn) {
+        copierLienBtn.addEventListener('click', () => {
+            const linkInput = document.querySelector('.lien-partage input');
+            if (linkInput) {
+                linkInput.select();
+                document.execCommand('copy');
+                copierLienBtn.textContent = 'Copié!';
+                setTimeout(() => copierLienBtn.textContent = 'Copier', 2000);
+            }
+        });
+    }
+
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            if (form.id === 'form-reserver' || form.id === 'form-liste-attente') return;
+
+            if (!form.classList.contains('annuler') && idReservation) {
+                const nombreJoueurs = parseInt(nombreJoueursInput.value) || 1;
+                const actionParts = form.action.split('/');
+                const lastPart = actionParts[actionParts.length - 1];
+                if (!isNaN(parseInt(lastPart))) {
+                    actionParts[actionParts.length - 1] = nombreJoueurs;
+                    form.action = actionParts.join('/');
+                } else {
+                    form.action = `${form.action}/${nombreJoueurs}`;
+                }
+            }
+        });
     });
 });
-
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById('form-liste-attente');
-    const nombreJoueursInput = document.getElementById('nombreJoueurs');
-    const prixInput = document.getElementById('prix');
-    const id_reservation = document.getElementById('id-reservation').dataset.id; // Utilisation du dataset de l'élément span
-
-    const listeNbJoueur = document.getElementById('listeNbJoueur');
-    listeNbJoueur.textContent = nombreJoueursInput.value;
-
-    form.addEventListener('submit', function (event) {
-        const nombreJoueurs = nombreJoueursInput.value;
-        const prixValeur = prixInput.textContent.replace(/[^\d.]/g, ''); 
-
-        form.action = `/ajouter-liste-attente/${id_reservation}/${nombreJoueurs}/${prixValeur}`;
-
-    });
-});
-

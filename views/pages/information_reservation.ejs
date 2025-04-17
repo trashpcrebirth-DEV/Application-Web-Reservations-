@@ -12,156 +12,387 @@
 
 <body>
     <%- include ("../partials/header.ejs") %>
+        <div class="page-background">
+            <div class="shape shape1"></div>
+            <div class="shape shape2"></div>
+            <div class="shape shape3"></div>
+        </div>
+
         <div class="conteneur">
             <a href="/reservation" class="lien-retour">
                 <i class="fas fa-arrow-left"></i> Retour aux réservations
             </a>
 
             <div class="carte-details">
-                <div class="entete"> 
-                    <h1>Réservation - <%= reservation.categorie_sport %> <%= reservation.id_reservation %> 
-                    </h1>
-                    <span class="places-restantes">
-                        <i class="fa-solid fa-address-book"></i> <span id="placeMaximale"><%= reservation.capacite %></span> places restantes
-                    </span>
-                    <span class="statut <%= (isDejaReserve || isRempli) ? 'reserve' : 'pasreserve' %>">
-                        <%= isDejaReserve ? 'Réservé' : reservation.statut %>
-                    </span>
+                <div class="entete">
+                    <div class="entete-gauche">
+                        <div class="sport-icon">
+                            <i class="fas fa-<%- reservation.categorie_sport.toLowerCase() === 'soccer' ? 'futbol' : 
+                                reservation.categorie_sport.toLowerCase() === 'basketball' ? 'basketball-ball' : 
+                                reservation.categorie_sport.toLowerCase() === 'tennis' ? 'table-tennis' : 
+                                'running' %>"></i>
+                        </div>
+                        <h1>Réservation - <%= reservation.categorie_sport %> #<%= reservation.id_reservation %></h1>
+                    </div>
+                    <div class="entete-droite">
+                        <span class="places-restantes">
+                            <i class="fa-solid fa-users"></i> <span id="placesRestantes"><%= reservation.capacite %></span> places restantes
+                        </span>
+                        <span class="statut <%= (isDejaReserve || isRempli) ? 'reserve' : 'disponible' %>">
+                            <%= isDejaReserve ? 'Réservé' : reservation.statut %>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="contenu">
-                    <div class="grille">
-                        <div class="section">
-                            <h2>Détails de la réservation</h2>
+                    <div class="onglets">
+                        <button class="onglet actif" data-onglet="details">Détails</button>
+                        <button class="onglet" data-onglet="client">Client</button>
+                        <button class="onglet" data-onglet="terrain">Terrain</button>
+                    </div>
 
-                            <div class="element-info">
-                                <i class="fas fa-calendar icone"></i>
-                                <div>
-                                    <p class="etiquette"><u>Date</u></p>
-                                    <p class="valeur">
-                                        <%= new Date(reservation.date_time).toLocaleDateString() %>
-                                    </p>
+                    <div class="panneau-onglet actif" id="details-panneau">
+                        <div class="grille">
+                            <div class="section">
+                                <h2><i class="fas fa-info-circle"></i> Détails de la réservation</h2>
+
+                                <div class="info-grid">
+                                    <div class="element-info">
+                                        <div class="info-icone">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                        <div>
+                                            <p class="etiquette">Date</p>
+                                            <p class="valeur">
+                                                <%= new Date(reservation.date_time).toLocaleDateString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}) %>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="element-info">
+                                        <div class="info-icone">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div>
+                                            <p class="etiquette">Heure</p>
+                                            <p class="valeur">
+                                                <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", {
+                                                    hour: "2-digit" , minute: "2-digit" }) %>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="element-info">
+                                        <div class="info-icone">
+                                            <i class="fas fa-<%- reservation.categorie_sport.toLowerCase() === 'soccer' ? 'futbol' : 
+                                                reservation.categorie_sport.toLowerCase() === 'basketball' ? 'basketball-ball' : 
+                                                reservation.categorie_sport.toLowerCase() === 'tennis' ? 'table-tennis' : 
+                                                'running' %>"></i>
+                                        </div>
+                                        <div>
+                                            <p class="etiquette">Sport</p>
+                                            <p class="valeur">
+                                                <%= reservation.categorie_sport %>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="element-info">
+                                        <div class="info-icone">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <p class="etiquette">Terrain</p>
+                                            <p class="valeur">
+                                                <%= reservation.installation %>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="element-info">
+                                        <div class="info-icone">
+                                            <i class="fa-solid fa-dollar-sign"></i>
+                                        </div>
+                                        <div>
+                                            <p class="etiquette">Prix unitaire</p>
+                                            <p class="valeur prix" id="prix-unitaire">
+                                                <%= reservation.prix %> $
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="element-info">
+                                        <div class="info-icone">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div>
+                                            <p class="etiquette">Capacité</p>
+                                            <div class="barre-capacite">
+                                                <div class="progression" id="progressBar" style="width: 0%"></div>
+                                            </div>
+                                            <p class="capacite-texte"><span id="capaciteRestante"><%= reservation.capacite  %></span> places sur <%= reservation.capacite %> disponibles</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="element-info full-width">
+                                        <div class="info-icone">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div class="info-participation">
+                                            <h3>Nombre de participants</h3>
+                                            <div class="nombre-input">
+                                                <button type="button" class="btn-moins" id="btn-moins">-</button>
+                                                <input type="number" name="nombreJoueurs" value="1" id="nombreJoueurs" min="1" max="<%= reservation.capacite %>" required>
+                                                <button type="button" class="btn-plus" id="btn-plus">+</button>
+                                            </div>
+                                            
+                                            <div class="calcul-prix">
+                                                <div class="ligne-prix">
+                                                    <span>Prix unitaire:</span>
+                                                    <span><%= reservation.prix %>$</span>
+                                                </div>
+                                                <div class="ligne-prix">
+                                                    <span>Nombre de participants:</span>
+                                                    <span id="nombre-participants">1</span>
+                                                </div>
+                                                <div class="ligne-prix total">
+                                                    <span>Total:</span>
+                                                    <span id="prix-total"><%= reservation.prix %>$</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="element-info">
-                                <i class="fas fa-clock icone"></i>
-                                <div>
-                                    <p class="etiquette"><u>Heure</u></p>
-                                    <p class="valeur">
-                                        <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", {
-                                            hour: "2-digit" , minute: "2-digit" }) %>
-                                    </p>
+                            <div class="section image-section">
+                                <div class="image-container">
+                                    <img src="<%= reservation.image_url || '/images/placeholder-sport.jpg' %>" alt="Image de la réservation" class="image-reservation">
+                                    <div class="image-overlay">
+                                        <h3><%= reservation.installation %></h3>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="element-info">
-                                <i class="fas fa-basketball-ball icone"></i>
-                                <div>
-                                    <p class="etiquette"><u>Sport</u></p>
-                                    <p class="valeur">
-                                        <%= reservation.categorie_sport %>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="element-info">
-                                <i class="fas fa-map-marker-alt icone"></i>
-                                <div>
-                                    <p class="etiquette"><u>Terrain</u></p>
-                                    <p class="valeur">
-                                        <%= reservation.installation %>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="element-info">
-                                <i class="fa-solid fa-dollar-sign icone"></i>
-                                <div>
-                                    <p class="etiquette"><u>Prix total</u> - <%= reservation.prix %>$ par personne 
-                                    </p>
-                                    <p class="valeur prix" id="prix">
-                                        <%= reservation.prix %> $
-                                    </p>
+                                
+                                <div class="meteo-widget">
+                                    <h3><i class="fas fa-cloud-sun"></i> Météo prévue</h3>
+                                    <div class="meteo-contenu">
+                                        <div class="meteo-icone">
+                                            <i class="fas fa-sun"></i>
+                                        </div>
+                                        <div class="meteo-info">
+                                            <p class="meteo-temp">22°C</p>
+                                            <p class="meteo-desc">Ensoleillé</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="panneau-onglet" id="client-panneau">
                         <div class="section">
-                            <h2>Informations du client</h2>
+                            <h2><i class="fas fa-user"></i> Informations du client</h2>
 
-                            <div class="bloc-info">
-                                <p class="etiquette"><u>Nom</u></p>
-                                <p class="valeur">
-                                    <%= user.nom %>
-                                </p>
-                            </div>
+                            <div class="info-client">
+                                <% if (user) { %>
+                                <div class="bloc-info">
+                                    <p class="etiquette">Nom</p>
+                                    <p class="valeur">
+                                        <%= user.nom %>
+                                    </p>
+                                </div>
 
-                            <div class="bloc-info">
-                                <p class="etiquette"><u>Email</u></p>
-                                <p class="valeur">
-                                    <%= user.email %>
-                                </p>
-                            </div>
+                                <div class="bloc-info">
+                                    <p class="etiquette">Email</p>
+                                    <p class="valeur">
+                                        <%= user.email %>
+                                    </p>
+                                </div>
 
-                            <div class="bloc-info">
-                                <p class="etiquette"><u>Téléphone</u></p>
-                                <p class="valeur">
-                                    <%= user.telephone %>
-                                </p>
-                            </div>
-
-                            <div class="info-paiement">
-                                <h3>Nombre de participants</h3>
-                                <input type="number" name="nombreJoueurs" value="1" id="nombreJoueurs" min="1" required>
+                                <div class="bloc-info">
+                                    <p class="etiquette">Téléphone</p>
+                                    <p class="valeur">
+                                        <%= user.telephone || 'Non spécifié' %>
+                                    </p>
+                                </div>
+                                <% } else { %>
+                                <div class="bloc-info">
+                                    <p class="etiquette">Information</p>
+                                    <p class="valeur">
+                                        Veuillez vous connecter pour voir vos informations.
+                                    </p>
+                                </div>
+                                <% } %>
                             </div>
                         </div>
-                        <div class="image-container">
-                            <img src="<%= reservation.image_url %>" alt="Image de la réservation" class="image-reservation">
+                    </div>
+
+                    <div class="panneau-onglet" id="terrain-panneau">
+                        <div class="section">
+                            <h2><i class="fas fa-map-marked-alt"></i> Détails du terrain</h2>
+                            
+                            <div class="terrain-details">
+                                <div class="terrain-map">
+                                    <div class="map-placeholder">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <p><%= reservation.installation %></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="terrain-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-info-circle"></i>
+                                        <div>
+                                            <h3>Description</h3>
+                                            <p>Terrain professionnel avec équipements de qualité et vestiaires.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <i class="fas fa-door-open"></i>
+                                        <div>
+                                            <h3>Accès</h3>
+                                            <p>Entrée principale, code d'accès fourni par email</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <i class="fas fa-parking"></i>
+                                        <div>
+                                            <h3>Stationnement</h3>
+                                            <p>Parking gratuit disponible sur place</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="actions">
-                        <p id="id-reservation" data-id="<%= reservation.id_reservation %>"></p>
-                        <form action="/reserver/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
-                            <% if (isDansPanier || isDejaReserve || isRempli) { %>
-                                <button type="submit" class="bouton primaire-reserver" disabled>Réservé</button>
-                                <% } else { %>
-                                    <button type="submit" class="bouton primaire">Réserver</button>
-                                    <% } %>
-                        </form>
-                        <% if (isDejaReserve) { %>
+                        <input type="hidden" id="id-reservation" value="<%= reservation.id_reservation %>">
+                        <input type="hidden" id="capacite-max" value="<%= reservation.capacite %>">
+                        <input type="hidden" id="prix-base" value="<%= reservation.prix %>">
+                        
+                        <% if (typeof isRempli !== 'undefined' && isRempli) { %>
+                            <% if (typeof isDansListeAttente !== 'undefined' && isDansListeAttente) { %>
+                                <div class="statut-action liste-attente">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    <span>Vous êtes sur la liste d'attente</span>
+                                </div>
+                                <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= typeof nombreJoueurs !== 'undefined' ? nombreJoueurs : 1 %>" method="POST">
+                                    <button type="submit" class="bouton-liste-attente-reserve">Vous avez déja rejoint la liste d'attente</button>
+                                </form>
+                            <% } else { %>
+                                <form id="form-liste-attente" action="/ajouter-liste-attente/<%= reservation.id_reservation %>/1" method="POST">
+                                    <input type="hidden" name="nombreJoueurs" id="listeNbJoueur" value="1">
+                                    <button type="submit" class="bouton-liste-attente">
+                                        <i class="fas fa-hourglass-half"></i> Rejoindre la liste d'attente (<span id="liste-display">1</span>)
+                                    </button>
+                                </form>
+                            <% } %>
+                        <% } else if (typeof isDejaReserve !== 'undefined' && isDejaReserve) { %>
+                            <div class="statut-action reserve">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Vous avez déjà réservé cette activité</span>
+                            </div>
                             <form class="bouton annuler" action="/api/annuler/<%= reservation.id_reservation %>" method="POST">
-                                <button type="submit" class="bouton danger">Annuler</button>
+                                <button type="submit" class="bouton danger">
+                                    <i class="fas fa-times"></i> Annuler ma réservation
+                                </button>
                             </form>
-                        <% } else if (isDansListeAttente){ %> 
-                            <span id="isRempliInformartion" value="<%= isRempli %>"></span>
-                            <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= nombreJoueurs %>" method="POST">
-                                <button type="submit" class="bouton-liste-attente-reserve">Vous avez déja rejoint la liste d'attente.</button>
-                            </form>  
-                        <% } else if(isRempli) { %>
-                            <span id="isRempliInformartion" value="<%= isRempli %>"></span>
-                            <form id="form-liste-attente" action="#" method="POST">
-                                <button type="submit" class="bouton-liste-attente">Rejoindre la liste d'attente avec (x<span id="listeNbJoueur"></span>)</button>
+                        <% } else if (typeof isDansPanier !== 'undefined' && isDansPanier) { %>
+                            <div class="statut-action panier">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Cette réservation est dans votre panier</span>
+                            </div>
+                            <a href="/panier" class="bouton primaire">
+                                <i class="fas fa-shopping-cart"></i> Voir mon panier
+                            </a>
+                        <% } else { %>
+                            <form id="form-reserver" action="/reserver/<%= reservation.id_reservation %>/1/prix-total" method="POST">
+                                <input type="hidden" name="nombreJoueurs" id="booking-count" value="1">
+                                <button type="submit" class="bouton primaire">
+                                    <i class="fas fa-check"></i> Réserver maintenant
+                                </button>
                             </form>
+                            <button class="bouton partage" id="btn-partage">
+                                <i class="fas fa-share-alt"></i> Partager
+                            </button>
                         <% } %>
                     </div>
-
-                   
+                </div>
+            </div>
+            
+            <div class="reservations-similaires">
+                <h2>Autres activités qui pourraient vous intéresser</h2>
+                <div class="similaires-grid">
+                    <div class="similaire-item">
+                        <div class="similaire-image" style="background-image: url('/images/placeholder-sport.jpg')"></div>
+                        <div class="similaire-contenu">
+                            <h3>Soccer</h3>
+                            <p><i class="fas fa-calendar"></i> Demain, 18:00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Terrain central</p>
+                        </div>
+                    </div>
+                    <div class="similaire-item">
+                        <div class="similaire-image" style="background-image: url('/images/placeholder-sport.jpg')"></div>
+                        <div class="similaire-contenu">
+                            <h3>Basketball</h3>
+                            <p><i class="fas fa-calendar"></i> Samedi, 14:00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Gymnase principal</p>
+                        </div>
+                    </div>
+                    <div class="similaire-item">
+                        <div class="similaire-image" style="background-image: url('/images/placeholder-sport.jpg')"></div>
+                        <div class="similaire-contenu">
+                            <h3>Tennis</h3>
+                            <p><i class="fas fa-calendar"></i> Dimanche, 10:00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Court extérieur</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Modal de partage -->
+        <div class="modal" id="modal-partage">
+            <div class="modal-contenu">
+                <div class="modal-entete">
+                    <h2>Partager cette activité</h2>
+                    <button class="fermer-modal">&times;</button>
+                </div>
+                <div class="modal-corps">
+                    <p>Partagez cette activité avec vos amis:</p>
+                    <div class="options-partage">
+                        <a href="#" class="option-partage facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" class="option-partage twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="#" class="option-partage whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="#" class="option-partage email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </a>
+                    </div>
+                    <div class="lien-partage">
+                        <input type="text" value="https://sportzone.com/reservation/<%= reservation.id_reservation %>" readonly>
+                        <button class="copier-lien">Copier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <%- include ("../partials/footer.ejs") %>
+        
         <script src="/Javascript/information_reservation.js"></script>
-        <script>
-            window.__ow = window.__ow || {};
-            window.__ow.organizationId = "715832fd-47e3-45b9-830f-c2a1b5115487";
-            window.__ow.template_id = "4ca5c965-dab7-4659-a17c-3c376b484df5";
-            window.__ow.integration_name = "manual_settings";
-            window.__ow.product_name = "chatbot";   
-            ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[OpenWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.openwidget.com/openwidget.js",t.head.appendChild(n)}};!n.__ow.asyncInit&&e.init(),n.OpenWidget=n.OpenWidget||e}(window,document,[].slice))
-        </script>
-        <noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
+        
 </body>
 
 </html>
