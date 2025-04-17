@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const capaciteRestante = document.getElementById("capaciteRestante");
 
     const capaciteMax = capaciteMaxElement ? parseInt(capaciteMaxElement.value) || 10 : 10;
-    const prixBase = prixBaseElement ? parseInt(prixBaseElement.value) || 0 : 0;
+    const prixBase = prixBaseElement ? parseFloat(prixBaseElement.value, 2) || 0 : 0;
     const idReservation = idReservationElement ? idReservationElement.value : null;
 
     function updatePlayerCount() {
@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (nombreParticipantsDisplay) nombreParticipantsDisplay.textContent = count;
-        if (prixTotalDisplay) prixTotalDisplay.textContent = `${count * prixBase}$`;
+        let prixTotal = parseFloat(count * prixBase).toFixed(2) || 0;
+        if (prixTotalDisplay) prixTotalDisplay.textContent = `${prixTotal}$`;
         if (bookingCountInput) bookingCountInput.value = count;
         if (listeNbJoueur) listeNbJoueur.value = count;
         if (listeDisplay) listeDisplay.textContent = count;
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateFormUrls(count) {
         if (!idReservation) return;
 
-        const prixTotal = parseFloat(prixTotalDisplay.textContent) || 0;
+        const prixTotal = parseFloat(prixTotalDisplay.textContent).toFixed(2) || 0;
 
         if (formReserver) {
             formReserver.action = `/reserver/${idReservation}/${count}/${prixTotal}`;
