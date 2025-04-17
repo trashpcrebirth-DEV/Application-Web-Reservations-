@@ -1524,16 +1524,18 @@ const transporter = nodemailer.createTransport({
                   };
   
                   transporter.sendMail(mailOptions, (err, info) => {
-                      if (err) {
-                          console.error("Erreur lors de l'envoi du mail :", err);
-                          return res.status(500).send("Erreur d'envoi du courriel.");
-                      }
-  
-                      res.send("Un courriel a été envoyé avec un lien de réinitialisation.");
-                  });
+                    if (err) {
+                        console.error("Erreur lors de l'envoi du mail :", err);
+                        res.send(`<script>alert("Erreur d'envoi du courriel."); window.location.href = "/";</script>`);
+                    }
+                
+                    res.send(`<script>alert("Un courriel a été envoyé avec un lien de réinitialisation."); window.location.href = "/";</script>`);
+
+                });
+                
               });
           } else {
-              res.send("Aucun compte associé à cette adresse.");
+              res.send(`<script>alert("Aucun compte associé à cette adresse."); window.location.href = "/";</script>`);
           }
       });
   });
@@ -1555,7 +1557,7 @@ const transporter = nodemailer.createTransport({
           const hashedPassword = await bcrypt.hash(password, 10);
           con.query("UPDATE utilisateurs SET mot_de_passe = ?, reset_token = NULL WHERE id = ?", [hashedPassword, user.id], (err) => {
               if (err) throw err;
-              res.send("Mot de passe mis à jour avec succès. Vous pouvez maintenant vous reconnecter.");
+              res.send(`<script>alert("Mot de passe mis à jour avec succès. Vous pouvez maintenant vous reconnecter."); window.location.href = "/";</script>`);
           });
       });
   });
