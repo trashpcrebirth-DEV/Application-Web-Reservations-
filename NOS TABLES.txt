@@ -126,7 +126,7 @@ CREATE TABLE utilisateurs (
     langue VARCHAR(50),                   -- Langue de l'utilisateur
     email VARCHAR(255) UNIQUE NOT NULL,   -- Adresse e-mail (unique)
     adresse VARCHAR(255),                 -- Adresse de l'utilisateur
-    reset_token VARCHAR(255)
+    reset_token VARCHAR(255),
     photo_url VARCHAR(255)
 );
 
