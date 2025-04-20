@@ -571,28 +571,40 @@ app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
     });
 });
 
-//Route pour ajouter un avis
+// Route pour ajouter un avis
 app.post('/ajouter-avis', (req, res) => {
     console.log(req.body);
 
     const { nom, note, commentaire } = req.body;
-    const dateAujourdhui = new Date(); // Récupère la date du jour
-    const image_url = "/images/default-avatar.png"; //la fonctionnalité de photo de profile n'est pas encore implémentée
-
+    const dateAujourdhui = new Date();
+    const userId = req.session.user.id;
 
     if (!nom || !note || !commentaire) {
         return res.status(400).json({ error: "Tous les champs sont requis." });
     }
 
-    const query = "INSERT INTO avis_desUtilisateurs (nom, note, commentaire, date, image) VALUES (?, ?, ?, ?, ?)";
-
-    con.query(query, [nom, note, commentaire, dateAujourdhui, image_url], (err, result) => {
+    // D'abord, récupérer la photo de profil de l'utilisateur
+    const getPhotoQuery = "SELECT photo_url FROM utilisateurs WHERE id = ?";
+    
+    con.query(getPhotoQuery, [userId], (err, results) => {
         if (err) {
-            console.error("Erreur lors de l'insertion de l'avis :", err);
+            console.error("Erreur lors de la récupération de la photo de profil:", err);
             return res.status(500).json({ error: "Erreur serveur" });
         }
-        res.redirect(`/contact?alertAvis=success`);
 
+        // Utiliser la photo de profil si elle existe, sinon utiliser l'image par défaut
+        const image_url = results[0]?.photo_url || "/images/default-avatar.png";
+
+        // Maintenant insérer l'avis avec la bonne image
+        const insertQuery = "INSERT INTO avis_desUtilisateurs (nom, note, commentaire, date, image) VALUES (?, ?, ?, ?, ?)";
+
+        con.query(insertQuery, [nom, note, commentaire, dateAujourdhui, image_url], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de l'insertion de l'avis :", err);
+                return res.status(500).json({ error: "Erreur serveur" });
+            }
+            res.redirect(`/contact?alertAvis=success`);
+        });
     });
 });
 
