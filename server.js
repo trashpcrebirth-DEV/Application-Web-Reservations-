@@ -540,36 +540,62 @@ app.get("/contact", (req, res) => {
 //Prend l'image uploadée et l'ajoute à la base de données
 const upload = multer({ dest: "./public/images/images-evenement" });
 
-// Route pour l'ajout d'événement
-app.post("/ajouter-evenement", upload.single("image_url"), (req, res) => {
+// Route modifiée pour utiliser Cloudinary
+app.post("/ajouter-evenement", upload.single("image_url"), async (req, res) => {
     const { nom, date_evenement, lieu, type, description, participants } = req.body;
-    const image_url = `./public/images/images-evenement/${req.file.filename}`;
-
+    
     console.log("Body:", req.body);
     console.log("Fichier:", req.file);
-    let formattedParticipants = participants; // Initialisation de la variable
 
-    if (type === "Individuel") {
-        formattedParticipants += " participants"; // Ajoute " participants" à la valeur existante
-    } else if (type === "Equipe") {
-        formattedParticipants += " équipes"; // Ajoute " équipes" à la valeur existante
-    }
-
-    if (!nom || !date_evenement || !lieu || !description || !participants || !image_url) {
+    if (!nom || !date_evenement || !lieu || !description || !participants || !req.file) {
         return res.status(400).json({ error: "Tous les champs sont requis." });
     }
 
-    const formattedDate = dateFormat(date_evenement, "yyyy-mm-dd");
-    const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url, statut) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    let formattedParticipants = participants;
+    if (type === "Individuel") {
+        formattedParticipants += " participants";
+    } else if (type === "Equipe") {
+        formattedParticipants += " équipes";
+    }
 
-    con.query(query, [nom, formattedDate, lieu, description, formattedParticipants, image_url, "En attente"], (err, result) => {
-        if (err) {
-            console.error("Erreur lors de l'insertion de l'événement :", err);
-            return res.status(500).json({ error: "Erreur serveur" });
-        }
-        res.redirect(`/contact?alertEvenement=success`);
-    });
+    try {
+        // Upload vers Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'events',
+            public_id: `event_${Date.now()}`
+        });
+
+        // Supprimer le fichier local après l'upload
+        fs.unlinkSync(req.file.path);
+
+        const formattedDate = dateFormat(date_evenement, "yyyy-mm-dd");
+        
+        const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url, statut) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        con.query(query, [
+            nom, 
+            formattedDate, 
+            lieu, 
+            description, 
+            formattedParticipants, 
+            result.secure_url, // URL Cloudinary
+            "En attente"
+        ], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de l'insertion de l'événement :", err);
+                return res.status(500).json({ error: "Erreur serveur" });
+            }
+            res.redirect(`/contact?alertEvenement=success`);
+        });
+
+    } catch (err) {
+        console.error("Erreur lors de l'upload Cloudinary:", err);
+        // Supprimer le fichier local en cas d'erreur
+        if (req.file) fs.unlinkSync(req.file.path);
+        return res.status(500).json({ error: "Erreur lors du traitement de l'image" });
+    }
 });
+
 
 // Route pour ajouter un avis
 app.post('/ajouter-avis', (req, res) => {
@@ -671,6 +697,8 @@ app.get("/AProposEvenement", (req, res) => {
         });
     });
 });
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -1574,7 +1602,9 @@ const transporter = nodemailer.createTransport({
       });
   });
 
+  
 
+  
 
 
 
