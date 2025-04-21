@@ -60,7 +60,7 @@ body {
     justify-content: center;
     position: relative;
     z-index: 1;
-    margin-top: -5.5%;
+    margin-top: -8.5%;
 }
 
 .logo-conteneur {
@@ -448,7 +448,7 @@ body {
     overflow: hidden;
     display: none;
     margin-right: 5%;
-    margin-bottom: 25%;
+    margin-bottom: 0;
 }
 
 .overlay-image {
@@ -469,6 +469,11 @@ body {
     flex-direction: column;
     justify-content: space-between;
     padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: left; /* Centrage vertical */
+    align-items: left;     /* Centrage horizontal si besoin */
+    height: 100%;
 }
 
 .texte-image {
@@ -759,7 +764,7 @@ body {
 
 
 .page-connexion {
-    min-height: 140vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: row;
 }

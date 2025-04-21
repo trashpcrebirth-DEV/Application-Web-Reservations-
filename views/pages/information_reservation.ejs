@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails de la réservation | SportZone</title>
     <link rel="icon" type="image/png" href="/images/favicon.png">
-
     <link rel="stylesheet" href="/CSS/information_reservation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -80,6 +79,9 @@
                                             <p class="valeur">
                                                 <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", {
                                                     hour: "2-digit" , minute: "2-digit" }) %>
+                                                    -
+                                                <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", {
+                                                    hour: "2-digit" , minute: "2-digit" }) %>    
                                             </p>
                                         </div>
                                     </div>
@@ -326,34 +328,24 @@
             </div>
             
             <div class="reservations-similaires">
-                <h2>Autres activités qui pourraient vous intéresser</h2>
+                <h2>Autres activités prévues le même jour</h2>
                 <div class="similaires-grid">
-                    <div class="similaire-item">
-                        <div class="similaire-image" style="background-image: url('/images/placeholder-sport.jpg')"></div>
-                        <div class="similaire-contenu">
-                            <h3>Soccer</h3>
-                            <p><i class="fas fa-calendar"></i> Demain, 18:00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> Terrain central</p>
-                        </div>
-                    </div>
-                    <div class="similaire-item">
-                        <div class="similaire-image" style="background-image: url('/images/placeholder-sport.jpg')"></div>
-                        <div class="similaire-contenu">
-                            <h3>Basketball</h3>
-                            <p><i class="fas fa-calendar"></i> Samedi, 14:00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> Gymnase principal</p>
-                        </div>
-                    </div>
-                    <div class="similaire-item">
-                        <div class="similaire-image" style="background-image: url('/images/placeholder-sport.jpg')"></div>
-                        <div class="similaire-contenu">
-                            <h3>Tennis</h3>
-                            <p><i class="fas fa-calendar"></i> Dimanche, 10:00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> Court extérieur</p>
-                        </div>
-                    </div>
+                    <% autresActivites.forEach(activite => { %>
+                        <a href="/reservation-information/<%= activite.id_reservation %>" class="similaire-item">
+                            <div class="similaire-image" style="background-image: url('<%= activite.image_url %>')"></div>
+                            <div class="similaire-contenu">
+                                <h3><%= activite.categorie_sport %></h3>
+                                <p><i class="fas fa-calendar"></i>
+                                    <%= new Date(activite.date_time).toLocaleTimeString("fr-FR", {
+                                        hour: "2-digit", minute: "2-digit"
+                                    }) %>
+                                </p>
+                                <p><i class="fas fa-map-marker-alt"></i> <%= activite.installation %></p>
+                            </div>
+                        </a>
+                    <% }) %>                    
                 </div>
-            </div>
+            </div>            
         </div>
         
         <div class="modal" id="modal-partage">

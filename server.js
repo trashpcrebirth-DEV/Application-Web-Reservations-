@@ -352,66 +352,60 @@ app.post('/ajouter-liste-attente/:id_reservation/:nombreJoueurs/:prix', (req, re
 });
 
 app.get("/reservation-information/:id", function (req, res) {
-    if (req.session.user) {
-        const reservationId = req.params.id;
-        const userId = req.session.user.id;
+    if (!req.session.user) return res.redirect("/connexion");
 
-        con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur serveur");
-            }
+    const reservationId = req.params.id;
+    const userId = req.session.user.id;
 
-            if (results.length === 0) {
-                return res.status(404).send("Réservation non trouvée");
-            }
+    con.query("SELECT * FROM reservations WHERE id_reservation = ?", [reservationId], (err, results) => {
+        if (err || results.length === 0) return res.status(500).send("Erreur serveur ou réservation non trouvée");
 
-            const reservation = results[0];
+        const reservation = results[0];
+        const dateResa = new Date(reservation.date_time);
+        const dateOnly = dateResa.toISOString().split("T")[0];
 
-            con.query("SELECT * FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, reservationCheck) => {
-                if (err) {
-                    console.error("Erreur lors de la vérification de la réservation :", err);
-                    return res.status(500).send("Erreur serveur");
-                }
+        con.query("SELECT * FROM utilisateurs_reservations WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, reservationCheck) => {
+            if (err) return res.status(500).send("Erreur serveur");
 
-                const isUserHasReservation = reservationCheck.length > 0;
-                const isCapaciteRempli = reservation.capacite <= 0 && reservationCheck.length <= 0;
+            const isUserHasReservation = reservationCheck.length > 0;
+            const isCapaciteRempli = reservation.capacite <= 0 && !isUserHasReservation;
 
-                con.query("SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, dansPanier) => {
-                    if (err) {
-                        console.error("Erreur lors de la récupération des items :", err);
-                        return res.status(500).json({ message: "Erreur serveur" });
-                    }
+            con.query("SELECT * FROM items WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, dansPanier) => {
+                if (err) return res.status(500).send("Erreur serveur");
+                const isDansPanier = dansPanier.length > 0;
 
-                    const isDansPanier = dansPanier.length > 0;
+                con.query("SELECT * FROM liste_attente WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, attenteCheck) => {
+                    if (err) return res.status(500).send("Erreur serveur");
+                    const isDansListeAttente = attenteCheck.length > 0;
 
-                    con.query("SELECT * FROM liste_attente WHERE id_reservation = ? AND id_utilisateur = ?", [reservationId, userId], (err, attenteCheck) => {
-                        if (err) {
-                            console.error("Erreur lors de la vérification de la liste d'attente :", err);
-                            return res.status(500).send("Erreur serveur");
+                    con.query(
+                        "SELECT * FROM reservations WHERE DATE(date_time) = ? AND id_reservation != ? ORDER BY RAND() LIMIT 3",
+                        [dateOnly, reservationId],
+                        (err, autresActivites) => {
+                            if (err) {
+                                console.error("Erreur lors de la récupération des autres activités :", err);
+                                return res.status(500).send("Erreur serveur");
+                            }
+
+                            res.render("pages/information_reservation", {
+                                siteTitle: "SportZone",
+                                pageTitle: "Détails de la réservation",
+                                activePage: "reservation",
+                                user: req.session.user,
+                                reservation: reservation,
+                                nombreJoueurs: 1,
+                                isDansPanier: isDansPanier,
+                                isDejaReserve: isUserHasReservation,
+                                isRempli: isCapaciteRempli,
+                                isDansListeAttente: isDansListeAttente,
+                                autresActivites: autresActivites 
+                            });
                         }
-
-                        const isDansListeAttente = attenteCheck.length > 0;
-
-                        res.render("pages/information_reservation", {
-                            siteTitle: "SportZone",
-                            pageTitle: "Détails de la réservation",
-                            activePage: "reservation",
-                            user: req.session.user,
-                            reservation: reservation,
-                            nombreJoueurs: 1,
-                            isDansPanier: isDansPanier,
-                            isDejaReserve: isUserHasReservation,
-                            isRempli: isCapaciteRempli,
-                            isDansListeAttente: isDansListeAttente
-                        });
-                    });
+                    );
                 });
             });
         });
-    } else {
-        res.redirect("/connexion");
-    }
+    });
 });
 
 
