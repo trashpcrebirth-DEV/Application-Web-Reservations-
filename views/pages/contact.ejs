@@ -3,192 +3,775 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Réservation de Terrains Sportifs</title>
+    <title>Contactez-nous | SportZone</title>
     <link rel="stylesheet" href="../CSS/contact.css">
     <link rel="icon" type="image/png" href="/images/favicon.png">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
-<body class="banniere">
+<body>
     <%- include ("../partials/header.ejs") %>
 
+    <div class="hero-section">
+        <div class="particules"></div>
+        <div class="contenu-hero">
+            <h1 class="titre-principal">Contactez <span class="accent">SportZone</span></h1>
+            <p class="sous-titre">Nous sommes à votre écoute pour vous offrir une expérience sportive exceptionnelle</p>
+            <div class="cartes-contact">
+                <div class="carte-contact" data-type="avis">
+                    <div class="carte-icone">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Partagez votre avis</h3>
+                    <p>Votre expérience compte pour nous</p>
+                </div>
+                <div class="carte-contact" data-type="evenement">
+                    <div class="carte-icone">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Organisez un événement</h3>
+                    <p>Créez des moments inoubliables</p>
+                </div>
+                <div class="carte-contact" data-type="assistance">
+                    <div class="carte-icone">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Assistance directe</h3>
+                    <p>Besoin d'aide immédiate?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="conteneur-principal">
-        <h1 class="titre-page">Nous contacter</h1>
-        
-        <div class="grille-formulaires">
-            <div class="carte-formulaire">
-                <div class="entete-carte">
-                    <span class="icone-carte"><i class="fas fa-star"></i></span>
-                    <h2 class="titre-section">Partagez votre expérience avec un avis</h2>
+        <div class="onglets-navigation">
+            <button class="onglet actif" data-onglet="avis">
+                <i class="fas fa-star"></i>
+                <span>Avis</span>
+            </button>
+            <button class="onglet" data-onglet="evenement">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Événement</span>
+            </button>
+            <button class="onglet" data-onglet="assistance">
+                <i class="fas fa-headset"></i>
+                <span>Assistance</span>
+            </button>
+        </div>
+
+        <div class="panneau-formulaires">
+            <div class="panneau actif" id="panneau-avis">
+                <div class="entete-panneau">
+                    <h2>Partagez votre expérience</h2>
+                    <p>Votre avis nous aide à améliorer nos services pour tous les sportifs</p>
                 </div>
                 
-                <form action="/ajouter-avis" method="POST" class="formulaire">
-                    <div class="groupe-champ">
-                        <label for="nom"><i class="fas fa-user"></i> Votre nom</label>
-                        <input type="text" id="nom" name="nom" placeholder="Entrez votre nom" required>
-                    </div>
-                    
-                    <div class="groupe-champ">
-                        <label for="email"><i class="fas fa-envelope"></i> Votre email</label>
-                        <input type="email" id="email" name="email" placeholder="Entrez votre email" required>
-                    </div>
-                    
-                    <div class="groupe-champ">
-                        <label for="note"><i class="fas fa-star"></i> Votre note</label>
-                        <div class="selecteur-note">
-                            <input type="radio" id="note5" name="note" value="5">
-                            <label for="note5" class="label-note">★</label>
-                            
-                            <input type="radio" id="note4" name="note" value="4">
-                            <label for="note4" class="label-note">★</label>
-                            
-                            <input type="radio" id="note3" name="note" value="3">
-                            <label for="note3" class="label-note">★</label>
-                            
-                            <input type="radio" id="note2" name="note" value="2">
-                            <label for="note2" class="label-note">★</label>
-                            
-                            <input type="radio" id="note1" name="note" value="1">
-                            <label for="note1" class="label-note">★</label>
+                <form action="/ajouter-avis" method="POST" class="formulaire formulaire-avis">
+                    <div class="groupe-champ animation-entree">
+                        <label for="nom">Votre nom</label>
+                        <div class="champ-avec-icone">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="nom" name="nom" placeholder="Comment vous appelez-vous?" required>
                         </div>
                     </div>
                     
-                    <div class="groupe-champ">
-                        <label for="commentaire"><i class="fas fa-comment"></i> Votre avis</label>
-                        <textarea id="commentaire" name="commentaire" rows="4" placeholder="Partagez votre expérience avec nous" required></textarea>
+                    <div class="groupe-champ animation-entree" style="animation-delay: 0.1s;">
+                        <label for="email">Votre email</label>
+                        <div class="champ-avec-icone">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="Où pouvons-nous vous répondre?" required>
+                        </div>
                     </div>
                     
-                    <div class="groupe-bouton">
+                    <div class="groupe-champ animation-entree" style="animation-delay: 0.2s;">
+                        <label for="note">Comment évaluez-vous votre expérience?</label>
+                        <div class="selecteur-etoiles">
+                            <input type="radio" id="note5" name="note" value="5" required>
+                            <label for="note5" class="etoile"><i class="fas fa-star"></i></label>
+                            
+                            <input type="radio" id="note4" name="note" value="4">
+                            <label for="note4" class="etoile"><i class="fas fa-star"></i></label>
+                            
+                            <input type="radio" id="note3" name="note" value="3">
+                            <label for="note3" class="etoile"><i class="fas fa-star"></i></label>
+                            
+                            <input type="radio" id="note2" name="note" value="2">
+                            <label for="note2" class="etoile"><i class="fas fa-star"></i></label>
+                            
+                            <input type="radio" id="note1" name="note" value="1">
+                            <label for="note1" class="etoile"><i class="fas fa-star"></i></label>
+                        </div>
+                    </div>
+                    
+                    <div class="groupe-champ animation-entree" style="animation-delay: 0.3s;">
+                        <label for="commentaire">Partagez votre expérience en détail</label>
+                        <div class="champ-avec-icone textarea">
+                            <i class="fas fa-comment"></i>
+                            <textarea id="commentaire" name="commentaire" rows="4" placeholder="Qu'avez-vous apprécié? Que pourrions-nous améliorer?" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="groupe-bouton animation-entree" style="animation-delay: 0.4s;">
                         <button type="submit" class="bouton-envoi">
-                            <i class="fas fa-paper-plane"></i>
-                             Envoyer votre avis
+                            <span class="texte-bouton">Envoyer mon avis</span>
+                            <span class="icone-bouton"><i class="fas fa-paper-plane"></i></span>
                         </button>
                     </div>
-
-                    <div>
-                        <li class="contact-gif"></li>
-                    </div>
                 </form>
+                
+                <div class="illustration-section">
+                    <div class="bulle-avis">
+                        <div class="avatar-avis">
+                            <img src="/images/placeholder.svg?height=50&width=50" alt="Avatar">
+                        </div>
+                        <div class="contenu-bulle">
+                            <div class="etoiles-bulle">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>STATIQUE POUR L'INSTANT "Une expérience sportive incroyable! Les installations sont impeccables."</p>
+                            <span class="auteur-bulle">Marie L.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bulle-avis decalee">
+                        <div class="avatar-avis">
+                            <img src="/images/placeholder.svg?height=50&width=50" alt="Avatar">
+                        </div>
+                        <div class="contenu-bulle">
+                            <div class="etoiles-bulle">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p>"Le personnel est très accueillant et les terrains sont parfaitement entretenus."</p>
+                            <span class="auteur-bulle">Thomas B.</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="carte-formulaire">
-                <div class="entete-carte">
-                    <span class="icone-carte"><i class="fas fa-calendar-alt"></i></span>
-                    <h2 class="titre-section">Organisez votre événement</h2>
+            <div class="panneau" id="panneau-evenement">
+                <div class="entete-panneau">
+                    <h2>Organisez votre événement sportif</h2>
+                    <p>Créez des moments mémorables pour vous et vos invités</p>
                 </div>
                 
-                <form action="/ajouter-evenement" method="POST" class="formulaire"  enctype="multipart/form-data">
-                    <div class="groupe-champ">
-                        <label for="nom-organisateur"><i class="fas fa-user"></i> Nom de l'organisateur</label>
-                        <input type="text" id="nom-organisateur" name="nom-organisateur" placeholder="Entrez votre nom" required>
+                <form action="/ajouter-evenement" method="POST" class="formulaire formulaire-evenement" enctype="multipart/form-data">
+                    <div class="etapes-formulaire">
+                        <div class="etape actif" data-etape="1">
+                            <span class="numero-etape">1</span>
+                            <span class="texte-etape">Organisateur</span>
+                        </div>
+                        <div class="ligne-etape"></div>
+                        <div class="etape" data-etape="2">
+                            <span class="numero-etape">2</span>
+                            <span class="texte-etape">Événement</span>
+                        </div>
+                        <div class="ligne-etape"></div>
+                        <div class="etape" data-etape="3">
+                            <span class="numero-etape">3</span>
+                            <span class="texte-etape">Détails</span>
+                        </div>
                     </div>
                     
-                    <div class="groupe-champ moitie">
-                        <label for="email-organisateur"><i class="fas fa-envelope"></i> Email</label>
-                        <input type="email" id="email-organisateur" name="email-organisateur" placeholder="Entrez votre email" required>
+                    <div class="contenu-etape actif" data-contenu="1">
+                        <div class="groupe-champ">
+                            <label for="nom-organisateur">Nom de l'organisateur</label>
+                            <div class="champ-avec-icone">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="nom-organisateur" name="nom-organisateur" placeholder="Votre nom complet" required>
+                            </div>
+                        </div>
+                        
+                        <div class="groupe-ligne">
+                            <div class="groupe-champ">
+                                <label for="email-organisateur">Email</label>
+                                <div class="champ-avec-icone">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" id="email-organisateur" name="email-organisateur" placeholder="Votre adresse email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="groupe-champ">
+                                <label for="telephone">Téléphone</label>
+                                <div class="champ-avec-icone">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="text" id="telephone" name="telephone" placeholder="Votre numéro de téléphone" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-etapes">
+                            <button type="button" class="bouton-etape suivant" data-goto="2">
+                                <span>Étape suivante</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="groupe-champ moitie">
-                        <label for="telephone"><i class="fas fa-phone"></i> Téléphone</label>
-                        <input type="text" id="telephone" name="telephone" placeholder="Votre numéro" required>
+                    <div class="contenu-etape" data-contenu="2">
+                        <div class="groupe-champ">
+                            <label for="nom-evenement">Nom de l'événement</label>
+                            <div class="champ-avec-icone">
+                                <i class="fas fa-clipboard"></i>
+                                <input type="text" id="nom-evenement" name="nom" placeholder="Donnez un nom à votre événement" required>
+                            </div>
+                        </div>
+                        
+                        <div class="groupe-champ">
+                            <label for="image_url">Image de l'événement</label>
+                            <div class="zone-depot-fichier">
+                                <input type="file" id="image_url" name="image_url" accept="image/*">
+                                <div class="contenu-depot">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Glissez votre image ici ou <span>parcourez</span></p>
+                                    <span class="nom-fichier">Aucun fichier sélectionné</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="groupe-ligne">
+                            <div class="groupe-champ">
+                                <label for="lieu">Lieu</label>
+                                <div class="champ-avec-icone">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <select id="lieu" name="lieu" required>
+                                        <option value="" disabled selected>Choisissez un lieu</option>
+                                        <option value="Basketball">Terrain Basketball</option>
+                                        <option value="foot">Terrain Football/Soccer</option>
+                                        <option value="gymnase">Gymnase Handball</option>
+                                        <option value="cricket">Terrain Cricket</option>
+                                        <option value="piscine">Piscine SportZone</option>
+                                        <option value="piscine-loisir">Piscine Loisir</option>
+                                        <option value="muscu">Salle de musculation</option>
+                                        <option value="studio">Studio collectif</option>
+                                        <option value="tennis">Cours de Tennis</option>
+                                        <option value="badminton">Gymnase Badminton</option>
+                                        <option value="squash">Gymnase Squash</option>
+                                        <option value="escalade">Emplacement d'escalade</option>
+                                        <option value="piste">Piste athlétique</option>
+                                        <option value="dojo">Dojo</option>
+                                        <option value="parc">Le Parc</option>
+                                        <option value="golf">Parc pour Golf</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="groupe-champ">
+                                <label for="type">Type d'événement</label>
+                                <div class="champ-avec-icone">
+                                    <i class="fas fa-filter"></i>
+                                    <select id="type" name="type" required>
+                                        <option value="" disabled selected>Choisissez un type</option>
+                                        <option value="Individuel">Individuel</option>
+                                        <option value="Equipe">En équipe</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-etapes">
+                            <button type="button" class="bouton-etape precedent" data-goto="1">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Retour</span>
+                            </button>
+                            <button type="button" class="bouton-etape suivant" data-goto="3">
+                                <span>Étape suivante</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="groupe-champ">
-                        <label for="nom"><i class="fa-solid fa-clipboard"></i> Entrez le nom de l'évenement</label>
-                        <input type="text" id="nom" name="nom" placeholder="Entrez le nom de l'évenement" required>
-                    </div>
-
-                    <div class="groupe-champ">
-                        <label for="image_url "><i class="fas fa-image"></i> Ajouter une image de l'événement</label>
-                        <input type="file" id="image_url " name="image_url" accept="image/*">
-                    </div>
-                    
-                    <div class="groupe-champ moitie">
-                        <label for="lieu"><i class="fas fa-futbol"></i> Lieu</label>
-                        <select id="lieu" name="lieu" required>
-                            <option value="" disabled selected>Sélectionnez un lieu</option>
-                            <option value="Basketball">Terrain Basketball</option>
-                            <option value="foot">Terrain Football/Soccer</option>
-                            <option value="gymnase">Gymnase Handball</option>
-                            <option value="cricket">Terrain Cricket</option>
-                            <option value="piscine">Pisicine SportZone</option>
-                            <option value="piscine-loisir">Pisicine Loisir</option>
-                            <option value="muscu">Salle de musculation</option>
-                            <option value="studio">Studio collectif</option>
-                            <option value="tennis">Cours de Tennis</option>
-                            <option value="tennis">Gymnase Badminton</option>
-                            <option value="squash">Gymnase Squash</option>
-                            <option value="escalade">Emplacement d'escalade</option>
-                            <option value="piste">Piste athlétique</option>
-                            <option value="dojo">Dojo</option>
-                            <option value="parc">Le Parc</option>
-                            <option value="golf">Parc pour Golf</option>
-                        </select>
-                    </div>
-
-                    <div class="groupe-champ moitie">
-                        <label for="type"><i class="fa-solid fa-filter"></i> Type d'évenement</label>
-                        <select id="type" name="type" required>
-                            <option value="" disabled selected>Sélectionnez un type</option>
-                            <option value="Individuel">Individuel</option>
-                            <option value="Equipe">En équipe</option>
-                        </select>
-                    </div>
-
-                    <div class="groupe-champ moitie">
-                        <label for="date_evenement"><i class="fas fa-calendar-day"></i> Date souhaitée</label>
-                        <input type="date" id="date_evenement" name="date_evenement" required>
-                    </div>
-                    
-                    <div class="groupe-champ moitie">
-                        <label for="participants"><i class="fas fa-users"></i> Participants</label>
-                        <input type="number" id="participants" name="participants" min="1" placeholder="Nombre" required>
-                    </div>
-                    
-                    <div class="groupe-champ">
-                        <label for="description"><i class="fas fa-info-circle"></i> Détails de l'événement</label>
-                        <textarea id="description" name="description" rows="4" placeholder="Décrivez votre événement" required></textarea>
-                    </div>
-                    
-                    <div class="groupe-bouton">
-                        <button type="submit" class="bouton-envoi">
-                            <i class="fas fa-paper-plane"></i>
-                             Demander un devis
-                        </button>
+                    <div class="contenu-etape" data-contenu="3">
+                        <div class="groupe-ligne">
+                            <div class="groupe-champ">
+                                <label for="date_evenement">Date souhaitée</label>
+                                <div class="champ-avec-icone">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <input type="date" id="date_evenement" name="date_evenement" required>
+                                </div>
+                            </div>
+                            
+                            <div class="groupe-champ">
+                                <label for="participants">Nombre de participants</label>
+                                <div class="champ-avec-icone">
+                                    <i class="fas fa-users"></i>
+                                    <input type="number" id="participants" name="participants" min="1" placeholder="Nombre de personnes" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="groupe-champ">
+                            <label for="description">Détails de l'événement</label>
+                            <div class="champ-avec-icone textarea">
+                                <i class="fas fa-info-circle"></i>
+                                <textarea id="description" name="description" rows="4" placeholder="Décrivez votre événement, vos besoins spécifiques..." required></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-etapes">
+                            <button type="button" class="bouton-etape precedent" data-goto="2">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Retour</span>
+                            </button>
+                            <button type="submit" class="bouton-envoi">
+                                <span class="texte-bouton">Demander un devis</span>
+                                <span class="icone-bouton"><i class="fas fa-paper-plane"></i></span>
+                            </button>
+                        </div>
                     </div>
                 </form>
+                
+                <div class="illustration-section evenement">
+                    <div class="carte-lieu">
+                        <div class="image-lieu">
+                            <img src="/images/placeholder.svg?height=200&width=300" alt="Lieu sportif" id="image-lieu-preview">
+                            <div class="badge-lieu" id="badge-lieu">Sélectionnez un lieu</div>
+                        </div>
+                        <div class="info-lieu">
+                            <div class="detail-lieu">
+                                <i class="fas fa-users"></i>
+                                <span id="capacite-lieu">Capacité: --</span>
+                            </div>
+                            <div class="detail-lieu">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span id="taille-lieu">Dimensions: --</span>
+                            </div>
+                            <div class="detail-lieu">
+                                <i class="fas fa-euro-sign"></i>
+                                <span id="tarif-lieu">Tarif: à partir de --€</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panneau" id="panneau-assistance">
+                <div class="entete-panneau">
+                    <h2>Besoin d'aide immédiate?</h2>
+                    <p>Notre équipe est à votre disposition pour répondre à toutes vos questions</p>
+                </div>
+                
+                <div class="options-assistance">
+                    <div class="option-contact">
+                        <div class="icone-option">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Chat en direct</h3>
+                        <p>Discutez immédiatement avec notre ChatBot</p>
+                        <button class="bouton-option" id="ouvrir-chat">
+                            <span>Démarrer le chat</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="option-contact">
+                        <div class="icone-option">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h3>Appelez-nous</h3>
+                        <p>Du lundi au vendredi, 9h-18h</p>
+                        <a href="tel:+33123456789" class="bouton-option">
+                            <span>(514) 123-4567</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="option-contact">
+                        <div class="icone-option">
+                            <i class="fas fa-envelope-open-text"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>Réponse sous 24h ouvrées</p>
+                        <a href="mailto:contact@sportzone.com" class="bouton-option">
+                            <span>info@sportzone.com</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="faq-section">
+                    <h3 class="titre-faq">Questions fréquentes</h3>
+                    
+                    <div class="accordeon">
+                        <div class="question">
+                            <h4>Comment annuler une réservation?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="reponse">
+                            <p>Vous pouvez annuler votre réservation jusqu'à 24h avant l'heure prévue sans frais. Rendez-vous dans votre espace personnel, section "Mes réservations" et cliquez sur "Annuler".</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordeon">
+                        <div class="question">
+                            <h4>Comment modifier le nombre de participants?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="reponse">
+                            <p>Pour modifier le nombre de participants, accédez à votre réservation dans votre espace personnel et cliquez sur "Modifier". Vous pourrez ajuster le nombre de participants en fonction des places disponibles.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordeon">
+                        <div class="question">
+                            <h4>Quels équipements sont fournis?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="reponse">
+                            <p>Cela dépend du sport et de l'installation. Les informations détaillées sont disponibles sur la page de chaque terrain. En général, nous fournissons l'équipement de base, mais nous recommandons d'apporter votre équipement personnel.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordeon">
+                        <div class="question">
+                            <h4>Comment organiser un tournoi?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="reponse">
+                            <p>Pour organiser un tournoi, utilisez notre formulaire d'organisation d'événement. Notre équipe vous contactera pour discuter des détails et vous proposer une offre personnalisée adaptée à vos besoins.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section-carte">
+        <div class="conteneur-carte">
+            <div class="info-contact">
+                <h2>Nos installations</h2>
+                <p>Retrouvez-nous dans toute la ville pour pratiquer votre sport favori</p>
+                
+                <div class="liste-adresses">
+                    <div class="adresse">
+                        <div class="icone-adresse">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="details-adresse">
+                            <h4>Centre SportZone Principal</h4>
+                            <p>7355 Av. Christophe Colomb #1-R, Montreal, Quebec H2R 0A6</p>
+                        </div>
+                    </div>
+                    
+                    <div class="adresse">
+                        <div class="icone-adresse">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="details-adresse">
+                            <h4>Complexe Aquatique</h4>
+                            <p>1000 Av. Émile-Journault, Montréal, QC H2M 2E7</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="reseaux-sociaux">
+                    <a href="#" class="reseau">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="reseau">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="reseau">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="reseau">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="carte-interactive">
+                <div class="marqueur" style="top: 30%; left: 40%;" data-lieu="Centre SportZone Principal">
+                    <div class="point-marqueur"></div>
+                    <div class="info-bulle">
+                        <h4>Centre SportZone Principal</h4>
+                        <p>7355 Av. Christophe Colomb #1-R, Montreal, Quebec H2R 0A6</p>
+                    </div>
+                </div>
+                
+                <div class="marqueur" style="top: 60%; left: 25%;" data-lieu="Complexe Aquatique">
+                    <div class="point-marqueur"></div>
+                    <div class="info-bulle">
+                        <h4>Complexe Aquatique</h4>
+                        <p>1000 Av. Émile-Journault, Montréal, QC H2M 2E7</p>
+                    </div>
+                </div>
+                
+                <gmp-map center="45.5017,-73.5673" zoom="10" map-id="8e1602f90b90879e">
+                    <gmp-advanced-marker position="-33.890542, 151.274856" title="Bondi Beach">
+                      <img class="flag-icon"
+                           src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+                    </gmp-advanced-marker>
+                    <gmp-advanced-marker position="45.55366,-73.63733" title="Complexe Aquatique">
+                      <img class="flag-icon"
+                           src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+                    </gmp-advanced-marker>
+                    <gmp-advanced-marker position="-34.028249, 151.157507" title="Cronulla Beach">
+                      <img class="flag-icon"
+                           src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+                    </gmp-advanced-marker>
+                    <gmp-advanced-marker position="-33.800101, 151.287478" title="Manly Beach">
+                      <img class="flag-icon"
+                           src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+                    </gmp-advanced-marker>
+                    <gmp-advanced-marker position="-33.950198, 151.259302" title="Maroubra Beach">
+                      <img class="flag-icon"
+                           src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+                    </gmp-advanced-marker>
+                  </gmp-map>
             </div>
         </div>
     </div>
 
     <%- include ("../partials/footer.ejs") %>
 
+    <div class="notification" id="notification">
+        <div class="icone-notification">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="contenu-notification">
+            <h4>Succès!</h4>
+            <p id="message-notification">Votre message a été envoyé avec succès.</p>
+        </div>
+        <button class="fermer-notification">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoOe96OJQvm816nKkuKQLwbAFqgHtdQZ4&loading=async&libraries=maps&v=beta" defer>
+    </script>
     <script>
-        // vérifie si le paramètre 'alert' est dans l'URL
+        document.querySelectorAll('.onglet').forEach(onglet => {
+            onglet.addEventListener('click', () => {
+                document.querySelectorAll('.onglet').forEach(o => o.classList.remove('actif'));
+                document.querySelectorAll('.panneau').forEach(p => p.classList.remove('actif'));
+                
+                onglet.classList.add('actif');
+                const ongletId = onglet.getAttribute('data-onglet');
+                document.getElementById(`panneau-${ongletId}`).classList.add('actif');
+            });
+        });
+        
+        document.querySelectorAll('.carte-contact').forEach(carte => {
+            carte.addEventListener('click', () => {
+                const type = carte.getAttribute('data-type');
+                
+                document.querySelectorAll('.onglet').forEach(o => o.classList.remove('actif'));
+                document.querySelectorAll('.panneau').forEach(p => p.classList.remove('actif'));
+                
+                document.querySelector(`.onglet[data-onglet="${type}"]`).classList.add('actif');
+                document.getElementById(`panneau-${type}`).classList.add('actif');
+                
+                document.querySelector('.onglets-navigation').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        document.querySelectorAll('.bouton-etape').forEach(bouton => {
+            bouton.addEventListener('click', () => {
+                const etapeCible = bouton.getAttribute('data-goto');
+                
+                document.querySelectorAll('.contenu-etape').forEach(etape => {
+                    etape.classList.remove('actif');
+                });
+                
+                document.querySelector(`.contenu-etape[data-contenu="${etapeCible}"]`).classList.add('actif');
+                
+                document.querySelectorAll('.etape').forEach(etape => {
+                    if (parseInt(etape.getAttribute('data-etape')) <= parseInt(etapeCible)) {
+                        etape.classList.add('actif');
+                    } else {
+                        etape.classList.remove('actif');
+                    }
+                });
+            });
+        });
+        
+        const inputFichier = document.getElementById('image_url');
+        if (inputFichier) {
+            inputFichier.addEventListener('change', function() {
+                const nomFichier = this.files[0] ? this.files[0].name : 'Aucun fichier sélectionné';
+                document.querySelector('.nom-fichier').textContent = nomFichier;
+                
+                document.querySelector('.zone-depot-fichier').classList.add('avec-fichier');
+            });
+            
+            const zoneDepot = document.querySelector('.zone-depot-fichier');
+            if (zoneDepot) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    zoneDepot.addEventListener(eventName, preventDefaults, false);
+                });
+                
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    zoneDepot.addEventListener(eventName, () => {
+                        zoneDepot.classList.add('survol');
+                    }, false);
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    zoneDepot.addEventListener(eventName, () => {
+                        zoneDepot.classList.remove('survol');
+                    }, false);
+                });
+                
+                zoneDepot.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    inputFichier.files = files;
+                    
+                    const nomFichier = files[0] ? files[0].name : 'Aucun fichier sélectionné';
+                    document.querySelector('.nom-fichier').textContent = nomFichier;
+                    zoneDepot.classList.add('avec-fichier');
+                }, false);
+            }
+        }
+        
+        document.querySelectorAll('.question').forEach(question => {
+            question.addEventListener('click', () => {
+                const parent = question.parentElement;
+                parent.classList.toggle('ouvert');
+            });
+        });
+        
         const urlParams = new URLSearchParams(window.location.search);
         const alertMessageAvis = urlParams.get('alertAvis');
         const alertMessageEvenement = urlParams.get('alertEvenement');
-
-    
+        
+        function afficherNotification(message) {
+            const notification = document.getElementById('notification');
+            const messageNotification = document.getElementById('message-notification');
+            
+            messageNotification.textContent = message;
+            notification.classList.add('visible');
+            
+            setTimeout(() => {
+                notification.classList.remove('visible');
+            }, 5000);
+        }
+        
         if (alertMessageAvis === 'success') {
-            alert('Votre avis a été transféré avec succès!');
+            afficherNotification('Votre avis a été envoyé avec succès!');
         }
-
-        if(alertMessageEvenement === 'success') {
-            alert("Votre demande d'evenement a été envoyée avec succès!");
+        
+        if (alertMessageEvenement === 'success') {
+            afficherNotification('Votre demande d\'événement a été envoyée avec succès!');
         }
+        
+        document.querySelector('.fermer-notification')?.addEventListener('click', () => {
+            document.getElementById('notification').classList.remove('visible');
+        });
+        
+        document.querySelectorAll('.marqueur').forEach(marqueur => {
+            marqueur.addEventListener('mouseenter', () => {
+                marqueur.classList.add('actif');
+            });
+            
+            marqueur.addEventListener('mouseleave', () => {
+                marqueur.classList.remove('actif');
+            });
+            
+            marqueur.addEventListener('click', () => {
+                const lieu = marqueur.getAttribute('data-lieu');
+                document.querySelectorAll('.adresse').forEach(adresse => {
+                    if (adresse.querySelector('h4').textContent === lieu) {
+                        adresse.classList.add('surligne');
+                        setTimeout(() => {
+                            adresse.classList.remove('surligne');
+                        }, 2000);
+                    }
+                });
+            });
+        });
+        
+        const selectLieu = document.getElementById('lieu');
+        if (selectLieu) {
+            selectLieu.addEventListener('change', function() {
+                const lieu = this.value;
+                const badgeLieu = document.getElementById('badge-lieu');
+                const imageLieu = document.getElementById('image-lieu-preview');
+                const capaciteLieu = document.getElementById('capacite-lieu');
+                const tailleLieu = document.getElementById('taille-lieu');
+                const tarifLieu = document.getElementById('tarif-lieu');
+                
+                const infoLieux = {
+                    'Basketball': {
+                        image: '/images/placeholder.svg?height=200&width=300',
+                        capacite: '20 personnes',
+                        taille: '28m x 15m',
+                        tarif: '60€/heure'
+                    },
+                    'foot': {
+                        image: '/images/placeholder.svg?height=200&width=300',
+                        capacite: '22 personnes',
+                        taille: '105m x 68m',
+                        tarif: '120€/heure'
+                    },
+                    'gymnase': {
+                        image: '/images/placeholder.svg?height=200&width=300',
+                        capacite: '30 personnes',
+                        taille: '40m x 20m',
+                        tarif: '80€/heure'
+                    },
+                };
+                
+                if (lieu && infoLieux[lieu]) {
+                    badgeLieu.textContent = lieu;
+                    imageLieu.src = infoLieux[lieu].image;
+                    capaciteLieu.textContent = `Capacité: ${infoLieux[lieu].capacite}`;
+                    tailleLieu.textContent = `Dimensions: ${infoLieux[lieu].taille}`;
+                    tarifLieu.textContent = `Tarif: à partir de ${infoLieux[lieu].tarif}`;
+                } else {
+                    badgeLieu.textContent = 'Sélectionnez un lieu';
+                    imageLieu.src = '/images/placeholder.svg?height=200&width=300';
+                    capaciteLieu.textContent = 'Capacité: --';
+                    tailleLieu.textContent = 'Dimensions: --';
+                    tarifLieu.textContent = 'Tarif: à partir de --€';
+                }
+            });
+        }
+        
+        function creerParticules() {
+            const particules = document.querySelector('.particules');
+            if (!particules) return;
+            
+            for (let i = 0; i < 50; i++) {
+                const particule = document.createElement('div');
+                particule.classList.add('particule');
+                
+                particule.style.left = Math.random() * 100 + '%';
+                particule.style.top = Math.random() * 100 + '%';
+                
+                const taille = Math.random() * 10 + 5;
+                particule.style.width = taille + 'px';
+                particule.style.height = taille + 'px';
+                
+                particule.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                particule.style.animationDelay = (Math.random() * 5) + 's';
+                
+                particules.appendChild(particule);
+            }
+        }
+        
+        creerParticules();
+        
+        document.getElementById('ouvrir-chat')?.addEventListener('click', () => {
+            if (window.OpenWidget) {
+                window.OpenWidget.call('open');
+            }
+        });
     </script>
-    <script>
-        window.__ow = window.__ow || {};
-        window.__ow.organizationId = "715832fd-47e3-45b9-830f-c2a1b5115487";
-        window.__ow.template_id = "4ca5c965-dab7-4659-a17c-3c376b484df5";
-        window.__ow.integration_name = "manual_settings";
-        window.__ow.product_name = "chatbot";   
-        ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[OpenWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.openwidget.com/openwidget.js",t.head.appendChild(n)}};!n.__ow.asyncInit&&e.init(),n.OpenWidget=n.OpenWidget||e}(window,document,[].slice))
-    </script>
-    <noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
 </body>
 </html>
-

@@ -612,7 +612,6 @@ i {
     position: relative;
 }
 
-/* Style du chatbot flottant */
 #chatbox {
     position: fixed;
     bottom: 20px;
