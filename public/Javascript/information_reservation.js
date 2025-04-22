@@ -153,3 +153,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const btnAnnuler = document.getElementById('btn-confirmer-annulation');
+    const formAnnulation = document.getElementById('form-annulation');
+
+    btnAnnuler.addEventListener('click', function (e) {
+        e.preventDefault();
+        const confirmation = confirm("Êtes-vous sûr de vouloir annuler cette réservation ?");
+        if (confirmation) {
+            formAnnulation.submit();
+        }
+    });
+});

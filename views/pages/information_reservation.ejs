@@ -299,17 +299,18 @@
                                 <i class="fas fa-check-circle"></i>
                                 <span>Vous avez déjà réservé cette activité</span>
                             </div>
-                            <form class="bouton annuler" action="/api/annuler/<%= reservation.id_reservation %>" method="POST">
-                                <button type="submit" class="bouton danger">
-                                    <i class="fas fa-times"></i> Annuler ma réservation
-                                </button>
+                            <button id="btn-confirmer-annulation" class="bouton danger">
+                                <i class="fas fa-times"></i> Annuler ma réservation
+                            </button>
+                            
+                            <form id="form-annulation" action="/api/annuler/<%= reservation.id_reservation %>" method="POST" style="display: none;">
                             </form>
                         <% } else if (typeof isDansPanier !== 'undefined' && isDansPanier) { %>
                             <div class="statut-action panier">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span>Cette réservation est dans votre panier</span>
                             </div>
-                            <a href="/panier" class="bouton primaire">
+                            <a href="/paiement" class="bouton primaire">
                                 <i class="fas fa-shopping-cart"></i> Voir mon panier
                             </a>
                         <% } else { %>
