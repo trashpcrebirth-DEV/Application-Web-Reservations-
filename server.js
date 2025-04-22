@@ -514,22 +514,33 @@ app.post('/modifier', async (req, res) => {
 
 
 
-
-
-
-
 // Route pour la page de contact
 app.get("/contact", (req, res) => {
-    if (req.session.user) {
+    if (!req.session.user) {
+        return res.redirect("/connexion?alertConnexion=success");
+    }
+
+    const sql = "SELECT * FROM avis_desUtilisateurs ORDER BY RAND() LIMIT 2";
+
+    con.query(sql, (err, avis) => {
+        if (err) {
+            console.error("Erreur SQL pour récupérer les avis :", err);
+            return res.render("pages/contact", {
+                activePage: 'contact',
+                user: req.session.user,
+                avis: []
+            });
+        }
+
         res.render("pages/contact", {
             activePage: 'contact',
-            user: req.session.user
-        }); // Render le fichier contact.ejs
-    } else {
-
-        res.redirect("/connexion?alertConnexion=success");
-    }
+            user: req.session.user,
+            avis
+        });
+    });
 });
+
+
 
 //Prend l'image uploadée et l'ajoute à la base de données
 const upload = multer({ dest: "./public/images/images-evenement" });

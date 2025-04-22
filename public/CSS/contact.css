@@ -205,10 +205,12 @@ body {
   border-radius: 8px;
   z-index: 1;
 }
+.onglet.actif i{
+    color: #175BED;
+}
 
 .onglet i {
   font-size: 1.2rem;
-  color: #000000;
 }
 
 .onglet::after {
@@ -444,6 +446,7 @@ label {
     margin-top: 10px;
 }
 
+
 .selecteur-etoiles {
     display: flex;
     flex-direction: row-reverse;
@@ -455,7 +458,7 @@ label {
     display: none;
 }
 
-.etoile {
+.etoile i{
     font-size: 2rem;
     color: #ddd;
     cursor: pointer;
@@ -466,7 +469,7 @@ label {
     transition: all 0.2s ease;
 }
 
-.selecteur-etoiles input[type="radio"]:checked ~ label {
+.selecteur-etoiles input[type="radio"]:checked ~ label i{
     color: #FFD700;
 }
 
@@ -624,6 +627,10 @@ label {
 
 .bouton-etape.suivant:hover {
     background-color: #1450d3;
+}
+
+.bouton-etape.precedent i {
+    color: #175BED;
 }
 
 .illustration-section {

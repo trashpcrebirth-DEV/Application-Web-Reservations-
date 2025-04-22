@@ -121,40 +121,28 @@
                 </form>
                 
                 <div class="illustration-section">
-                    <div class="bulle-avis">
-                        <div class="avatar-avis">
-                            <img src="/images/placeholder.svg?height=50&width=50" alt="Avatar">
-                        </div>
-                        <div class="contenu-bulle">
+                    <% if (avis && avis.length > 0) { %>
+                      <% avis.forEach(a => { %>
+                        <div class="bulle-avis <%= avis.indexOf(a) % 2 !== 0 ? 'decalee' : '' %>">
+                          <div class="avatar-avis">
+                            <img src="<%= a.image %>" alt="Avatar">
+                          </div>
+                          <div class="contenu-bulle">
                             <div class="etoiles-bulle">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                              <% for (let i = 1; i <= a.note; i++) { %>
+                                <i class="fas fa-star <%= i <= a.note ? '' : 'inactive' %>"></i>
+                              <% } %>
                             </div>
-                            <p>STATIQUE POUR L'INSTANT "Une expérience sportive incroyable! Les installations sont impeccables."</p>
-                            <span class="auteur-bulle">Marie L.</span>
+                            <p><%= a.commentaire %></p>
+                            <span class="auteur-bulle"><%= a.nom || 'Anonyme' %></span>
+                          </div>
                         </div>
-                    </div>
-                    
-                    <div class="bulle-avis decalee">
-                        <div class="avatar-avis">
-                            <img src="/images/placeholder.svg?height=50&width=50" alt="Avatar">
-                        </div>
-                        <div class="contenu-bulle">
-                            <div class="etoiles-bulle">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <p>"Le personnel est très accueillant et les terrains sont parfaitement entretenus."</p>
-                            <span class="auteur-bulle">Thomas B.</span>
-                        </div>
-                    </div>
+                      <% }); %>
+                    <% } else { %>
+                      <p style="color: #999;">Aucun avis pour l’instant. Soyez le premier à en laisser un !</p>
+                    <% } %>
                 </div>
+                  
             </div>
             
             <div class="panneau" id="panneau-evenement">
@@ -332,21 +320,12 @@
                 <div class="illustration-section evenement">
                     <div class="carte-lieu">
                         <div class="image-lieu">
-                            <img src="/images/placeholder.svg?height=200&width=300" alt="Lieu sportif" id="image-lieu-preview">
-                            <div class="badge-lieu" id="badge-lieu">Sélectionnez un lieu</div>
+                            <img src="/images/hockeybackground.gif" alt="Lieu sportif" id="image-lieu-preview">
                         </div>
                         <div class="info-lieu">
                             <div class="detail-lieu">
                                 <i class="fas fa-users"></i>
-                                <span id="capacite-lieu">Capacité: --</span>
-                            </div>
-                            <div class="detail-lieu">
-                                <i class="fas fa-ruler-combined"></i>
-                                <span id="taille-lieu">Dimensions: --</span>
-                            </div>
-                            <div class="detail-lieu">
-                                <i class="fas fa-euro-sign"></i>
-                                <span id="tarif-lieu">Tarif: à partir de --€</span>
+                                <span id="capacite-lieu">Nous tenons à vous informer que seules les personnes qui auront des événements sélectionnés seront avisées.</span>
                             </div>
                         </div>
                     </div>
@@ -474,16 +453,13 @@
                 </div>
                 
                 <div class="reseaux-sociaux">
-                    <a href="#" class="reseau">
+                    <a href="https://www.facebook.com/" class="reseau">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="reseau">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="reseau">
+                    <a href="https://www.instagram.com/" class="reseau">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="reseau">
+                    <a href="https://www.youtube.com/" class="reseau">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
