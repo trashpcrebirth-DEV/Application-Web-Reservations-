@@ -270,7 +270,19 @@ app.post('/api/annuler/:id', async (req, res) => {
                         }
 
                         if (newCapacity > 0) {
-                            const getListeAttenteQuery = `SELECT * FROM liste_attente WHERE id_reservation = ? ORDER BY date_ajout ASC`;
+                            const getListeAttenteQuery = `
+                                SELECT la.*, r.categorie_sport, r.date_time
+                                FROM liste_attente la
+                                JOIN reservations r ON la.id_reservation = r.id_reservation
+                                WHERE la.id_reservation = ?
+                                ORDER BY la.date_ajout ASC
+                            `;
+                            
+                            const formatDateTime = (dateTime) => {
+                                const date = new Date(dateTime);
+                                const optionsDate = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
+                                return date.toLocaleDateString('fr-FR', optionsDate).replace(',', ' à');
+                            };
 
                             con.query(getListeAttenteQuery, [reservationId], (err, attenteList) => {
                                 if (err) {
@@ -279,27 +291,26 @@ app.post('/api/annuler/:id', async (req, res) => {
                                 }
 
                                 if (attenteList.length > 0) {
-                                    const utilisateur = attenteList[0];
-
-                                    if (utilisateur.nombreJoueur <= newCapacity) {
-                                        // Ajouter une notification pour l'utilisateur
-                                        const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
-                                        const message = `Une place est disponible pour la réservation ${reservationId}. Êtes-vous toujours intéressé ?`;
-
-                                        con.query(notificationQuery, [utilisateur.id_utilisateur, message], (err) => {
-                                            if (err) {
-                                                console.error('Erreur lors de l\'ajout de la notification :', err);
-                                            } else {
-                                                // Marquer l'utilisateur comme notifié
-                                                const updateListeAttenteQuery = `UPDATE liste_attente SET is_notified = TRUE WHERE id_attente = ?`;
-                                                con.query(updateListeAttenteQuery, [utilisateur.id_attente], (err) => {
-                                                    if (err) {
-                                                        console.error('Erreur lors de la mise à jour de la liste d\'attente :', err);
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
+                                    attenteList.forEach((utilisateur) => {
+                                        if (utilisateur.nombreJoueur <= newCapacity) {
+                                            // Ajouter une notification pour chaque utilisateur
+                                            const notificationQuery = `INSERT INTO notifications (id_utilisateur, message) VALUES (?, ?)`;
+                                            const message = `Une place est disponible pour la réservation de ${utilisateur.categorie_sport} le ${formatDateTime(utilisateur.date_time)}. Êtes-vous toujours intéressé ?`;
+                                            con.query(notificationQuery, [utilisateur.id_utilisateur, message], (err) => {
+                                                if (err) {
+                                                    console.error('Erreur lors de l\'ajout de la notification :', err);
+                                                } else {
+                                                    // Marquer l'utilisateur comme notifié
+                                                    const updateListeAttenteQuery = `UPDATE liste_attente SET is_notified = TRUE WHERE id_attente = ?`;
+                                                    con.query(updateListeAttenteQuery, [utilisateur.id_attente], (err) => {
+                                                        if (err) {
+                                                            console.error('Erreur lors de la mise à jour de la liste d\'attente :', err);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
 
                                 const updateFinalCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
