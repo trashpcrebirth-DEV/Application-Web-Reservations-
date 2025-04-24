@@ -16,54 +16,262 @@ body {
   margin: 0;
 }
 
+/* Conteneur de succès avec design bleu et blanc */
 .success-container {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #2d3bd2, #2f3484);
+  /* Dégradé bleu */
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  /* Ombre subtile */
   text-align: center;
-  width: 70%;
-  max-width: 500px;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  /* Bordure subtile */
 }
 
-h1 {
-  color: #175bed;
-  font-size: 3rem;
+.success-container.fade-in.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.success-container i {
+  color: #ffffff;
+  /* Blanc pur */
+  font-size: 100px;
   margin-bottom: 20px;
+  animation: pop-in 0.5s ease;
+}
+
+.success-container h1 {
+  color: #ffffff;
+  /* Blanc pur */
+  font-size: 2.5rem;
+  margin-bottom: 15px;
   font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  /* Ombre pour le texte */
 }
 
-h2 {
-  color: #444444;
-  font-size: 1.3rem;
-  margin-bottom: 20px;
+.success-container h2 {
+  color: #e3f2fd;
+  /* Bleu clair */
+  font-size: 1.5rem;
+  margin-bottom: 30px;
   font-weight: 400;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  /* Ombre subtile */
 }
 
-.fa-check-circle {
-  color: #175bed;
-  font-size: 80px;
-  margin-bottom: 20px;
-}
-
-.redirect-info {
-  color: #888;
-  font-size: 1rem;
-}
-
-.btn {
+.success-container .btn {
   display: inline-block;
-  margin-top: 30px;
-  padding: 12px 25px;
-  background-color: #175bed;
-  color: #fff;
-  font-size: 1.1rem;
-  border-radius: 5px;
+  margin: 10px 10px 0;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #3341df, #183cdf);
+  /* Dégradé bleu inversé */
+  color: #ffffff;
+  /* Blanc pur */
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 50px;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* Ombre pour les boutons */
 }
 
-.btn:hover {
-  background-color: #175bed;
+.success-container .btn:hover {
+  background: linear-gradient(135deg, #425dd8, #3858c9);
+  /* Couleur plus claire au survol */
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  /* Ombre plus prononcée */
+}
+
+/* Animation pour l'icône */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation pour l'icône */
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Loading dots */
+.loading-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.loading-dots span {
+  font-size: 2rem;
+  color: #175bed;
+  animation: blink 1.5s infinite;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Animation de la carte et de la machine */
+.animation-container {
+  position: relative;
+  height: 150px;
+  margin: 20px auto;
+  width: 300px;
+}
+
+.card {
+  width: 100px;
+  height: 60px;
+  background: linear-gradient(135deg, #175bed, #4a90e2);
+  border-radius: 8px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  animation: slide-card 4s ease-in-out forwards;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.card::before {
+  content: '';
+  width: 80%;
+  height: 10px;
+  background: #fff;
+  border-radius: 5px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.machine {
+  width: 140px;
+  height: 100px;
+  background: linear-gradient(135deg, #333, #555);
+  border-radius: 12px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.machine::before {
+  content: '';
+  width: 80%;
+  height: 10px;
+  background: #222;
+  border-radius: 5px;
+  position: absolute;
+  top: 20px;
+}
+
+.machine::after {
+  content: '';
+  width: 60%;
+  height: 6px;
+  background: #444;
+  border-radius: 3px;
+  position: absolute;
+  bottom: 20px;
+}
+
+@keyframes slide-card {
+  0% {
+    left: 0;
+  }
+
+  50% {
+    left: 50%;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  100% {
+    left: 100%;
+    transform: translateY(-50%);
+  }
+}
+
+/* Point vert sur la machine */
+.green-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  background-color: #28a745;
+  /* Vert */
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+  /* Lueur subtile */
+}
+
+/* Animation de fondu */
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
 }
