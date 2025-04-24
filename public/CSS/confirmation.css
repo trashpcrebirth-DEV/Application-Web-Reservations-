@@ -128,7 +128,8 @@ body {
 }
 
 .loading-dots span {
-  font-size: 2rem;
+  font-size: 3rem;
+  /* Increase font size */
   color: #175bed;
   animation: blink 1.5s infinite;
 }
@@ -156,14 +157,20 @@ body {
 /* Animation de la carte et de la machine */
 .animation-container {
   position: relative;
-  height: 150px;
-  margin: 20px auto;
-  width: 300px;
+  height: 200px;
+  /* Increase height */
+  margin: 30px auto;
+  /* Adjust margin */
+  width: 400px;
+  /* Increase width */
 }
 
+/* Card */
 .card {
-  width: 100px;
-  height: 60px;
+  width: 150px;
+  /* Increase width */
+  height: 90px;
+  /* Increase height */
   background: linear-gradient(135deg, #175bed, #4a90e2);
   border-radius: 8px;
   position: absolute;
@@ -177,7 +184,8 @@ body {
   align-items: center;
   color: #fff;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  /* Adjust font size */
   text-transform: uppercase;
 }
 
@@ -194,8 +202,10 @@ body {
 }
 
 .machine {
-  width: 140px;
-  height: 100px;
+  width: 180px;
+  /* Increase width */
+  height: 120px;
+  /* Increase height */
   background: linear-gradient(135deg, #333, #555);
   border-radius: 12px;
   position: absolute;
@@ -211,7 +221,8 @@ body {
 .machine::before {
   content: '';
   width: 80%;
-  height: 10px;
+  height: 12px;
+  /* Adjust height */
   background: #222;
   border-radius: 5px;
   position: absolute;
