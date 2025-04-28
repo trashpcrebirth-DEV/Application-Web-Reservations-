@@ -1463,7 +1463,7 @@ app.get('/facture', (req, res) => {
     delete req.session.lastReservations;
 });
 
-// Définir le stockage pour les photos de profil
+// import du cloudinary
 import cloudinaryModule from 'cloudinary';
 
 const cloudinary = cloudinaryModule.v2;

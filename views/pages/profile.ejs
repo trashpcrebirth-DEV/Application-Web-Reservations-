@@ -31,8 +31,9 @@
                     <label class="upload-label" for="profilePicInput">
                         <i class="fas fa-camera"></i>
                     </label>
-                    <input type="file" name="profile_pic" id="profilePicInput" accept="image/*" style="display:none"
-                        onchange="document.getElementById('profilePicForm').submit();">
+                    <input type="file" name="profile_pic" id="profilePicInput" accept="image/*" style="display:none">
+
+
                 </form>
 
                 <form action="/revert-profile-pic" method="POST" style="margin-top: 10px;">
@@ -134,6 +135,10 @@
                                         onclick="togglePasswordVisibility('passwordField', this)"></i>
                                 </div>
                             </div>
+                            <div id="passwordWeakMessage" style="display:none; color: red;">
+                                Votre mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort!
+                            </div>
+                            
                             <div class="password-strength-container" style="display: none;" id="passwordStrengthContainer">
                                 <div id="passwordStrengthBar" style="height: 5px; width: 0; background-color: red; transition: width 0.3s;"></div>
                                 <small id="passwordStrengthMessage" style="display: block; margin-top: 5px;"></small>
@@ -169,6 +174,13 @@
                         <button type="button" class="btn btn-primary" onclick="enableEdit()">
                             <i class="fas fa-edit btn-icon"></i> Modifier
                         </button>
+                        <div id="successMessage" class="success-message" style="display:none;">
+                            ✅ Mot de passe changé avec succès !
+                        </div>
+                        <div id="errorMessage" class="error-message" style="display:none;">
+                            Erreur : Les nouveaux mots de passe ne correspondent pas.
+                        </div>
+
                         <button type="submit" class="btn btn-primary" id="saveButton" style="display:none;">
                             <i class="fas fa-save btn-icon"></i> Sauvegarder
                         </button>
@@ -181,6 +193,9 @@
                         <i class="fas fa-sign-out-alt btn-icon"></i> Déconnexion
                     </button>
                 </form>
+
+              
+                
             </div>
         </div>
 

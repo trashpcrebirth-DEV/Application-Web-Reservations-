@@ -331,3 +331,16 @@ button.btn-warning i {
     opacity: 1 !important;
     transform: translateY(0) !important;
 }
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+

@@ -26,60 +26,84 @@ function validateForm() {
     const currentPassword = document.querySelector('[name="ancien_mot_de_passe"]').value;
     const confirmPassword = document.querySelector('[name="confirmation_mot_de_passe"]').value;
 
-    // Vérifie si tous les champs sont remplis
+    // Cacher les messages au début
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+
     if (newPassword || currentPassword || confirmPassword) {
         if (!newPassword || !currentPassword || !confirmPassword) {
             alert("Tous les champs de mot de passe doivent être remplis.");
             return false;
         }
-        // Vérifie si les nouveaux mots de passe correspondent
         if (newPassword !== confirmPassword) {
-            alert("Les nouveaux mots de passe ne correspondent pas.");
+            // Affiche un message d'erreur sans utiliser alert
+            document.getElementById('errorMessage').style.display = 'block';
             return false;
         }
+
+        // ✅ Tous les champs sont corrects
+        document.getElementById('successMessage').style.display = 'block';
+        
+        // Désactive le bouton pour éviter plusieurs clics
+        document.getElementById('saveButton').disabled = true;
+
+        setTimeout(() => {
+            document.getElementById('saveForm').submit(); // Soumettre après 1 seconde
+        }, 1000);
+
+        return false;
     }
     return true;
 }
 
+
+
 const passwordField = document.getElementById('passwordField');
 const strengthBar = document.getElementById('passwordStrengthBar');
 const strengthMessage = document.getElementById('passwordStrengthMessage');
+const passwordWeakMessage = document.getElementById('passwordWeakMessage'); // Nouveau message
 
 if (passwordField) {
     passwordField.addEventListener('input', function () {
         const password = passwordField.value;
         let strength = 0;
-    
+
         // Affiche la barre uniquement quand il y a du texte
         const container = document.getElementById('passwordStrengthContainer');
         container.style.display = password.length > 0 ? 'block' : 'none';
-    
+
         // Calcul de la force du mot de passe
         if (password.length >= 8) strength++;
         if (/[A-Z]/.test(password)) strength++;
         if (/[a-z]/.test(password)) strength++;
         if (/[0-9]/.test(password)) strength++;
         if (/[^A-Za-z0-9]/.test(password)) strength++;
-    
+
         // Met à jour la barre de force du mot de passe
         strengthBar.style.width = `${(strength / 5) * 100}%`;
-    
+
         const colors = ['#ff4d4d', '#ff944d', '#ffff4d', '#99e600', '#33cc33'];
         strengthBar.style.backgroundColor = colors[strength - 1] || 'transparent';
-    
+
         const messages = ['Très faible', 'Faible', 'Moyenne', 'Bonne', 'Excellente'];
         strengthMessage.textContent = messages[strength - 1] || '';
-        
-        // Empêcher l'envoi du formulaire si le mot de passe est trop faible
-        if (strength < 3) {
+
+        // Affiche un message si le mot de passe est trop faible
+        if (strength < 3 && password.length > 0) {
             document.getElementById('saveButton').disabled = true;
-            
+            passwordWeakMessage.style.display = 'block'; // Affiche le message d'avertissement
         } else {
             document.getElementById('saveButton').disabled = false;
+            passwordWeakMessage.style.display = 'none'; // Cache le message d'avertissement
         }
- 
+
+        // Si le champ est vide, cache le message
+        if (password.length === 0) {
+            passwordWeakMessage.style.display = 'none';
+        }
     });
 }
+
 
 function togglePasswordVisibility(fieldId, iconElement) {
     const passwordInput = document.getElementById(fieldId);
@@ -121,7 +145,17 @@ function formatPhoneNumber() {
 }
 
 // Animation au chargement
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.profile-info').style.opacity = '1';
-    formatPhoneNumber();
+document.addEventListener('DOMContentLoaded', function() {
+    const inputProfilePic = document.getElementById('profilePicInput');
+    if (inputProfilePic) {
+        inputProfilePic.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                document.getElementById('profilePicForm').submit();
+                setTimeout(() => {
+                    location.reload();
+                }, 2500);
+            }
+        });
+    }
 });
+
