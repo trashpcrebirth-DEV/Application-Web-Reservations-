@@ -17,6 +17,7 @@ import fs from "fs";
 import moment from "moment";
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import axios from 'axios';
 
 
 // Connexion à MongoDB
@@ -277,7 +278,7 @@ app.post('/api/annuler/:id', async (req, res) => {
                                 WHERE la.id_reservation = ?
                                 ORDER BY la.date_ajout ASC
                             `;
-                            
+
                             const formatDateTime = (dateTime) => {
                                 const date = new Date(dateTime);
                                 const optionsDate = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
@@ -409,7 +410,7 @@ app.get("/reservation-information/:id", function (req, res) {
                                 isDejaReserve: isUserHasReservation,
                                 isRempli: isCapaciteRempli,
                                 isDansListeAttente: isDansListeAttente,
-                                autresActivites: autresActivites 
+                                autresActivites: autresActivites
                             });
                         }
                     );
@@ -559,7 +560,7 @@ const upload = multer({ dest: "./public/images/images-evenement" });
 // Route modifiée pour utiliser Cloudinary
 app.post("/ajouter-evenement", upload.single("image_url"), async (req, res) => {
     const { nom, date_evenement, lieu, type, description, participants } = req.body;
-    
+
     console.log("Body:", req.body);
     console.log("Fichier:", req.file);
 
@@ -585,15 +586,15 @@ app.post("/ajouter-evenement", upload.single("image_url"), async (req, res) => {
         fs.unlinkSync(req.file.path);
 
         const formattedDate = dateFormat(date_evenement, "yyyy-mm-dd");
-        
+
         const query = "INSERT INTO Liste_Evenements (nom, date_evenement, lieu, description, participants, image_url, statut) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         con.query(query, [
-            nom, 
-            formattedDate, 
-            lieu, 
-            description, 
-            formattedParticipants, 
+            nom,
+            formattedDate,
+            lieu,
+            description,
+            formattedParticipants,
             result.secure_url, // URL Cloudinary
             "En attente"
         ], (err, result) => {
@@ -627,7 +628,7 @@ app.post('/ajouter-avis', (req, res) => {
 
     // D'abord, récupérer la photo de profil de l'utilisateur
     const getPhotoQuery = "SELECT photo_url FROM utilisateurs WHERE id = ?";
-    
+
     con.query(getPhotoQuery, [userId], (err, results) => {
         if (err) {
             console.error("Erreur lors de la récupération de la photo de profil:", err);
@@ -1543,84 +1544,122 @@ const transporter = nodemailer.createTransport({
     port: 587, // You can also use ports 25, 2525, 8025, or 80
     secure: false, // Set to true if using port 465
     auth: {
-      user: 'bdeb.qc.ca',
-      pass: 'F7IaLlYeAIkIxwKc'
+        user: 'bdeb.qc.ca',
+        pass: 'F7IaLlYeAIkIxwKc'
     }
-  });
-  
-  
-  // GET: affiche la page de mot de passe oublié
-  app.get("/mot_de_passe_oublie", (req, res) => {
-      res.render("pages/mot_de_passe_oublie", {
-          activePage: 'mot_de_passe_oublie',
-          user: req.session.user
-      });
-  });
-  
-  // POST: traite le formulaire de réinitialisation
-  app.post("/mot_de_passe_oublie", (req, res) => {
-      const email = req.body.email;
-  
-      con.query("SELECT * FROM utilisateurs WHERE email = ?", [email], (err, results) => {
-          if (err) throw err;
-  
-          if (results.length > 0) {
-              const token = crypto.randomBytes(32).toString('hex');
-  
-              con.query("UPDATE utilisateurs SET reset_token = ? WHERE email = ?", [token, email], (err) => {
-                  if (err) throw err;
-  
-                  const resetLink = `http://localhost:4000/reset_password?token=${token}`;
-  
-                  const mailOptions = {
-                      from: 'sportzone950@outlook.com',  // Adresse expéditeur
-                      to: email,
-                      subject: 'Réinitialisation du mot de passe',
-                      html: `<p>Voici votre lien pour réinitialiser votre mot de passe : <a href="${resetLink}">${resetLink}</a></p>`
-                  };
-  
-                  transporter.sendMail(mailOptions, (err, info) => {
+});
+
+
+// GET: affiche la page de mot de passe oublié
+app.get("/mot_de_passe_oublie", (req, res) => {
+    res.render("pages/mot_de_passe_oublie", {
+        activePage: 'mot_de_passe_oublie',
+        user: req.session.user
+    });
+});
+
+// POST: traite le formulaire de réinitialisation
+app.post("/mot_de_passe_oublie", (req, res) => {
+    const email = req.body.email;
+
+    con.query("SELECT * FROM utilisateurs WHERE email = ?", [email], (err, results) => {
+        if (err) throw err;
+
+        if (results.length > 0) {
+            const token = crypto.randomBytes(32).toString('hex');
+
+            con.query("UPDATE utilisateurs SET reset_token = ? WHERE email = ?", [token, email], (err) => {
+                if (err) throw err;
+
+                const resetLink = `http://localhost:4000/reset_password?token=${token}`;
+
+                const mailOptions = {
+                    from: 'sportzone950@outlook.com',  // Adresse expéditeur
+                    to: email,
+                    subject: 'Réinitialisation du mot de passe',
+                    html: `<p>Voici votre lien pour réinitialiser votre mot de passe : <a href="${resetLink}">${resetLink}</a></p>`
+                };
+
+                transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
                         console.error("Erreur lors de l'envoi du mail :", err);
                         res.send(`<script>alert("Erreur d'envoi du courriel."); window.location.href = "/";</script>`);
                     }
-                
+
                     res.send(`<script>alert("Un courriel a été envoyé avec un lien de réinitialisation."); window.location.href = "/";</script>`);
 
                 });
-                
-              });
-          } else {
-              res.send(`<script>alert("Aucun compte associé à cette adresse."); window.location.href = "/";</script>`);
-          }
-      });
-  });
-  
-  app.get("/reset_password", (req, res) => {
-      const token = req.query.token;
-      if (!token) return res.status(400).send("Token manquant.");
-      res.render("pages/reset_password", { token });
-  });
-  
-  app.post("/reset_password", async (req, res) => {
-      const { token, password } = req.body;
-      con.query("SELECT * FROM utilisateurs WHERE reset_token = ?", [token], async (err, results) => {
-          if (err) throw err;
-          if (results.length === 0) {
-              return res.status(400).send("Lien invalide ou expiré.");
-          }
-          const user = results[0];
-          const hashedPassword = await bcrypt.hash(password, 10);
-          con.query("UPDATE utilisateurs SET mot_de_passe = ?, reset_token = NULL WHERE id = ?", [hashedPassword, user.id], (err) => {
-              if (err) throw err;
-              res.send(`<script>alert("Mot de passe mis à jour avec succès. Vous pouvez maintenant vous reconnecter."); window.location.href = "/";</script>`);
-          });
-      });
-  });
 
-  
+            });
+        } else {
+            res.send(`<script>alert("Aucun compte associé à cette adresse."); window.location.href = "/";</script>`);
+        }
+    });
+});
 
-  
+app.get("/reset_password", (req, res) => {
+    const token = req.query.token;
+    if (!token) return res.status(400).send("Token manquant.");
+    res.render("pages/reset_password", { token });
+});
+
+app.post("/reset_password", async (req, res) => {
+    const { token, password } = req.body;
+    con.query("SELECT * FROM utilisateurs WHERE reset_token = ?", [token], async (err, results) => {
+        if (err) throw err;
+        if (results.length === 0) {
+            return res.status(400).send("Lien invalide ou expiré.");
+        }
+        const user = results[0];
+        const hashedPassword = await bcrypt.hash(password, 10);
+        con.query("UPDATE utilisateurs SET mot_de_passe = ?, reset_token = NULL WHERE id = ?", [hashedPassword, user.id], (err) => {
+            if (err) throw err;
+            res.send(`<script>alert("Mot de passe mis à jour avec succès. Vous pouvez maintenant vous reconnecter."); window.location.href = "/";</script>`);
+        });
+    });
+});
+
+
+app.get('/api/meteo', async (req, res) => {
+    const { lat, lon, datetime } = req.query;
+
+    const username = "etudiant_tanguay_julien";
+    const password = "iGfaE93R8B";
+
+    if (!lat || !lon || !datetime) {
+        return res.status(400).json({ error: "Latitude, longitude et datetime requis." });
+    }
+
+    // Important : utiliser exactement la date + heure
+    const dateTimeUTC = new Date(datetime).toISOString().split('.')[0] + "Z";
+
+    const url = `https://api.meteomatics.com/${dateTimeUTC}/t_2m:C/${lat},${lon}/json`;
+
+    try {
+        const response = await axios.get(url, {
+            auth: {
+                username,
+                password
+            }
+        });
+
+        const data = response.data;
+        if (data && data.data && data.data[0] && data.data[0].coordinates && data.data[0].coordinates[0]) {
+            const temperature = data.data[0].coordinates[0].dates[0].value;
+            res.json({ temperature });
+        } else {
+            res.status(500).json({ error: "Impossible d'obtenir la météo." });
+        }
+    } catch (error) {
+        console.error('Erreur lors de l\'appel Meteomatics :', error.message);
+        res.status(500).json({ error: "Erreur serveur pour la météo." });
+    }
+});
+
+
+
+
+
 
 
 
