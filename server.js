@@ -290,7 +290,7 @@ app.post('/api/annuler/:id', async (req, res) => {
                                     console.error('Erreur SQL lors de la récupération de la liste d’attente:', err);
                                     return res.status(500).json({ success: false, message: "Erreur lors de la récupération de la liste d'attente." });
                                 }
-
+                            
                                 if (attenteList.length > 0) {
                                     attenteList.forEach((utilisateur) => {
                                         if (utilisateur.nombreJoueur <= newCapacity) {
@@ -301,11 +301,11 @@ app.post('/api/annuler/:id', async (req, res) => {
                                                 if (err) {
                                                     console.error('Erreur lors de l\'ajout de la notification :', err);
                                                 } else {
-                                                    // Marquer l'utilisateur comme notifié
-                                                    const updateListeAttenteQuery = `UPDATE liste_attente SET is_notified = TRUE WHERE id_attente = ?`;
-                                                    con.query(updateListeAttenteQuery, [utilisateur.id_attente], (err) => {
+                                                    // Supprimer l'utilisateur de la liste d'attente après notification
+                                                    const deleteFromListeAttenteQuery = `DELETE FROM liste_attente WHERE id_utilisateur = ? AND id_reservation = ?`;
+                                                    con.query(deleteFromListeAttenteQuery, [utilisateur.id_utilisateur, reservationId], (err) => {
                                                         if (err) {
-                                                            console.error('Erreur lors de la mise à jour de la liste d\'attente :', err);
+                                                            console.error('Erreur lors de la suppression de l\'utilisateur de la liste d\'attente :', err);
                                                         }
                                                     });
                                                 }
@@ -313,7 +313,6 @@ app.post('/api/annuler/:id', async (req, res) => {
                                         }
                                     });
                                 }
-
                                 const updateFinalCapacityQuery = `UPDATE reservations SET capacite = ? WHERE id_reservation = ?`;
                                 con.query(updateFinalCapacityQuery, [newCapacity, reservationId], (err) => {
                                     if (err) {
