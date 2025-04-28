@@ -33,11 +33,14 @@
                                 reservation.categorie_sport.toLowerCase() === 'tennis' ? 'table-tennis' : 
                                 'running' %>"></i>
                         </div>
-                        <h1>Réservation - <%= reservation.categorie_sport %> #<%= reservation.id_reservation %></h1>
+                        <h1>Réservation - <%= reservation.categorie_sport %> #<%= reservation.id_reservation %>
+                        </h1>
                     </div>
                     <div class="entete-droite">
                         <span class="places-restantes">
-                            <i class="fa-solid fa-users"></i> <span id="placesRestantes"><%= reservation.capacite %></span> places restantes
+                            <i class="fa-solid fa-users"></i> <span id="placesRestantes">
+                                <%= reservation.capacite %>
+                            </span> places restantes
                         </span>
                         <span class="statut <%= (isDejaReserve || isRempli) ? 'reserve' : 'disponible' %>">
                             <%= isDejaReserve ? 'Réservé' : reservation.statut %>
@@ -65,7 +68,9 @@
                                         <div>
                                             <p class="etiquette">Date</p>
                                             <p class="valeur">
-                                                <%= new Date(reservation.date_time).toLocaleDateString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}) %>
+                                                <%= new Date(reservation.date_time).toLocaleDateString('fr-FR',
+                                                    {weekday: 'long' , day: 'numeric' , month: 'long' , year: 'numeric'
+                                                    }) %>
                                             </p>
                                         </div>
                                     </div>
@@ -80,8 +85,8 @@
                                                 <%= new Date(reservation.date_time).toLocaleTimeString("fr-FR", {
                                                     hour: "2-digit" , minute: "2-digit" }) %>
                                                     -
-                                                <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR", {
-                                                    hour: "2-digit" , minute: "2-digit" }) %>    
+                                                    <%= new Date(reservation.date_time_fin).toLocaleTimeString("fr-FR",
+                                                        { hour: "2-digit" , minute: "2-digit" }) %>
                                             </p>
                                         </div>
                                     </div>
@@ -134,10 +139,12 @@
                                             <div class="barre-capacite">
                                                 <div class="progression" id="progressBar" style="width: 0%"></div>
                                             </div>
-                                            <p class="capacite-texte"><span id="capaciteRestante"><%= reservation.capacite  %></span> places sur <%= reservation.capacite %> disponibles</p>
+                                            <p class="capacite-texte"><span id="capaciteRestante">
+                                                    <%= reservation.capacite %>
+                                                </span> places sur <%= reservation.capacite %> disponibles</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="element-info full-width">
                                         <div class="info-icone">
                                             <i class="fas fa-user-plus"></i>
@@ -146,14 +153,17 @@
                                             <h3>Nombre de participants</h3>
                                             <div class="nombre-input">
                                                 <button type="button" class="btn-moins" id="btn-moins">-</button>
-                                                <input type="number" name="nombreJoueurs" value="1" id="nombreJoueurs" min="1" max="<%= reservation.capacite %>" required>
+                                                <input type="number" name="nombreJoueurs" value="1" id="nombreJoueurs"
+                                                    min="1" max="<%= reservation.capacite %>" required>
                                                 <button type="button" class="btn-plus" id="btn-plus">+</button>
                                             </div>
-                                            
+
                                             <div class="calcul-prix">
                                                 <div class="ligne-prix">
                                                     <span>Prix unitaire:</span>
-                                                    <span><%= reservation.prix %>$</span>
+                                                    <span>
+                                                        <%= reservation.prix %>$
+                                                    </span>
                                                 </div>
                                                 <div class="ligne-prix">
                                                     <span>Nombre de participants:</span>
@@ -161,7 +171,9 @@
                                                 </div>
                                                 <div class="ligne-prix total">
                                                     <span>Total:</span>
-                                                    <span id="prix-total"><%= reservation.prix %>$</span>
+                                                    <span id="prix-total">
+                                                        <%= reservation.prix %>$
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -171,12 +183,15 @@
 
                             <div class="section image-section">
                                 <div class="image-container">
-                                    <img src="<%= reservation.image_url || '/images/placeholder-sport.jpg' %>" alt="Image de la réservation" class="image-reservation">
+                                    <img src="<%= reservation.image_url || '/images/placeholder-sport.jpg' %>"
+                                        alt="Image de la réservation" class="image-reservation">
                                     <div class="image-overlay">
-                                        <h3><%= reservation.installation %></h3>
+                                        <h3>
+                                            <%= reservation.installation %>
+                                        </h3>
                                     </div>
                                 </div>
-                                
+
                                 <div class="meteo-widget">
                                     <h3><i class="fas fa-cloud-sun"></i> Météo prévue</h3>
                                     <div class="meteo-contenu">
@@ -184,8 +199,8 @@
                                             <i class="fas fa-sun"></i>
                                         </div>
                                         <div class="meteo-info">
-                                            <p class="meteo-temp">22°C</p>
-                                            <p class="meteo-desc">Ensoleillé</p>
+                                            <p class="meteo-temp"></p>
+                                            <p class="meteo-desc"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -199,34 +214,34 @@
 
                             <div class="info-client">
                                 <% if (user) { %>
-                                <div class="bloc-info">
-                                    <p class="etiquette">Nom</p>
-                                    <p class="valeur">
-                                        <%= user.nom %>
-                                    </p>
-                                </div>
+                                    <div class="bloc-info">
+                                        <p class="etiquette">Nom</p>
+                                        <p class="valeur">
+                                            <%= user.nom %>
+                                        </p>
+                                    </div>
 
-                                <div class="bloc-info">
-                                    <p class="etiquette">Email</p>
-                                    <p class="valeur">
-                                        <%= user.email %>
-                                    </p>
-                                </div>
+                                    <div class="bloc-info">
+                                        <p class="etiquette">Email</p>
+                                        <p class="valeur">
+                                            <%= user.email %>
+                                        </p>
+                                    </div>
 
-                                <div class="bloc-info">
-                                    <p class="etiquette">Téléphone</p>
-                                    <p class="valeur">
-                                        <%= user.telephone || 'Non spécifié' %>
-                                    </p>
-                                </div>
-                                <% } else { %>
-                                <div class="bloc-info">
-                                    <p class="etiquette">Information</p>
-                                    <p class="valeur">
-                                        Veuillez vous connecter pour voir vos informations.
-                                    </p>
-                                </div>
-                                <% } %>
+                                    <div class="bloc-info">
+                                        <p class="etiquette">Téléphone</p>
+                                        <p class="valeur">
+                                            <%= user.telephone || 'Non spécifié' %>
+                                        </p>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="bloc-info">
+                                            <p class="etiquette">Information</p>
+                                            <p class="valeur">
+                                                Veuillez vous connecter pour voir vos informations.
+                                            </p>
+                                        </div>
+                                        <% } %>
                             </div>
                         </div>
                     </div>
@@ -234,15 +249,17 @@
                     <div class="panneau-onglet" id="terrain-panneau">
                         <div class="section">
                             <h2><i class="fas fa-map-marked-alt"></i> Détails du terrain</h2>
-                            
+
                             <div class="terrain-details">
                                 <div class="terrain-map">
                                     <div class="map-placeholder">
                                         <i class="fas fa-map-marker-alt"></i>
-                                        <p><%= reservation.installation %></p>
+                                        <p>
+                                            <%= reservation.installation %>
+                                        </p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="terrain-info">
                                     <div class="info-item">
                                         <i class="fas fa-info-circle"></i>
@@ -251,7 +268,7 @@
                                             <p>Terrain professionnel avec équipements de qualité et vestiaires.</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <i class="fas fa-door-open"></i>
                                         <div>
@@ -259,7 +276,7 @@
                                             <p>Entrée principale, code d'accès fourni par email</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="info-item">
                                         <i class="fas fa-parking"></i>
                                         <div>
@@ -276,79 +293,94 @@
                         <input type="hidden" id="id-reservation" value="<%= reservation.id_reservation %>">
                         <input type="hidden" id="capacite-max" value="<%= reservation.capacite %>">
                         <input type="hidden" id="prix-base" value="<%= reservation.prix %>">
-                        
-                        <% if (typeof isRempli !== 'undefined' && isRempli) { %>
-                            <% if (typeof isDansListeAttente !== 'undefined' && isDansListeAttente) { %>
+
+                        <% if (typeof isRempli !=='undefined' && isRempli) { %>
+                            <% if (typeof isDansListeAttente !=='undefined' && isDansListeAttente) { %>
                                 <div class="statut-action liste-attente">
                                     <i class="fas fa-hourglass-half"></i>
                                     <span>Vous êtes sur la liste d'attente</span>
                                 </div>
-                                <form action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= typeof nombreJoueurs !== 'undefined' ? nombreJoueurs : 1 %>" method="POST">
-                                    <button type="submit" class="bouton-liste-attente-reserve">Vous avez déja rejoint la liste d'attente</button>
+                                <form
+                                    action="/ajouter-liste-attente/<%= reservation.id_reservation %>/<%= typeof nombreJoueurs !== 'undefined' ? nombreJoueurs : 1 %>"
+                                    method="POST">
+                                    <button type="submit" class="bouton-liste-attente-reserve">Vous avez déja rejoint la
+                                        liste d'attente</button>
                                 </form>
-                            <% } else { %>
-                                <form id="form-liste-attente" action="/ajouter-liste-attente/<%= reservation.id_reservation %>/1" method="POST">
-                                    <input type="hidden" name="nombreJoueurs" id="listeNbJoueur" value="1">
-                                    <button type="submit" class="bouton-liste-attente">
-                                        <i class="fas fa-hourglass-half"></i> Rejoindre la liste d'attente (<span id="liste-display">1</span>)
-                                    </button>
-                                </form>
-                            <% } %>
-                        <% } else if (typeof isDejaReserve !== 'undefined' && isDejaReserve) { %>
-                            <div class="statut-action reserve">
-                                <i class="fas fa-check-circle"></i>
-                                <span>Vous avez déjà réservé cette activité</span>
-                            </div>
-                            <button id="btn-confirmer-annulation" class="bouton danger">
-                                <i class="fas fa-times"></i> Annuler ma réservation
-                            </button>
-                            
-                            <form id="form-annulation" action="/api/annuler/<%= reservation.id_reservation %>" method="POST" style="display: none;">
-                            </form>
-                        <% } else if (typeof isDansPanier !== 'undefined' && isDansPanier) { %>
-                            <div class="statut-action panier">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span>Cette réservation est dans votre panier</span>
-                            </div>
-                            <a href="/paiement" class="bouton primaire">
-                                <i class="fas fa-shopping-cart"></i> Voir mon panier
-                            </a>
-                        <% } else { %>
-                            <form id="form-reserver" action="/reserver/<%= reservation.id_reservation %>/1/prix-total" method="POST">
-                                <input type="hidden" name="nombreJoueurs" id="booking-count" value="1">
-                                <button type="submit" class="bouton primaire">
-                                    <i class="fas fa-check"></i> Réserver maintenant
-                                </button>
-                            </form>
-                            <button class="bouton partage" id="btn-partage">
-                                <i class="fas fa-share-alt"></i> Partager
-                            </button>
-                        <% } %>
+                                <% } else { %>
+                                    <form id="form-liste-attente"
+                                        action="/ajouter-liste-attente/<%= reservation.id_reservation %>/1"
+                                        method="POST">
+                                        <input type="hidden" name="nombreJoueurs" id="listeNbJoueur" value="1">
+                                        <button type="submit" class="bouton-liste-attente">
+                                            <i class="fas fa-hourglass-half"></i> Rejoindre la liste d'attente (<span
+                                                id="liste-display">1</span>)
+                                        </button>
+                                    </form>
+                                    <% } %>
+                                        <% } else if (typeof isDejaReserve !=='undefined' && isDejaReserve) { %>
+                                            <div class="statut-action reserve">
+                                                <i class="fas fa-check-circle"></i>
+                                                <span>Vous avez déjà réservé cette activité</span>
+                                            </div>
+                                            <button id="btn-confirmer-annulation" class="bouton danger">
+                                                <i class="fas fa-times"></i> Annuler ma réservation
+                                            </button>
+
+                                            <form id="form-annulation"
+                                                action="/api/annuler/<%= reservation.id_reservation %>" method="POST"
+                                                style="display: none;">
+                                            </form>
+                                            <% } else if (typeof isDansPanier !=='undefined' && isDansPanier) { %>
+                                                <div class="statut-action panier">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    <span>Cette réservation est dans votre panier</span>
+                                                </div>
+                                                <a href="/paiement" class="bouton primaire">
+                                                    <i class="fas fa-shopping-cart"></i> Voir mon panier
+                                                </a>
+                                                <% } else { %>
+                                                    <form id="form-reserver"
+                                                        action="/reserver/<%= reservation.id_reservation %>/1/prix-total"
+                                                        method="POST">
+                                                        <input type="hidden" name="nombreJoueurs" id="booking-count"
+                                                            value="1">
+                                                        <button type="submit" class="bouton primaire">
+                                                            <i class="fas fa-check"></i> Réserver maintenant
+                                                        </button>
+                                                    </form>
+                                                    <button class="bouton partage" id="btn-partage">
+                                                        <i class="fas fa-share-alt"></i> Partager
+                                                    </button>
+                                                    <% } %>
                     </div>
                 </div>
             </div>
-            
+
             <div class="reservations-similaires">
                 <h2>Autres activités prévues le même jour</h2>
                 <div class="similaires-grid">
-                    <% autresActivites.forEach(activite => { %>
+                    <% autresActivites.forEach(activite=> { %>
                         <a href="/reservation-information/<%= activite.id_reservation %>" class="similaire-item">
-                            <div class="similaire-image" style="background-image: url('<%= activite.image_url %>')"></div>
+                            <div class="similaire-image" style="background-image: url('<%= activite.image_url %>')">
+                            </div>
                             <div class="similaire-contenu">
-                                <h3><%= activite.categorie_sport %></h3>
+                                <h3>
+                                    <%= activite.categorie_sport %>
+                                </h3>
                                 <p><i class="fas fa-calendar"></i>
-                                    <%= new Date(activite.date_time).toLocaleTimeString("fr-FR", {
-                                        hour: "2-digit", minute: "2-digit"
-                                    }) %>
+                                    <%= new Date(activite.date_time).toLocaleTimeString("fr-FR", { hour: "2-digit" ,
+                                        minute: "2-digit" }) %>
                                 </p>
-                                <p><i class="fas fa-map-marker-alt"></i> <%= activite.installation %></p>
+                                <p><i class="fas fa-map-marker-alt"></i>
+                                    <%= activite.installation %>
+                                </p>
                             </div>
                         </a>
-                    <% }) %>                    
+                        <% }) %>
                 </div>
-            </div>            
+            </div>
         </div>
-        
+
         <div class="modal" id="modal-partage">
             <div class="modal-contenu">
                 <div class="modal-entete">
@@ -372,18 +404,52 @@
                         </a>
                     </div>
                     <div class="lien-partage">
-                        <input type="text" value="https://sportzone.com/reservation/<%= reservation.id_reservation %>" readonly>
+                        <input type="text" value="https://sportzone.com/reservation/<%= reservation.id_reservation %>"
+                            readonly>
                         <button class="copier-lien">Copier</button>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <%- include ("../partials/footer.ejs") %>
-        
-        <script src="/Javascript/information_reservation.js"></script>
-        <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
-        <script src="https://files.bpcontent.cloud/2025/04/14/20/20250414205547-HF27LNVK.js"></script>
+
+            <script src="/Javascript/information_reservation.js"></script>
+            <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
+            <script src="https://files.bpcontent.cloud/2025/04/14/20/20250414205547-HF27LNVK.js"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const lat = 45.5017;
+                    const lon = -73.5673;
+
+                    const dateReservation = "<%= reservation.date_time.toISOString() %>";
+                    // format complet : '2025-05-01T18:00:00.000Z' 
+
+                    fetch(`/api/meteo?lat=${lat}&lon=${lon}&datetime=${encodeURIComponent(dateReservation)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const meteoTemp = document.querySelector('.meteo-temp');
+                            const meteoDesc = document.querySelector('.meteo-desc');
+                            const meteoIcone = document.querySelector('.meteo-icone i');
+
+                            if (data.error) {
+                                meteoTemp.textContent = "N/A";
+                                meteoDesc.textContent = "Météo indisponible";
+                            } else {
+                                meteoTemp.textContent = data.temperature + "°C";
+                                meteoDesc.textContent = "Température prévue";
+                                meteoIcone.className = 'fas fa-thermometer-half';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur météo:', error);
+                        });
+                });
+
+            </script>
+
+
 </body>
 
 </html>
