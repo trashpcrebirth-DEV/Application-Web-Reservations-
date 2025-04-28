@@ -470,7 +470,7 @@ app.post('/modifier', async (req, res) => {
     }
 
     const userId = req.session.user.id;
-    const { nom, prenom, mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
+    const { nom, prenom, mot_de_passe, ancien_mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
 
     // Validation
     if (!nom || !prenom || !email) {
@@ -478,18 +478,33 @@ app.post('/modifier', async (req, res) => {
     }
 
     try {
+        const user = await getUserById(userId); // Récupérer l'utilisateur par ID depuis la base de données
+
+        // Vérification de l'ancien mot de passe si fourni
+        if (ancien_mot_de_passe && ancien_mot_de_passe.trim() !== "") {
+            const isMatch = await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe);
+            if (!isMatch) {
+                return res.status(400).json({ message: "Ancien mot de passe incorrect", success: false });
+            }
+        }
+
         // Construction dynamique de la requête
         let query = "UPDATE utilisateurs SET nom = ?, prenom = ?, ";
         const values = [nom, prenom];
 
-        // Ajouter le mot de passe seulement s'il est fourni
+        // Ajouter l'ancienne valeur du mot de passe à `ancien_mot_de_passe` si un nouveau mot de passe est fourni
         if (mot_de_passe && mot_de_passe.trim() !== "") {
+            // Stocker l'ancien mot de passe dans `ancien_mot_de_passe` avant de le changer
+            query += "ancien_mot_de_passe = ?, mot_de_passe = ?, ";
+
+            // Hacher le nouveau mot de passe
             const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
-            query += "mot_de_passe = ?, ";
-            values.push(hashedPassword);
+
+            // Ajouter l'ancien mot de passe dans la requête
+            values.push(user.mot_de_passe, hashedPassword);
         }
 
-        // Suite de la requête
+        // Ajouter les autres informations à mettre à jour
         query += "date_naissance = ?, telephone = ?, langue = ?, email = ?, adresse = ? WHERE id = ?";
         values.push(
             date_naissance || null,
@@ -500,6 +515,7 @@ app.post('/modifier', async (req, res) => {
             userId
         );
 
+        // Exécution de la requête
         con.query(query, values, (err, result) => {
             if (err) {
                 console.error("Error updating user:", err);
@@ -522,6 +538,21 @@ app.post('/modifier', async (req, res) => {
         res.status(500).send("Error updating user information");
     }
 });
+
+// Fonction pour récupérer un utilisateur par ID
+async function getUserById(userId) {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT mot_de_passe FROM utilisateurs WHERE id = ?";
+        con.query(query, [userId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results[0]);
+            }
+        });
+    });
+}
+
 
 
 
