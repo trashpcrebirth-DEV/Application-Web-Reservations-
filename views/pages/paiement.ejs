@@ -32,6 +32,7 @@
               <% let totalPrice=0; %>
                 <% reservations.forEach(function(reservation) { %>
                   <% totalPrice +=parseFloat(reservation.prix); %>
+                  <a href="/reservation-information/<%= reservation.id_reservation%>" style="text-decoration:none">
                     <div class="reservation-item">
                       <div class="reservation-info">
                         <div class="reservation-title">
@@ -74,6 +75,7 @@
                         <i class="fas fa-trash-alt"></i>
                       </button>
                     </div>
+                  </a>
                     <% }); %>
 
                       <div class="checkout-total">
@@ -90,6 +92,7 @@
                         <i class="fas fa-credit-card"></i>
                         Procéder au paiement
                       </button>
+                    
             </div>
             <% } else { %>
               <div class="empty-cart">

@@ -67,6 +67,7 @@
                         <thead>
                             <tr>
                                 <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fa-solid fa-calendar"></i> Date</th>
                                 <th><i class="fas fa-running"></i> Sport</th>
                                 <th><i class="fas fa-map-marker-alt"></i> Terrain</th>
                                 <th><i class="fas fa-users"></i> Joueurs</th>
@@ -80,6 +81,13 @@
                                     <td>
                                         <div class="id-cell">
                                             <span class="id-badge">#<%= r.id_reservation %></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="id-cell">
+                                            <span class="id-badge"><%= new Date(r.date_time).toLocaleDateString('fr-FR',
+                                                {weekday: 'long' , day: 'numeric' , month: 'long' , year: 'numeric'
+                                                }) %></span>
                                         </div>
                                     </td>
                                     <td>
