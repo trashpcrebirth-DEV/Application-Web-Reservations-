@@ -247,7 +247,7 @@ body {
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-text-fill-color*/
 .a-propos {
     position: relative;
-    margin-top: 35vw;
+    margin-top: 37vw;
     padding: 80px 40px;
     color: white;
     background: linear-gradient(180deg, rgba(23, 91, 237, 0.05) 0%, #1a1a1a 100%), url('../images/imageAccueil1.png');
@@ -374,11 +374,11 @@ i {
 
 /*Animation defilante https://nosmoking.developpez.com/demos/css/css-marque-rtl.html */
 .mots-animation {
-    margin-top: 7vw;
+    top: 35.30%;
     height: 35px;
-    overflow: hidden;
-    position: relative;
-    margin-left: 5.5vw;
+    position: absolute;
+    left: 5.5%;
+    white-space: nowrap;
 }
 
 .mots-animation span {
@@ -485,12 +485,12 @@ i {
     background-color: transparent;
     border: 2px solid #175BED;
     border-radius: 30px;
-    position: relative;
+    position: absolute;
     overflow: hidden;
     transition: all 0.3s ease;
     letter-spacing: 2px;
-    margin-left: 60%;
-    margin-top: -40%;
+    margin-left: 62.5%;
+    margin-top: 5.5%;
 }
 
 .bouton-reservation-2::before {
