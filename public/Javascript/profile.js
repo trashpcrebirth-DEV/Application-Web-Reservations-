@@ -12,14 +12,7 @@ function enableEdit() {
 }
 
 
-function togglePasswordVisibility(inputId, icon) {
-    const input = document.getElementById(inputId);
-    if (input) {
-        const isPassword = input.type === 'password';
-        input.type = isPassword ? 'text' : 'password';
-        icon.classList.toggle('fa-eye-slash', isPassword);
-    }
-}
+
 
 function validateForm() {
     const newPassword = document.getElementById('passwordField').value;
@@ -32,7 +25,7 @@ function validateForm() {
 
     if (newPassword || currentPassword || confirmPassword) {
         if (!newPassword || !currentPassword || !confirmPassword) {
-            alert("Tous les champs de mot de passe doivent être remplis.");
+            alert("Tous les champs de MOT DE PASSE doivent être remplis.");
             return false;
         }
         if (newPassword !== confirmPassword) {
@@ -157,5 +150,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Check if there's an error message passed from the server
+    const errorMessage = document.getElementById('erreurAncienMotDePasse');
+    if (errorMessage) {
+        errorMessage.style.display = 'block';
+    }
+});
+
 });
 
