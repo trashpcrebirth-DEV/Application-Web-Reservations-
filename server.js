@@ -484,8 +484,8 @@ app.post('/modifier', async (req, res) => {
         if (ancien_mot_de_passe && ancien_mot_de_passe.trim() !== "") {
             const isMatch = await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe);
             if (!isMatch) {
-                return res.status(400).json({ message: "Ancien mot de passe incorrect", success: false });
-            }
+                return res.redirect(`/profile?id=${userId}`); 
+           }
         }
 
         // Construction dynamique de la requête
