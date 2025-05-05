@@ -22,7 +22,7 @@
                         <img src="<%= utilisateur.photo_url %>" alt="Photo de profil" class="avatar-image">
                         <% } else { %>
                             <span class="initial">
-                                <%= utilisateur.nom[0] %>
+                                <%= utilisateur.nom %>
                             </span>
                             <% } %>
                 </div>
@@ -66,6 +66,13 @@
                 <h2 class="section-title">Informations Personnelles</h2>
 
                 <form action="/modifier" method="POST" id="saveForm" onsubmit="return validateForm()">
+                    <% if (typeof errorAncienMotDePasse !== 'undefined' && errorAncienMotDePasse) { %>
+                        <div class="error-message" style="color: red; margin-bottom: 15px;">
+                            ⚠️ Ancien mot de passe invalide. Veuillez réessayer.
+                        </div>
+                    <% } %>
+
+                    
                     <div class="info-grid">
                         <!-- Colonne 1 -->
                         <div class="info-column">
@@ -152,10 +159,7 @@
                                     <i class="fas fa-eye toggle-password"
                                         onclick="togglePasswordVisibility('oldPasswordField', this)"></i>
                                 </div>
-                                <div id="erreurAncienMotDePasse" data-error="true" style="display:none;">
-                                    L'ancien mot de passe est incorrect.
-                                </div>
-                                
+                               
                             </div>
 
                             <!-- Confirmation mot de passe -->

@@ -290,7 +290,7 @@ app.post('/api/annuler/:id', async (req, res) => {
                                     console.error('Erreur SQL lors de la récupération de la liste d’attente:', err);
                                     return res.status(500).json({ success: false, message: "Erreur lors de la récupération de la liste d'attente." });
                                 }
-                            
+
                                 if (attenteList.length > 0) {
                                     attenteList.forEach((utilisateur) => {
                                         if (utilisateur.nombreJoueur <= newCapacity) {
@@ -448,6 +448,9 @@ app.get("/profile", (req, res) => {
 
                 const nombreCommandes = resultReservations[0].nombreCommandes || 0;
 
+                // Store nombreCommandes in session for later use in other routes
+                req.session.nombreCommandes = nombreCommandes;
+
                 res.render("pages/profile", {
                     activePage: 'profile',
                     user: req.session.user,
@@ -484,8 +487,40 @@ app.post('/modifier', async (req, res) => {
         if (ancien_mot_de_passe && ancien_mot_de_passe.trim() !== "") {
             const isMatch = await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe);
             if (!isMatch) {
-                return res.redirect(`/profile?id=${userId}`); 
-           }
+
+
+                // Recharger toutes les infos utilisateur
+                const queryUser = "SELECT * FROM utilisateurs WHERE id = ?";
+                const queryReservations = "SELECT COUNT(id_reservation) AS nombreCommandes FROM utilisateurs_reservations WHERE id_utilisateur = ?";
+
+                con.query(queryUser, [userId], (err, resultUser) => {
+                    if (err || resultUser.length === 0) {
+                        return res.status(500).send("Erreur lors de la récupération de l'utilisateur");
+                    }
+
+                    const fullUser = resultUser[0];
+                    fullUser.date_inscription = new Date(fullUser.date_inscription);
+
+                    con.query(queryReservations, [userId], (err, resultReservations) => {
+                        if (err) return res.status(500).send("Erreur lors de la récupération des commandes");
+
+                        const nombreCommandes = resultReservations[0].nombreCommandes || 0;
+                        req.session.nombreCommandes = nombreCommandes;
+
+                        return res.render("pages/profile", {
+                            errorAncienMotDePasse: true,
+                            user: req.session.user,
+                            utilisateur: fullUser,
+                            activePage: 'profile',
+                            nombreCommandes: nombreCommandes
+                        });
+                    });
+                });
+
+                return; // Important pour stopper ici
+
+
+            }
         }
 
         // Construction dynamique de la requête
@@ -528,7 +563,8 @@ app.post('/modifier', async (req, res) => {
                 req.session.user.prenom = prenom;
                 req.session.user.email = email;
 
-                res.redirect(`/profile?id=${userId}`);
+                res.redirect("/profile");
+                ;
             } else {
                 res.status(404).send("User not found or no changes made");
             }

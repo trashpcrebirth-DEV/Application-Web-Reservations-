@@ -14,7 +14,7 @@ function enableEdit() {
 
 
 
-function validateForm() {
+async function validateForm() {
     const newPassword = document.getElementById('passwordField').value;
     const currentPassword = document.querySelector('[name="ancien_mot_de_passe"]').value;
     const confirmPassword = document.querySelector('[name="confirmation_mot_de_passe"]').value;
@@ -34,9 +34,12 @@ function validateForm() {
             return false;
         }
 
+       
+
+
         // ✅ Tous les champs sont corrects
         document.getElementById('successMessage').style.display = 'block';
-        
+
         // Désactive le bouton pour éviter plusieurs clics
         document.getElementById('saveButton').disabled = true;
 
@@ -114,23 +117,23 @@ function togglePasswordVisibility(fieldId, iconElement) {
 
 function formatPhoneNumber() {
     const phoneInput = document.getElementById('phoneInput');
-    
-    phoneInput.addEventListener('input', function(e) {
+
+    phoneInput.addEventListener('input', function (e) {
         // Enlève tout ce qui n'est pas un chiffre
         let phoneNumber = this.value.replace(/\D/g, '');
-        
+
         // Formatage: 3-3-4
         if (phoneNumber.length > 6) {
             phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
         } else if (phoneNumber.length > 3) {
             phoneNumber = phoneNumber.replace(/(\d{3})(\d{0,3})/, '$1-$2');
         }
-        
+
         this.value = phoneNumber;
     });
 
     // Permet de supprimer les tirets si l'utilisateur efface
-    phoneInput.addEventListener('keydown', function(e) {
+    phoneInput.addEventListener('keydown', function (e) {
         if (e.key === 'Backspace' && this.value.endsWith('-')) {
             this.value = this.value.slice(0, -1);
         }
@@ -138,10 +141,10 @@ function formatPhoneNumber() {
 }
 
 // Animation au chargement
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const inputProfilePic = document.getElementById('profilePicInput');
     if (inputProfilePic) {
-        inputProfilePic.addEventListener('change', function() {
+        inputProfilePic.addEventListener('change', function () {
             if (this.files.length > 0) {
                 document.getElementById('profilePicForm').submit();
                 setTimeout(() => {
@@ -152,12 +155,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-    // Check if there's an error message passed from the server
-    const errorMessage = document.getElementById('erreurAncienMotDePasse');
-    if (errorMessage) {
-        errorMessage.style.display = 'block';
-    }
-});
+        // Check if there's an error message passed from the server
+        const errorMessage = document.getElementById('erreurAncienMotDePasse');
+        if (errorMessage) {
+            errorMessage.style.display = 'block';
+        }
+    });
 
 });
 
