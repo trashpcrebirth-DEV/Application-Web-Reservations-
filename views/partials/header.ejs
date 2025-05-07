@@ -15,44 +15,73 @@
                     <img class="logo" src="/images/logoSportZone.png" alt="Erreur de chargement">
                 </h1>
             </a>
-            <ul>
-                <li class="<%= activePage === 'accueil' ? 'bar-page-actuel' : '' %>"><a
-                        href="/"><span>Accueil</span></a></li>
-                <li class="<%= activePage === 'reservation' ? 'bar-page-actuel' : '' %>"><a
-                        href="/reservation">Réservation</a></li>
-                <li class="<%= activePage === 'contact' ? 'bar-page-actuel' : '' %>"><a href="/contact">Contact</a></li>
-                <% if (!user) { %>
-                    <li class="boite-bleu"><a href="/connexion"><i class="fa-solid fa-user"></i> Se connecter</a> </li>
-                <% } else { %>
-                    <li class="boite-bleu"><a href="/profile"><i class="fa-solid fa-user"></i><span>
-                                Profile</span></a></li>
-                    <li class="notification-icon">
-                        <a href="#" onclick="toggleNotifications()" class="notification-link">
-                            <i class="fa-solid fa-bell"></i>
-                            <span id="notification-count" class="notification-badge" style="display: none;">0</span>
-                        </a>
+            
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li class="<%= activePage === 'accueil' ? 'bar-page-actuel' : '' %>"><a
+                            href="/"><span>Accueil</span></a></li>
+                    <li class="<%= activePage === 'reservation' ? 'bar-page-actuel' : '' %>"><a
+                            href="/reservation">Réservation</a></li>
+                    <li class="<%= activePage === 'contact' ? 'bar-page-actuel' : '' %>"><a href="/contact">Contact</a></li>
+                    <% if (!user) { %>
+                        <li class="boite-bleu"><a href="/connexion"><i class="fa-solid fa-user"></i> Se connecter</a> </li>
+                    <% } else { %>
+                        <li class="boite-bleu"><a href="/profile"><i class="fa-solid fa-user"></i><span>
+                                    Profile</span></a></li>
+                        <li class="notification-icon">
+                            <a href="#" onclick="toggleNotifications()" class="notification-link">
+                                <i class="fa-solid fa-bell"></i>
+                                <span id="notification-count" class="notification-badge" style="display: none;">0</span>
+                            </a>
 
-                        <div id="notifications" class="notification-dropdown">
-
-                            
-                        </div>
-                    </li>
-                    <li class="cart-icon">
-                        <a href="/paiement" class="cart-link">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <% if (user.cartCount > 0) { %>
-                                <span id="cart-count" class="cart-badge"><%= user.cartCount %></span>
-                            <% } %>
-                        </a>
-                    </li>
-                <% } %>
-            </ul>
+                            <div id="notifications" class="notification-dropdown">
+                                <!-- Contenu des notifications -->
+                            </div>
+                        </li>
+                        <li class="cart-icon">
+                            <a href="/paiement" class="cart-link">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <% if (user.cartCount > 0) { %>
+                                    <span id="cart-count" class="cart-badge"><%= user.cartCount %></span>
+                                <% } %>
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
         </div>
-        
     </header>
     <!--FIN DU HEADER-->
 </body>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        mobileMenu.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+        
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (navMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                }
+            });
+        });
+    });
+
     let previousNotificationCount = 0;
 
     async function loadNotifications() {
@@ -69,11 +98,9 @@
 
                 const currentCount = data.notifications.length;
 
-                // Comparer avec la valeur précédente
                 if (currentCount > previousNotificationCount) {
                     bellIcon.classList.add("ring-animation");
 
-                    // Supprimer l'animation après la fin pour pouvoir la rejouer
                     setTimeout(() => {
                         bellIcon.classList.remove("ring-animation");
                     }, 600);
@@ -88,14 +115,12 @@
                     notificationCount.style.display = "none";
                 }
 
-                // Vérification si les notifications sont vides
                 if (currentCount === 0) {
                     const noNotificationMessage = document.createElement("div");
                     noNotificationMessage.className = "no-notification-message";
                     noNotificationMessage.innerHTML = "<p>Pas de notifications</p>";
                     notificationsContainer.appendChild(noNotificationMessage);
                 } else {
-                    // Si des notifications existent, les afficher
                     data.notifications.forEach(notif => {
                         const notifItem = document.createElement("div");
                         notifItem.className = "notification-item";
@@ -114,15 +139,32 @@
 
     async function markAsRead(id) {
         await fetch(`/api/notifications/${id}/lire`, { method: "POST" });
-        loadNotifications(); // Recharge les notifications après marquage
+        loadNotifications();
     }
 
     function toggleNotifications() {
         const container = document.getElementById("notifications");
         container.style.display = (container.style.display === "block") ? "none" : "block";
+        
+        if (document.querySelector('.nav-menu').classList.contains('active')) {
+            document.getElementById('mobile-menu').classList.remove('active');
+            document.querySelector('.nav-menu').classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
     }
 
     document.addEventListener("DOMContentLoaded", loadNotifications);
+    
+    document.addEventListener('click', function(event) {
+        const notifContainer = document.getElementById('notifications');
+        const notifIcon = document.querySelector('.notification-link');
+        
+        if (notifContainer.style.display === 'block' && 
+            !notifContainer.contains(event.target) && 
+            !notifIcon.contains(event.target)) {
+            notifContainer.style.display = 'none';
+        }
+    });
 </script>
 
 <div id="notifications"></div>
