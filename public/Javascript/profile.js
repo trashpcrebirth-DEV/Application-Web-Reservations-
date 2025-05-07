@@ -31,26 +31,30 @@ async function validateForm() {
         if (newPassword !== confirmPassword) {
             // Affiche un message d'erreur sans utiliser alert
             document.getElementById('errorMessage').style.display = 'block';
+    
+            // Cache le message d'erreur après 4 secondes
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+                console.log('Error message hidden');
+            }, 5000); // Increased to 5 seconds
+            
+           
             return false;
         }
 
-       
-
-
-        // ✅ Tous les champs sont corrects
-        document.getElementById('successMessage').style.display = 'block';
-
-        // Désactive le bouton pour éviter plusieurs clics
+        // Si tous les champs sont corrects, soumettre après un délai
         document.getElementById('saveButton').disabled = true;
-
+        console.log('Form will be submitted after 1 second');
         setTimeout(() => {
             document.getElementById('saveForm').submit(); // Soumettre après 1 seconde
-        }, 1000);
+        }, 3000);
 
         return false;
     }
     return true;
 }
+
+
 
 
 
@@ -140,8 +144,8 @@ function formatPhoneNumber() {
     });
 }
 
-// Animation au chargement
 document.addEventListener('DOMContentLoaded', function () {
+    // Gestion du changement de photo de profil
     const inputProfilePic = document.getElementById('profilePicInput');
     if (inputProfilePic) {
         inputProfilePic.addEventListener('change', function () {
@@ -154,13 +158,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Check if there's an error message passed from the server
-        const errorMessage = document.getElementById('erreurAncienMotDePasse');
-        if (errorMessage) {
-            errorMessage.style.display = 'block';
-        }
-    });
+    // Affiche un message d'erreur si l'ancien mot de passe est incorrect
+    const errorMessage = document.getElementById('erreurAncienMotDePasse');
+    if (errorMessage) {
+        errorMessage.style.display = 'block';
+    }
 
+    // Faire disparaître le message de succès après 4 secondes
+    const successMessage = document.getElementById('successMessage');
+    if (successMessage) {
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 3000);
+    }
+
+    // Active le formatage du numéro de téléphone
+    formatPhoneNumber();
 });
+
 

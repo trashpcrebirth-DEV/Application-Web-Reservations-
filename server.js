@@ -469,125 +469,122 @@ app.get("/profile", (req, res) => {
 // Update user
 app.post('/modifier', async (req, res) => {
     if (!req.session.user) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send("Non autorisé");
     }
 
     const userId = req.session.user.id;
-    const { nom, prenom, mot_de_passe, ancien_mot_de_passe, date_naissance, telephone, langue, email, adresse } = req.body;
+    const {
+        nom, prenom, mot_de_passe, confirmation_mot_de_passe, ancien_mot_de_passe,
+        date_naissance, telephone, langue, email, adresse
+    } = req.body;
 
-    // Validation
     if (!nom || !prenom || !email) {
         return res.status(400).send("Nom, prénom et email sont obligatoires");
     }
 
     try {
-        const user = await getUserById(userId); // Récupérer l'utilisateur par ID depuis la base de données
+        const user = await getUserById(userId);
+        let errorAncienMotDePasse = false;
+        let errorConfirmationMotDePasse = false;
+        let hashedPassword = null;
 
-        // Vérification de l'ancien mot de passe si fourni
-        if (ancien_mot_de_passe && ancien_mot_de_passe.trim() !== "") {
-            const isMatch = await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe);
-            if (!isMatch) {
+        // Si un nouveau mot de passe est fourni
+        if (mot_de_passe && mot_de_passe.trim() !== "") {
+            // Vérifie la confirmation
+            if (mot_de_passe !== confirmation_mot_de_passe) {
+                errorConfirmationMotDePasse = true;  // Set the error flag if passwords don't match
+            }
 
-
-                // Recharger toutes les infos utilisateur
-                const queryUser = "SELECT * FROM utilisateurs WHERE id = ?";
-                const queryReservations = "SELECT COUNT(id_reservation) AS nombreCommandes FROM utilisateurs_reservations WHERE id_utilisateur = ?";
-
-                con.query(queryUser, [userId], (err, resultUser) => {
-                    if (err || resultUser.length === 0) {
-                        return res.status(500).send("Erreur lors de la récupération de l'utilisateur");
-                    }
-
-                    const fullUser = resultUser[0];
-                    fullUser.date_inscription = new Date(fullUser.date_inscription);
-
-                    con.query(queryReservations, [userId], (err, resultReservations) => {
-                        if (err) return res.status(500).send("Erreur lors de la récupération des commandes");
-
-                        const nombreCommandes = resultReservations[0].nombreCommandes || 0;
-                        req.session.nombreCommandes = nombreCommandes;
-
-                        return res.render("pages/profile", {
-                            errorAncienMotDePasse: true,
-                            user: req.session.user,
-                            utilisateur: fullUser,
-                            activePage: 'profile',
-                            nombreCommandes: nombreCommandes
-                        });
-                    });
-                });
-
-                return; // Important pour stopper ici
-
-
+            // Vérifie l'ancien mot de passe
+            if (!ancien_mot_de_passe || !(await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe))) {
+                errorAncienMotDePasse = true;
+            } else {
+                hashedPassword = await bcrypt.hash(mot_de_passe, 10);
             }
         }
 
-        // Construction dynamique de la requête
+        // If there are any errors, render the profile page with appropriate error messages
+        if (errorAncienMotDePasse || errorConfirmationMotDePasse) {
+            return renderProfilePage(res, req, userId, { 
+                errorAncienMotDePasse,
+                errorConfirmationMotDePasse  // Pass error flag for confirmation mismatch
+            });
+        }
+
+        // Préparer les champs à mettre à jour
         let query = "UPDATE utilisateurs SET nom = ?, prenom = ?, ";
         const values = [nom, prenom];
 
-        // Ajouter l'ancienne valeur du mot de passe à `ancien_mot_de_passe` si un nouveau mot de passe est fourni
-        if (mot_de_passe && mot_de_passe.trim() !== "") {
-            // Stocker l'ancien mot de passe dans `ancien_mot_de_passe` avant de le changer
-            query += "ancien_mot_de_passe = ?, mot_de_passe = ?, ";
-
-            // Hacher le nouveau mot de passe
-            const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
-
-            // Ajouter l'ancien mot de passe dans la requête
-            values.push(user.mot_de_passe, hashedPassword);
+        if (hashedPassword) {
+            query += "mot_de_passe = ?, ";
+            values.push(hashedPassword);
         }
 
-        // Ajouter les autres informations à mettre à jour
         query += "date_naissance = ?, telephone = ?, langue = ?, email = ?, adresse = ? WHERE id = ?";
-        values.push(
-            date_naissance || null,
-            telephone || null,
-            langue || null,
-            email,
-            adresse || null,
-            userId
-        );
+        values.push(date_naissance || null, telephone || null, langue || null, email, adresse || null, userId);
 
-        // Exécution de la requête
-        con.query(query, values, (err, result) => {
+        con.query(query, values, async (err, result) => {
             if (err) {
-                console.error("Error updating user:", err);
-                return res.status(500).send("Error updating user information");
+                console.error("Erreur mise à jour:", err);
+                return res.status(500).send("Erreur lors de la mise à jour des informations.");
             }
 
             if (result.affectedRows > 0) {
-                // Mettre à jour les informations de session si nécessaire
                 req.session.user.nom = nom;
                 req.session.user.prenom = prenom;
                 req.session.user.email = email;
-
-                res.redirect("/profile");
-                ;
+                return renderProfilePage(res, req, userId, { successMessage: true });
             } else {
-                res.status(404).send("User not found or no changes made");
+                return renderProfilePage(res, req, userId, { successMessage: false });
             }
         });
     } catch (error) {
-        console.error("Error hashing password:", error);
-        res.status(500).send("Error updating user information");
+        console.error("Erreur:", error);
+        res.status(500).send("Erreur interne.");
     }
 });
+
+// Fonction pour afficher la page de profil avec données utilisateur + commandes
+function renderProfilePage(res, req, userId, options = {}) {
+    const queryUser = "SELECT * FROM utilisateurs WHERE id = ?";
+    const queryReservations = "SELECT COUNT(id_reservation) AS nombreCommandes FROM utilisateurs_reservations WHERE id_utilisateur = ?";
+
+    con.query(queryUser, [userId], (err, resultUser) => {
+        if (err || resultUser.length === 0) {
+            return res.status(500).send("Erreur lors de la récupération de l'utilisateur");
+        }
+
+        const fullUser = resultUser[0];
+        fullUser.date_inscription = new Date(fullUser.date_inscription);
+
+        con.query(queryReservations, [userId], (err, resultReservations) => {
+            if (err) return res.status(500).send("Erreur lors de la récupération des commandes");
+
+            const nombreCommandes = resultReservations[0].nombreCommandes || 0;
+            req.session.nombreCommandes = nombreCommandes;
+
+            return res.render("pages/profile", {
+                ...options,
+                user: req.session.user,
+                utilisateur: fullUser,
+                activePage: 'profile',
+                nombreCommandes
+            });
+        });
+    });
+}
 
 // Fonction pour récupérer un utilisateur par ID
 async function getUserById(userId) {
     return new Promise((resolve, reject) => {
-        const query = "SELECT mot_de_passe FROM utilisateurs WHERE id = ?";
-        con.query(query, [userId], (err, results) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(results[0]);
-            }
+        con.query("SELECT * FROM utilisateurs WHERE id = ?", [userId], (err, results) => {
+            if (err) return reject(err);
+            resolve(results[0]);
         });
     });
 }
+
+
 
 
 
