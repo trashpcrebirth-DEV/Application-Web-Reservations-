@@ -14,7 +14,7 @@ function enableEdit() {
 
 
 
-function validateForm() {
+async function validateForm() {
     const newPassword = document.getElementById('passwordField').value;
     const currentPassword = document.querySelector('[name="ancien_mot_de_passe"]').value;
     const confirmPassword = document.querySelector('[name="confirmation_mot_de_passe"]').value;
@@ -31,23 +31,30 @@ function validateForm() {
         if (newPassword !== confirmPassword) {
             // Affiche un message d'erreur sans utiliser alert
             document.getElementById('errorMessage').style.display = 'block';
+    
+            // Cache le message d'erreur après 4 secondes
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+                console.log('Error message hidden');
+            }, 5000); // Increased to 5 seconds
+            
+           
             return false;
         }
 
-        // ✅ Tous les champs sont corrects
-        document.getElementById('successMessage').style.display = 'block';
-        
-        // Désactive le bouton pour éviter plusieurs clics
+        // Si tous les champs sont corrects, soumettre après un délai
         document.getElementById('saveButton').disabled = true;
-
+        console.log('Form will be submitted after 1 second');
         setTimeout(() => {
             document.getElementById('saveForm').submit(); // Soumettre après 1 seconde
-        }, 1000);
+        }, 3000);
 
         return false;
     }
     return true;
 }
+
+
 
 
 
@@ -114,34 +121,34 @@ function togglePasswordVisibility(fieldId, iconElement) {
 
 function formatPhoneNumber() {
     const phoneInput = document.getElementById('phoneInput');
-    
-    phoneInput.addEventListener('input', function(e) {
+
+    phoneInput.addEventListener('input', function (e) {
         // Enlève tout ce qui n'est pas un chiffre
         let phoneNumber = this.value.replace(/\D/g, '');
-        
+
         // Formatage: 3-3-4
         if (phoneNumber.length > 6) {
             phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
         } else if (phoneNumber.length > 3) {
             phoneNumber = phoneNumber.replace(/(\d{3})(\d{0,3})/, '$1-$2');
         }
-        
+
         this.value = phoneNumber;
     });
 
     // Permet de supprimer les tirets si l'utilisateur efface
-    phoneInput.addEventListener('keydown', function(e) {
+    phoneInput.addEventListener('keydown', function (e) {
         if (e.key === 'Backspace' && this.value.endsWith('-')) {
             this.value = this.value.slice(0, -1);
         }
     });
 }
 
-// Animation au chargement
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    // Gestion du changement de photo de profil
     const inputProfilePic = document.getElementById('profilePicInput');
     if (inputProfilePic) {
-        inputProfilePic.addEventListener('change', function() {
+        inputProfilePic.addEventListener('change', function () {
             if (this.files.length > 0) {
                 document.getElementById('profilePicForm').submit();
                 setTimeout(() => {
@@ -151,13 +158,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-    // Check if there's an error message passed from the server
+    // Affiche un message d'erreur si l'ancien mot de passe est incorrect
     const errorMessage = document.getElementById('erreurAncienMotDePasse');
     if (errorMessage) {
         errorMessage.style.display = 'block';
     }
+
+    // Faire disparaître le message de succès après 4 secondes
+    const successMessage = document.getElementById('successMessage');
+    if (successMessage) {
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 3000);
+    }
+
+    // Active le formatage du numéro de téléphone
+    formatPhoneNumber();
 });
 
-});
 

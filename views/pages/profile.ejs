@@ -22,7 +22,7 @@
                         <img src="<%= utilisateur.photo_url %>" alt="Photo de profil" class="avatar-image">
                         <% } else { %>
                             <span class="initial">
-                                <%= utilisateur.nom[0] %>
+                                <%= utilisateur.nom %>
                             </span>
                             <% } %>
                 </div>
@@ -66,129 +66,159 @@
                 <h2 class="section-title">Informations Personnelles</h2>
 
                 <form action="/modifier" method="POST" id="saveForm" onsubmit="return validateForm()">
-                    <div class="info-grid">
-                        <!-- Colonne 1 -->
-                        <div class="info-column">
-                            <div class="info-group">
-                                <label class="info-label">Nom</label>
-                                <input type="text" name="nom" value="<%= utilisateur.nom || '' %>"
-                                    class="info-input editable" disabled required>
-                            </div>
-
-                            <div class="info-group">
-                                <label class="info-label">Prénom</label>
-                                <input type="text" name="prenom" value="<%= utilisateur.prenom || '' %>"
-                                    class="info-input editable" disabled required>
-                            </div>
-
-                            <div class="info-group">
-                                <label class="info-label">Date de naissance</label>
-                                <input type="date" name="date_naissance"
-                                    value="<%= utilisateur.date_naissance ? new Date(utilisateur.date_naissance).toISOString().split('T')[0] : '' %>"
-                                    class="info-input editable" disabled>
-                            </div>
-
-                            <div class="info-group">
-                                <label class="info-label">Téléphone</label>
-                                <input type="tel" name="telephone" id="phoneInput"
-                                    value="<%= utilisateur.telephone ? utilisateur.telephone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3') : '' %>"
-                                    class="info-input editable" disabled pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                    title="Format: 514-111-1111" placeholder="514-111-1111" maxlength="12">
-                            </div>
+                    <% if (typeof errorAncienMotDePasse !=='undefined' && errorAncienMotDePasse) { %>
+                        <div id="erreurAncienMotDePasse" div class="error-message"
+                            style="color: red; margin-bottom: 15px;">
+                            ⚠️ Ancien mot de passe invalide. Veuillez réessayer.
                         </div>
+                        <% if (errorConfirmationMotDePasse) { %>
+                            <div class="error"  style="color: red; margin-bottom: 15px;">Les mots de passe ne correspondent pas. Veuillez réessayer.</div>
+                            <% } %>
+                                <% } else if (typeof successMessage !=='undefined' && successMessage) { %>
+                                    <div id="successMessage" div class="success-message"
+                                        style="color: green; margin-bottom: 15px;">
+                                        ✅ Profil mis à jour avec succès.
+                                    </div>
+                                    <% } %>
 
-                        <!-- Colonne 2 -->
-                        <div class="info-column">
-                            <div class="info-group">
-                                <label class="info-label">Email</label>
-                                <input type="email" name="email" value="<%= utilisateur.email || '' %>"
-                                    class="info-input editable" disabled required>
-                            </div>
 
-                            <div class="info-group">
-                                <label class="info-label">Langue</label>
-                                <select name="langue" class="info-input editable" disabled>
-                                    <option value="français" <%=utilisateur.langue==='français' ? 'selected' : '' %>
-                                        >Français</option>
-                                    <option value="english" <%=utilisateur.langue==='english' ? 'selected' : '' %>
-                                        >English</option>
-                                    <option value="español" <%=utilisateur.langue==='español' ? 'selected' : '' %>
-                                        >Español</option>
-                                </select>
-                            </div>
+                                        <div class="info-grid">
+                                            <!-- Colonne 1 -->
+                                            <div class="info-column">
+                                                <div class="info-group">
+                                                    <label class="info-label">Nom</label>
+                                                    <input type="text" name="nom" value="<%= utilisateur.nom || '' %>"
+                                                        class="info-input editable" disabled required>
+                                                </div>
 
-                            <div class="info-group">
-                                <label class="info-label">Adresse</label>
-                                <textarea name="adresse" class="info-input editable"
-                                    disabled><%= utilisateur.adresse || '' %></textarea>
-                            </div>
+                                                <div class="info-group">
+                                                    <label class="info-label">Prénom</label>
+                                                    <input type="text" name="prenom"
+                                                        value="<%= utilisateur.prenom || '' %>"
+                                                        class="info-input editable" disabled required>
+                                                </div>
 
-                            <!-- Nouveau mot de passe -->
-                            <div class="info-group">
-                                <label class="info-label">Nouveau mot de passe</label>
-                                <div class="password-wrapper">
-                                    <input type="password" name="mot_de_passe" id="passwordField"
-                                        class="info-input editable" disabled
-                                        placeholder="Laisser vide pour ne pas changer" pattern=".{8,}"
-                                        title="8 caractères minimum">
-                                    <i class="fas fa-eye toggle-password"
-                                        onclick="togglePasswordVisibility('passwordField', this)"></i>
-                                </div>
-                            </div>
-                            <div id="passwordWeakMessage" style="display:none; color: red;">
-                                Votre mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort!
-                            </div>
-                            
-                            <div class="password-strength-container" style="display: none;" id="passwordStrengthContainer">
-                                <div id="passwordStrengthBar" style="height: 5px; width: 0; background-color: red; transition: width 0.3s;"></div>
-                                <small id="passwordStrengthMessage" style="display: block; margin-top: 5px;"></small>
-                            </div>
-                            <!-- Ancien mot de passe -->
-                            <div class="info-group" id="currentPasswordGroup" style="display: none;">
-                                <label class="info-label">Ancien mot de passe</label>
-                                <div class="password-wrapper">
-                                    <input type="password" name="ancien_mot_de_passe" id="oldPasswordField"
-                                        class="info-input editable" placeholder="Entrez l'ancien mot de passe">
-                                    <i class="fas fa-eye toggle-password"
-                                        onclick="togglePasswordVisibility('oldPasswordField', this)"></i>
-                                </div>
-                                <div id="erreurAncienMotDePasse" data-error="true" style="display:none;">
-                                    L'ancien mot de passe est incorrect.
-                                </div>
-                                
-                            </div>
+                                                <div class="info-group">
+                                                    <label class="info-label">Date de naissance</label>
+                                                    <input type="date" name="date_naissance"
+                                                        value="<%= utilisateur.date_naissance ? new Date(utilisateur.date_naissance).toISOString().split('T')[0] : '' %>"
+                                                        class="info-input editable" disabled>
+                                                </div>
 
-                            <!-- Confirmation mot de passe -->
-                            <div class="info-group" id="confirmPasswordGroup" style="display: none;">
-                                <label class="info-label">Confirmer le nouveau mot de passe</label>
-                                <div class="password-wrapper">
-                                    <input type="password" name="confirmation_mot_de_passe" id="confirmPasswordField"
-                                        class="info-input editable" placeholder="Confirmer le mot de passe">
-                                    <i class="fas fa-eye toggle-password"
-                                        onclick="togglePasswordVisibility('confirmPasswordField', this)"></i>
-                                </div>
-                            </div>
+                                                <div class="info-group">
+                                                    <label class="info-label">Téléphone</label>
+                                                    <input type="tel" name="telephone" id="phoneInput"
+                                                        value="<%= utilisateur.telephone ? utilisateur.telephone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3') : '' %>"
+                                                        class="info-input editable" disabled
+                                                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                                        title="Format: 514-111-1111" placeholder="514-111-1111"
+                                                        maxlength="12">
+                                                </div>
+                                            </div>
 
-                        </div>
-                    </div>
+                                            <!-- Colonne 2 -->
+                                            <div class="info-column">
+                                                <div class="info-group">
+                                                    <label class="info-label">Email</label>
+                                                    <input type="email" name="email"
+                                                        value="<%= utilisateur.email || '' %>"
+                                                        class="info-input editable" disabled required>
+                                                </div>
 
-                    <input type="hidden" name="id" value="<%= utilisateur.id %>">
+                                                <div class="info-group">
+                                                    <label class="info-label">Langue</label>
+                                                    <select name="langue" class="info-input editable" disabled>
+                                                        <option value="français" <%=utilisateur.langue==='français'
+                                                            ? 'selected' : '' %>
+                                                            >Français</option>
+                                                        <option value="english" <%=utilisateur.langue==='english'
+                                                            ? 'selected' : '' %>
+                                                            >English</option>
+                                                        <option value="español" <%=utilisateur.langue==='español'
+                                                            ? 'selected' : '' %>
+                                                            >Español</option>
+                                                    </select>
+                                                </div>
 
-                    <div class="action-buttons">
-                        <button type="button" class="btn btn-primary" onclick="enableEdit()">
-                            <i class="fas fa-edit btn-icon"></i> Modifier
-                        </button>
-                        <div id="successMessage" class="success-message" style="display:none;">
-                            ✅ Mot de passe changé avec succès !
-                        </div>
-                        <div id="errorMessage" class="error-message" style="display:none;">
-                            Erreur : Les nouveaux mots de passe ne correspondent pas.
-                        </div>
+                                                <div class="info-group">
+                                                    <label class="info-label">Adresse</label>
+                                                    <textarea name="adresse" class="info-input editable"
+                                                        disabled><%= utilisateur.adresse || '' %></textarea>
+                                                </div>
 
-                        <button type="submit" class="btn btn-primary" id="saveButton" style="display:none;">
-                            <i class="fas fa-save btn-icon"></i> Sauvegarder
-                        </button>
-                    </div>
+                                                <!-- Nouveau mot de passe -->
+                                                <div class="info-group">
+                                                    <label class="info-label">Nouveau mot de passe</label>
+                                                    <div class="password-wrapper">
+                                                        <input type="password" name="mot_de_passe" id="passwordField"
+                                                            class="info-input editable" disabled
+                                                            placeholder="Laisser vide pour ne pas changer"
+                                                            pattern=".{8,}" title="8 caractères minimum">
+                                                        <i class="fas fa-eye toggle-password"
+                                                            onclick="togglePasswordVisibility('passwordField', this)"></i>
+                                                    </div>
+                                                </div>
+                                                <div id="passwordWeakMessage" style="display:none; color: red;">
+                                                    Votre mot de passe est trop faible. Veuillez utiliser un mot de
+                                                    passe plus fort!
+                                                </div>
+
+                                                <div class="password-strength-container" style="display: none;"
+                                                    id="passwordStrengthContainer">
+                                                    <div id="passwordStrengthBar"
+                                                        style="height: 5px; width: 0; background-color: red; transition: width 0.3s;">
+                                                    </div>
+                                                    <small id="passwordStrengthMessage"
+                                                        style="display: block; margin-top: 5px;"></small>
+                                                </div>
+                                                <!-- Ancien mot de passe -->
+                                                <div class="info-group" id="currentPasswordGroup"
+                                                    style="display: none;">
+                                                    <label class="info-label">Ancien mot de passe</label>
+                                                    <div class="password-wrapper">
+                                                        <input type="password" name="ancien_mot_de_passe"
+                                                            id="oldPasswordField" class="info-input editable"
+                                                            placeholder="Entrez l'ancien mot de passe">
+                                                        <i class="fas fa-eye toggle-password"
+                                                            onclick="togglePasswordVisibility('oldPasswordField', this)"></i>
+                                                    </div>
+
+                                                </div>
+
+                                                <!-- Confirmation mot de passe -->
+                                                <div class="info-group" id="confirmPasswordGroup"
+                                                    style="display: none;">
+                                                    <label class="info-label">Confirmer le nouveau mot de passe</label>
+                                                    <div class="password-wrapper">
+                                                        <input type="password" name="confirmation_mot_de_passe"
+                                                            id="confirmPasswordField" class="info-input editable"
+                                                            placeholder="Confirmer le mot de passe">
+                                                        <i class="fas fa-eye toggle-password"
+                                                            onclick="togglePasswordVisibility('confirmPasswordField', this)"></i>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="id" value="<%= utilisateur.id %>">
+
+                                        <div class="action-buttons">
+                                            <button type="button" class="btn btn-primary" onclick="enableEdit()">
+                                                <i class="fas fa-edit btn-icon"></i> Modifier
+                                            </button>
+                                            <div id="successMessage" class="success-message" style="display:none;">
+                                                ✅ Mot de passe changé avec succès !
+                                            </div>
+                                            <div id="errorMessage" class="error-message" style="display:none;">
+                                                Les nouveaux mots de passe ne correspondent pas.
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary" id="saveButton"
+                                                style="display:none;">
+                                                <i class="fas fa-save btn-icon"></i> Sauvegarder
+                                            </button>
+                                        </div>
                 </form>
 
                 <!-- Formulaire de déconnexion séparé -->
@@ -198,16 +228,16 @@
                     </button>
                 </form>
 
-              
-                
+
+
             </div>
         </div>
 
         <%- include ("../partials/footer.ejs") %>
 
-        <script src="../Javascript/profile.js"></script>
-        <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
-        <script src="https://files.bpcontent.cloud/2025/04/14/20/20250414205547-HF27LNVK.js"></script>
+            <script src="../Javascript/profile.js"></script>
+            <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
+            <script src="https://files.bpcontent.cloud/2025/04/14/20/20250414205547-HF27LNVK.js"></script>
 </body>
 
 </html>
