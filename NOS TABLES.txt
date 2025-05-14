@@ -219,6 +219,7 @@ CREATE TABLE liste_attente (
     nombreJoueur INT NOT NULL, 
     prix DECIMAL(10,2) NOT NULL, 
     date_ajout DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_notified BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id),
     FOREIGN KEY (id_reservation) REFERENCES reservations(id_reservation)
 );
