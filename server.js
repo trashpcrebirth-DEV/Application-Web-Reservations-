@@ -30,7 +30,7 @@ mongoose.connect('mongodb://localhost:27017/mongodb', {
     console.error("Erreur de connexion MongoDB:", err);
 });
 
-
+import Avis from './models/Avis.js';  // ✅ Import après la connexion
 
 const stripe = new Stripe("sk_test_51R4MLIFZkxHTL2uBltxLNi9y1KcLf4AX5O9wCZ3BbEOhyAJFh1TDsESZcHpdtizXfr0b7kQp6YZ6j7IiAgqXNrNg00r0gp3FDe");
 const app = express();
@@ -590,31 +590,21 @@ async function getUserById(userId) {
 
 
 // Route pour la page de contact
-app.get("/contact", (req, res) => {
-    if (!req.session.user) {
-        return res.redirect("/connexion?alertConnexion=success");
-    }
+app.get("/contact", async (req, res) => {
+    if (!req.session.user) return res.redirect("/connexion?alertConnexion=success");
 
-    const sql = "SELECT * FROM avis_desUtilisateurs ORDER BY RAND() LIMIT 2";
-
-    con.query(sql, (err, avis) => {
-        if (err) {
-            console.error("Erreur SQL pour récupérer les avis :", err);
-            return res.render("pages/contact", {
-                activePage: 'contact',
-                user: req.session.user,
-                avis: []
-            });
-        }
-
+    try {
+        const avis = await Avis.aggregate([{ $sample: { size: 2 } }]);
         res.render("pages/contact", {
             activePage: 'contact',
             user: req.session.user,
             avis
         });
-    });
+    } catch (err) {
+        console.error("Erreur MongoDB:", err);
+        res.render("pages/contact", { avis: [] });
+    }
 });
-
 
 
 //Prend l'image uploadée et l'ajoute à la base de données
@@ -678,42 +668,38 @@ app.post("/ajouter-evenement", upload.single("image_url"), async (req, res) => {
 
 
 // Route pour ajouter un avis
-app.post('/ajouter-avis', (req, res) => {
-    console.log(req.body);
-
+app.post('/ajouter-avis', async (req, res) => {
     const { nom, note, commentaire } = req.body;
-    const dateAujourdhui = new Date();
-    const userId = req.session.user.id;
+    const userId = req.session.user?.id;
 
     if (!nom || !note || !commentaire) {
         return res.status(400).json({ error: "Tous les champs sont requis." });
     }
 
-    // D'abord, récupérer la photo de profil de l'utilisateur
-    const getPhotoQuery = "SELECT photo_url FROM utilisateurs WHERE id = ?";
-
-    con.query(getPhotoQuery, [userId], (err, results) => {
-        if (err) {
-            console.error("Erreur lors de la récupération de la photo de profil:", err);
-            return res.status(500).json({ error: "Erreur serveur" });
-        }
-
-        // Utiliser la photo de profil si elle existe, sinon utiliser l'image par défaut
+    try {
+        // Récupérer la photo depuis MySQL (temporaire)
+        const [results] = await con.promise().query(
+            "SELECT photo_url FROM utilisateurs WHERE id = ?", 
+            [userId]
+        );
         const image_url = results[0]?.photo_url || "/images/default-avatar.png";
 
-        // Maintenant insérer l'avis avec la bonne image
-        const insertQuery = "INSERT INTO avis_desUtilisateurs (nom, note, commentaire, date, image) VALUES (?, ?, ?, ?, ?)";
-
-        con.query(insertQuery, [nom, note, commentaire, dateAujourdhui, image_url], (err, result) => {
-            if (err) {
-                console.error("Erreur lors de l'insertion de l'avis :", err);
-                return res.status(500).json({ error: "Erreur serveur" });
-            }
-            res.redirect(`/contact?alertAvis=success`);
+        // Créer l'avis dans MongoDB
+        const nouvelAvis = new Avis({
+            nom,
+            note,
+            commentaire,
+            image: image_url,
+            userId // Optionnel: référence à l'utilisateur
         });
-    });
-});
 
+        await nouvelAvis.save();
+        res.redirect(`/contact?alertAvis=success`);
+    } catch (err) {
+        console.error("Erreur lors de l'ajout de l'avis :", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 
 // Route pour la page de connexion
 app.get("/connexion", (req, res) => {
@@ -726,18 +712,20 @@ app.get("/inscription", (req, res) => {
 });
 
 // Route pour la page À propos de l'utilisateur
-app.get('/AProposUtilisateur', (req, res) => {
-    con.query("SELECT * FROM avis_desUtilisateurs", function (err,
-        results) {
-        if (err) throw err;
+app.get('/AProposUtilisateur', async (req, res) => {
+    try {
+        const avis = await Avis.find().limit(10); // ou .aggregate([{ $sample: { size: 10 } }])
         res.render("pages/AProposUtilisateur", {
             siteTitle: "SportZone",
             pageTitle: "Nos utilisateurs",
             activePage: 'accueil',
-            avis: results,
+            avis,
             user: req.session.user
         });
-    });
+    } catch (err) {
+        console.error("Erreur MongoDB:", err);
+        res.status(500).send("Erreur serveur");
+    }
 });
 
 app.get('/AProposInstallations', (req, res) => {
