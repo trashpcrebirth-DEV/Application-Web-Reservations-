@@ -1,5 +1,7 @@
 use mongodb;
 
+db.createCollection("paiements");
+
 db.avis.insertMany([
   {
     "nom": "Alex Dubois",
