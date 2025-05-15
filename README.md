@@ -6,12 +6,13 @@ git clone https://github.com/votre-utilisateur/application_web_transactionnelle.
 
 2. Installez un conteneur MySQL sous Docker et creez-vous une base de données
 
-3. Roulez le script dans la base de données qui se trouve dans NOS TABLES.txt
+3. Allez dans le script de NOS TABLES.TXT et roulez chaque commande un par un pour la création et l'insertion de la table Reservations
+   dans la base de données (JUSQU'À CREATE TABLE utilisateurs). Une fois fini, roulez le reste du script.
 
 4. Installer un conteneur mongodb dont le port est 27017
 
 5. Ouvrez votre mongoDB compass, sous la connexion "mongodb://localhost:27017, créez une base de données en l'appellant "mongodb".
-   Ensuite, créez une collection "avis". Ouvrez MongoDB shell et roulez le script de la création des documents de la collection d'avis, située dans NOS COLLECTIONS.TXT. On a une autre collection "paiements", mais elle est automatiquement créée lors d'un paiement d'une réservation par exemple.
+   Ensuite, créez une collection "avis". Ouvrez MongoDB shell et roulez la première commande, puis, le deuxième dans le script de la création des documents de la collection d'avis, située dans NOS COLLECTIONS.TXT. Aussi, roulez la 3ième commande, cela va créer une autre collection appellée "paiements".
 
 4. Accédez au répertoire du projet application_web_transactionnelle et démarrer le serveur, qui se trouve dans le répertoire, avec la commande "node server.js". On indique le fonctionnement du serveur avec un message à la suite de la commande.
 

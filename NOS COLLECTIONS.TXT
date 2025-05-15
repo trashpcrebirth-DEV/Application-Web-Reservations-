@@ -1,7 +1,5 @@
 use mongodb;
 
-db.createCollection("paiements");
-
 db.avis.insertMany([
   {
     "nom": "Alex Dubois",
@@ -102,3 +100,5 @@ db.avis.insertMany([
     "image": "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?crop=faces&fit=crop&w=80&h=80"
   }
 ])
+
+db.createCollection("paiements");
