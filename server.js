@@ -1114,7 +1114,6 @@ app.get('/success', async (req, res) => {
 });
 
 
-// Remplacer toute la route /paiement existante par :
 app.get("/paiement", async (req, res) => {
     if (!req.session.user) return res.redirect("/connexion");
 
@@ -1160,7 +1159,6 @@ app.get("/paiement", async (req, res) => {
     }
 });
 
-
 app.post("/paiement", async (req, res) => {
     const { amount, currency, paymentMethodId } = req.body;
 
@@ -1173,13 +1171,26 @@ app.post("/paiement", async (req, res) => {
             confirm: true, // Confirme automatiquement le paiement
         });
 
+        // Enregistrer le paiement dans MongoDB
+        await mongoose.connection.db.collection('paiements').insertOne({
+            userId: req.session.user.id.toString(), // Lien avec l'utilisateur
+            amount: amount,
+            currency: currency,
+            stripePaymentId: paymentIntent.id,
+            status: paymentIntent.status,
+            createdAt: new Date()
+        });
+
         // Réponse en cas de succès
         res.json({ success: true, paymentIntent });
+
     } catch (error) {
         console.error("Erreur lors du paiement :", error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
+
+
 
 app.get("/api/notifications", async (req, res) => {
     if (!req.session.user) return res.status(401).json({ success: false, message: "Non connecté" });
@@ -1674,8 +1685,8 @@ app.post("/reset_password", async (req, res) => {
 app.get('/api/meteo', async (req, res) => {
     const { lat, lon, datetime } = req.query;
 
-    const username = "etudiant_tanguay_julien";
-    const password = "iGfaE93R8B";
+    const username = "sportzone_tanguay_julien";
+    const password = "435LXtM5kc";
 
     if (!lat || !lon || !datetime) {
         return res.status(400).json({ error: "Latitude, longitude et datetime requis." });
