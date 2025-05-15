@@ -714,7 +714,7 @@ app.get("/inscription", (req, res) => {
 // Route pour la page À propos de l'utilisateur
 app.get('/AProposUtilisateur', async (req, res) => {
     try {
-        const avis = await Avis.find().limit(10); // ou .aggregate([{ $sample: { size: 10 } }])
+        const avis = await Avis.find(); // ou .aggregate([{ $sample: { size: 10 } }])
         res.render("pages/AProposUtilisateur", {
             siteTitle: "SportZone",
             pageTitle: "Nos utilisateurs",

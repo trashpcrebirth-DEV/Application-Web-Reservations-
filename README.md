@@ -8,6 +8,11 @@ git clone https://github.com/votre-utilisateur/application_web_transactionnelle.
 
 3. Roulez le script dans la base de données qui se trouve dans NOS TABLES.txt
 
+4. Installer un conteneur mongodb dont le port est 27017
+
+5. Ouvrez votre mongoDB compass, sous la connexion "mongodb://localhost:27017, créez une base de données en l'appellant "mongodb".
+   Ensuite, créez une collection "avis". Ouvrez MongoDB shell et roulez le script de la création des documents de la collection d'avis, située dans NOS COLLECTIONS.TXT. On a une autre collection "paiements", mais elle est automatiquement créée lors d'un paiement d'une réservation par exemple.
+
 4. Accédez au répertoire du projet application_web_transactionnelle et démarrer le serveur, qui se trouve dans le répertoire, avec la commande "node server.js". On indique le fonctionnement du serveur avec un message à la suite de la commande.
 
 5. Une fois connecté au serveur, rendez vous sur localhost:4000 dans votre navigateur afin de voir l'application

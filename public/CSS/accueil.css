@@ -299,7 +299,6 @@ main {
         justify-content: center;
     }
 }
-/* Section À propos - Gardée comme avant */
 .a-propos {
     position: relative;
     margin-top: 0;
@@ -658,7 +657,6 @@ main {
     }
 }
 
-/* Media Queries pour la responsivité */
 @media screen and (max-width: 1200px) {
     .hero-title {
         font-size: 3rem;
