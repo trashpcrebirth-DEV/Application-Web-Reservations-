@@ -1103,8 +1103,21 @@ app.get('/success', async (req, res) => {
         });
     });
 
-    try {
+  try {
         await Promise.all(promises);
+
+        // Enregistrement dans MongoDB
+        const montantTotal = items.reduce((total, item) => total + item.prix, 0);
+
+        await mongoose.connection.db.collection('paiements').insertOne({
+            userId: userId.toString(),
+            amount: Math.round(montantTotal * 100),
+            currency: "cad",
+            stripePaymentId: "via-checkout-session",
+            status: "succeeded",
+            createdAt: new Date()
+        });
+
         req.session.user.cartCount = 0;
         return res.redirect("/confirmation");
     } catch (err) {
@@ -1169,16 +1182,6 @@ app.post("/paiement", async (req, res) => {
             currency: currency,
             payment_method: paymentMethodId,
             confirm: true, // Confirme automatiquement le paiement
-        });
-
-        // Enregistrer le paiement dans MongoDB
-        await mongoose.connection.db.collection('paiements').insertOne({
-            userId: req.session.user.id.toString(), // Lien avec l'utilisateur
-            amount: amount,
-            currency: currency,
-            stripePaymentId: paymentIntent.id,
-            status: paymentIntent.status,
-            createdAt: new Date()
         });
 
         // Réponse en cas de succès
